@@ -1,0 +1,24 @@
+<project name="JavaMexico" default="build">
+
+<target name="build" depends="build-core" />
+
+<target name="build-core">
+	<mkdir dir="core/bin" />
+	<javac srcdir="core/src" includes="**/*.java" destdir="core/bin">
+		<classpath>
+			<fileset dir="core/lib" includes="*.jar" />
+		</classpath>
+	</javac>
+</target>
+
+<target name="build-mockups" depends="build-core">
+	<mkdir dir="mockups/bin" />
+	<javac srcdir="mockups/src" includes="**/*.java" destdir="mockups/bin">
+		<classpath>
+			<fileset dir="core/lib" includes="*.jar" />
+			<pathelement location="core/bin" />
+		</classpath>
+	</javac>
+</target>
+
+</project>

@@ -1,0 +1,11 @@
+Esta es la lista de JARs que se deben incluir en este directorio. No se incluyen para evitar problemas por diferencia de licencias. Se incluye el nombre de la libreria y su MD5.
+
+persistence-api-1.0.jar		aeb56ad8210370d0cd5c0e995eb0d16c
+jsr250-api-1.0.jar			4cd56b2e4977e541186de69f5126b4a6
+spring-2.5.6.jar			1f0bb28a7a5e32493a747467f9c426d9
+slf4j-api-1.5.8.jar			f552fed65cab609d57f9aed8de435651
+slf4j-log4j12-1.5.8.jar		e833f7d233d6240c919b57b51a52002e
+jcl-over-slf4j-1.5.8.jar	79bddc98616aae3654de36f653d42e39
+log4j-1.2.15.jar			4d4609998fbc124ce6f0d1d48fca2614
+junit-4.4.jar				f852bbb2bbe0471cef8e5b833cb36078
+spring-test-2.5.6.jar		61e599762d336e2c8d4ab77f1b715dcc
