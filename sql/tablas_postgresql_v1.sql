@@ -6,8 +6,9 @@
 
 -- Usuarios del sistema
 CREATE TABLE usuario(
-	uid	SERIAL PRIMARY KEY,
+	uid        SERIAL PRIMARY KEY,
 	uname      VARCHAR(20) NOT NULL UNIQUE,
+	password   VARCHAR(40) NOT NULL,
 	fecha_alta TIMESTAMP NOT NULL,
 	nombre     VARCHAR(80) NOT NULL,
 	status     INTEGER NOT NULL DEFAULT 2,
@@ -119,11 +120,10 @@ CREATE TABLE coment_foro(
 
 --tags que el autor le puede poner a su foro
 CREATE TABLE tag_foro(
+	tid   SERIAL PRIMARY KEY,
 	fid   INTEGER REFERENCES foro(fid) NOT NULL ON DELETE CASCADE,
-	tid   INTEGER,
 	count INTEGER NOT NULL DEFAULT 1,
 	tag   VARCHAR(80) NOT NULL UNIQUE,
-	PRIMARY KEY(fid, tid)
 );
 
 --votos que los usuarios le dan a un foro
@@ -155,7 +155,7 @@ CREATE TABLE pregunta(
 	fecha_p  TIMESTAMP NOT NULL,
 	status   INTEGER NOT NULL DEFAULT 1,
 	pregunta VARCHAR(2000) NOT NULL,
-	resp_sel INTEGER, --REFERENCES respuesta(rid) NULL ON DELETE nullify,
+	resp_sel INTEGER, -- REFERENCES respuesta(rid) NULL ON DELETE nullify,
 	fecha_r  TIMESTAMP
 );
 
@@ -188,11 +188,9 @@ CREATE TABLE coment_respuesta(
 
 --Tags que el usuario le pone a sus preguntas
 CREATE TABLE tag_pregunta(
+	tid SERIAL PRIMARY KEY,
 	pid INTEGER REFERENCES pregunta(pid) NOT NULL ON DELETE CASCADE,
-	tid INTEGER,
-	count INTEGER NOT NULL DEFAULT 1,
 	tag   VARCHAR(80) NOT NULL UNIQUE,
-	PRIMARY KEY(pid, tid)
 );
 
 --Votos que los usuarios le dan a una pregunta
@@ -263,17 +261,33 @@ CREATE TABLE voto_blog_coment(
 
 --La parte de encuestas
 CREATE TABLE encuesta(
-	eid SERIAL PRIMARY KEY,
-	fecha TIMESTAMP NOT NULL,
-	titulo VARCHAR(400)
+	eid     SERIAL PRIMARY KEY,
+	uid     INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE RESTRICT,
+	fecha   TIMESTAMP NOT NULL,
+	status  INTEGER NOT NULL DEFAULT 1,
+	titulo  VARCHAR(400),
+	descrip VARCHAR(400)
+);
+
+CREATE TABLE opcion_encuesta(
+	opid  SERIAL PRIMARY KEY,
+	eid   INTEGER REFERENCES encuesta(eid) NOT NULL ON DELETE CASCADE,
+	texto VARCHAR(400)
 );
 
 CREATE TABLE voto_encuesta(
-	eid   INTEGER REFERENCES encuesta(eid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	fecha TIMESTAMP NOT NULL,
-	up    BOOLEAN NOT NULL DEFAULT true,
-	PRIMARY KEY(pid, uid)
+	opid   INTEGER REFERENCES opcion_encuesta(opid) NOT NULL ON DELETE CASCADE,
+	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	fecha  TIMESTAMP NOT NULL,
+	PRIMARY KEY(opid, uid)
+);
+
+CREATE TABLE coment_encuesta(
+	cid    SERIAL PRIMARY KEY,
+	eid    INTEGER REFERENCES encuesta(eid) NOT NULL ON DELETE CASCADE,
+	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	fecha  TIMESTAMP NOT NULL,
+	coment VARCHAR(2000) NOT NULL
 );
 
 --La parte de bolsa de trabajo
