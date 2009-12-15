@@ -1,0 +1,12 @@
+<html t:type="layout" title="JavaMexico Index"
+      t:sidebarTitle="Current Time"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+        <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
+
+    <p>En esta pagina se registra una nueva pregunta</p>
+    <p:sidebar>
+		Aqui podemos mostrar los tags mas utilizados por si quieren utilizar alguno de estos
+    </p:sidebar>
+
+</html>

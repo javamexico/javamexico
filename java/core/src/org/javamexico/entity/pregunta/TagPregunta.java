@@ -1,9 +1,9 @@
 package org.javamexico.entity.pregunta;
 
+import java.util.Comparator;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 /** Representa un tag que el autor de una pregunta le pone, para indicar los temas
  * relacionados.
@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 public class TagPregunta implements Comparable<TagPregunta> {
 
 	private int tid;
-	private Pregunta pregunta;
+	private int count;
 	private String tag;
 
 	@Id
@@ -25,13 +25,11 @@ public class TagPregunta implements Comparable<TagPregunta> {
 		tid = value;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="pid", referencedColumnName="pid")
-	public Pregunta getPregunta() {
-		return pregunta;
+	public int getCount() {
+		return count;
 	}
-	public void setPregunta(Pregunta value) {
-		pregunta = value;
+	public void setCount(int value) {
+		count = value;
 	}
 
 	public String getTag() {
@@ -41,6 +39,7 @@ public class TagPregunta implements Comparable<TagPregunta> {
 		tag = value;
 	}
 
+	/** Compara dos tags por su nombre. */
 	public int compareTo(TagPregunta o) {
 		if (o == null) {
 			return 1;
@@ -49,6 +48,27 @@ public class TagPregunta implements Comparable<TagPregunta> {
 			return o.getTag() == null ? 0 : -1;
 		}
 		return tag.compareTo(o.getTag());
+	}
+
+	/** Este comparador evalua la cuenta de cada tag en vez del nombre.
+	 * 
+	 * @author Enrique Zamudio
+	 */
+	public static class CountComparator implements Comparator<TagPregunta> {
+
+		public int compare(TagPregunta o1, TagPregunta o2) {
+			if (o1 == null) {
+				return o2 == null ? 0 : 1;
+			} else if (o2 == null) {
+				return -1;
+			} else {
+				if (o1.getCount() == o2.getCount()) {
+					return 0;
+				}
+				return o1.getCount() > o2.getCount() ? -1 : 1;
+			}
+		}
+		
 	}
 
 }

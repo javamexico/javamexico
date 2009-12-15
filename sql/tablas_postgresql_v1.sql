@@ -188,9 +188,15 @@ CREATE TABLE coment_respuesta(
 
 --Tags que el usuario le pone a sus preguntas
 CREATE TABLE tag_pregunta(
-	tid SERIAL PRIMARY KEY,
-	pid INTEGER REFERENCES pregunta(pid) NOT NULL ON DELETE CASCADE,
-	tag   VARCHAR(80) NOT NULL UNIQUE,
+	tid   SERIAL PRIMARY KEY,
+	count INTEGER NOT NULL DEFAULT 0,
+	tag   VARCHAR(80) NOT NULL UNIQUE
+);
+
+CREATE TABLE tag_pregunta_join(
+	tid INTEGER NOT NULL,
+	pid INTEGER NOT NULL,
+	PRIMARY KEY(tid,pid)
 );
 
 --Votos que los usuarios le dan a una pregunta

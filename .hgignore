@@ -1,8 +1,14 @@
 syntax:glob
 
 #Ignorar los bin de cada proyecto
-core/bin/*
-mockups/bin/*
+core/bin
+mockups/bin
+core/target
+mockups/target
+JavaMexico/target
+core/.settings
+mockups/.settings
+JavaMexico/.settings
 
 #Ignorar las librerias del lib
 core/lib/*.jar

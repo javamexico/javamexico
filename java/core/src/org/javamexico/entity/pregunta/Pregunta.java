@@ -5,11 +5,12 @@ import org.javamexico.entity.Usuario;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /** Representa una pregunta que un usuario hace en el sistema.
@@ -23,6 +24,7 @@ public class Pregunta implements Comparable<Pregunta> {
 	private int status; //abierta, contestada, etc
 	private Usuario autor;
 	private Respuesta resp; //cuando ya fue seleccionada una respuesta por el usuario que hizo la pregunta original
+	private String titulo;
 	private String pregunta;
 	private Date fechaP; //la fecha en que se hizo la pregunta
 	private Date fechaR; //la respuesta en que fue seleccionada la respuesta
@@ -59,6 +61,13 @@ public class Pregunta implements Comparable<Pregunta> {
 		status = value;
 	}
 
+	public String getTitulo() {
+		return titulo;
+	}
+	public void setTitulo(String value) {
+		titulo = value;
+	}
+
 	public String getPregunta() {
 		return pregunta;
 	}
@@ -82,7 +91,7 @@ public class Pregunta implements Comparable<Pregunta> {
 		resp = value;
 	}
 
-	@OneToMany
+	@ManyToMany(cascade=CascadeType.PERSIST)
 	public Set<TagPregunta> getTags() {
 		return tags;
 	}

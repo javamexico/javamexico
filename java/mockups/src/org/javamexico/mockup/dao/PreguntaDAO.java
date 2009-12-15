@@ -24,31 +24,65 @@ import javax.annotation.Resource;
  */
 public class PreguntaDAO implements PreguntaDao {
 
+	private List<TagPregunta> tags;
 	private Set<Pregunta> pregs;
 	private UserDao udao;
 	private Random rng = new Random(System.currentTimeMillis());
 
 	@PostConstruct
 	public void init() {
-		java.util.ArrayList<Usuario> users = new java.util.ArrayList<Usuario>();
+		tags = new ArrayList<TagPregunta>();
+		//Crear algunos tags
+		TagPregunta t1 = new TagPregunta();
+		t1.setTid(1);
+		t1.setTag("jsf");
+		TagPregunta t2 = new TagPregunta();
+		t2.setTid(2);
+		t2.setTag("servlet");
+		TagPregunta t3 = new TagPregunta();
+		t3.setTid(3);
+		t3.setTag("hibernate");
+		TagPregunta t4 = new TagPregunta();
+		t4.setTid(4);
+		t4.setTag("spring");
+		TagPregunta t5 = new TagPregunta();
+		t5.setTid(5);
+		t5.setTag("jdbc");
+		TagPregunta t6 = new TagPregunta();
+		t6.setTid(6);
+		t6.setTag("jee");
+		TagPregunta t7 = new TagPregunta();
+		t7.setTid(7);
+		t7.setTag("glassfish");
+		TagPregunta t8 = new TagPregunta();
+		t8.setTid(8);
+		t8.setTag("threads");
+		TagPregunta t9 = new TagPregunta();
+		t9.setTid(9);
+		t9.setTag("swing");
+		tags.add(t1);
+		tags.add(t2);
+		tags.add(t3);
+		tags.add(t4);
+		tags.add(t5);
+		tags.add(t6);
+		tags.add(t7);
+		tags.add(t8);
+		tags.add(t9);
+		Collections.sort(tags, new TagPregunta.CountComparator());
+
+		ArrayList<Usuario> users = new ArrayList<Usuario>();
 		users.addAll(udao.getAllUsers());
 		TreeSet<TagPregunta> tags = new TreeSet<TagPregunta>();
 		pregs = new TreeSet<Pregunta>();
 		Pregunta p = new Pregunta();
 		p.setPid(1);
 		p.setStatus(1);
-		p.setPregunta("Primera pregunta; algo acerca de servlets con JSF");
+		p.setTitulo("Algo de servlets");
+		p.setPregunta("Primera pregunta; algo acerca de servlets con JSF, tal vez especificamente con ICEfaces");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (86400200L*5)));
-		TagPregunta t = new TagPregunta();
-		t.setTid(1);
-		t.setPregunta(p);
-		t.setTag("jsf");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(2);
-		t.setPregunta(p);
-		t.setTag("servlet");
-		tags.add(t);
+		tags.add(t1); countTag(t1);
+		tags.add(t2); countTag(t2);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -56,14 +90,11 @@ public class PreguntaDAO implements PreguntaDao {
 		p = new Pregunta();
 		p.setPid(2);
 		p.setStatus(1);
-		p.setPregunta("Segunda pregunta, algo acerca de Hibernate");
+		p.setTitulo("Hibernate");
+		p.setPregunta("Segunda pregunta, algo acerca de Hibernate para un primerizo");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (86006000L*7)));
 		tags = new TreeSet<TagPregunta>();
-		t = new TagPregunta();
-		t.setTid(3);
-		t.setPregunta(p);
-		t.setTag("hibernate");
-		tags.add(t);
+		tags.add(t3); countTag(t3);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -71,24 +102,12 @@ public class PreguntaDAO implements PreguntaDao {
 		p = new Pregunta();
 		p.setPid(3);
 		p.setStatus(1);
+		p.setTitulo("Duda de Spring");
 		p.setPregunta("Esta es la tercera pregunta, que trata de algo con Spring");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (86900500L*2)));
 		tags = new TreeSet<TagPregunta>();
-		t = new TagPregunta();
-		t.setTid(4);
-		t.setPregunta(p);
-		t.setTag("spring");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(5);
-		t.setPregunta(p);
-		t.setTag("jdbc");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(6);
-		t.setPregunta(p);
-		t.setTag("spring-jdbc");
-		tags.add(t);
+		tags.add(t4); countTag(t4);
+		tags.add(t5); countTag(t5);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -96,30 +115,14 @@ public class PreguntaDAO implements PreguntaDao {
 		p = new Pregunta();
 		p.setPid(4);
 		p.setStatus(2);
-		p.setPregunta("Pregunta numero cuatro, una duda de Glassfish");
+		p.setTitulo("No puedo levantar Glassfish");
+		p.setPregunta("Pregunta numero cuatro, una duda de como instalar bien Glassfish en Windows porque no corre");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (89300300L*15)));
 		p.setFechaRespuesta(new Date(System.currentTimeMillis() - (87100000L*2)));
 		tags = new TreeSet<TagPregunta>();
-		t = new TagPregunta();
-		t.setTid(7);
-		t.setPregunta(p);
-		t.setTag("jee");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(8);
-		t.setPregunta(p);
-		t.setTag("glassfish");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(9);
-		t.setPregunta(p);
-		t.setTag("jndi");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(10);
-		t.setPregunta(p);
-		t.setTag("ejb");
-		tags.add(t);
+		tags.add(t6); countTag(t6);
+		tags.add(t7); countTag(t7);
+		tags.add(t2); countTag(t2);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -127,14 +130,11 @@ public class PreguntaDAO implements PreguntaDao {
 		p = new Pregunta();
 		p.setPid(5);
 		p.setStatus(1);
+		p.setTitulo("Multithreading");
 		p.setPregunta("La quinta pregunta es acerca de hilos");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (82900800L*3)));
 		tags = new TreeSet<TagPregunta>();
-		t = new TagPregunta();
-		t.setTid(11);
-		t.setPregunta(p);
-		t.setTag("threads");
-		tags.add(t);
+		tags.add(t8); countTag(t8);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -142,19 +142,12 @@ public class PreguntaDAO implements PreguntaDao {
 		p = new Pregunta();
 		p.setPid(6);
 		p.setStatus(1);
-		p.setPregunta("Pregunta Seis, algo de base de datos");
+		p.setTitulo("MySQL con Java");
+		p.setPregunta("Pregunta Seis, algo de base de datos, especificamente como conectarse a MySQL");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (81200000L*9)));
 		tags = new TreeSet<TagPregunta>();
-		t = new TagPregunta();
-		t.setTid(12);
-		t.setPregunta(p);
-		t.setTag("jdbc");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(13);
-		t.setPregunta(p);
-		t.setTag("mysql");
-		tags.add(t);
+		tags.add(t5); countTag(t5);
+		tags.add(t6); countTag(t6);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -162,19 +155,13 @@ public class PreguntaDAO implements PreguntaDao {
 		p = new Pregunta();
 		p.setPid(7);
 		p.setStatus(1);
+		p.setTitulo("Cliente Swing");
 		p.setPregunta("Aqui esta la pregunta numero siete, que trata de programacion de aplicaciones de escritorio");
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (84350030L*11)));
 		tags = new TreeSet<TagPregunta>();
-		t = new TagPregunta();
-		t.setTid(14);
-		t.setPregunta(p);
-		t.setTag("swing");
-		tags.add(t);
-		t = new TagPregunta();
-		t.setTid(15);
-		t.setPregunta(p);
-		t.setTag("j2se");
-		tags.add(t);
+		tags.add(t9); countTag(t9);
+		tags.add(t4); countTag(t4);
+		tags.add(t5); countTag(t5);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -224,7 +211,15 @@ public class PreguntaDAO implements PreguntaDao {
 	}
 
 	public Set<TagPregunta> getTagsPopulares(int limit) {
-		return null;
+		Set<TagPregunta> rv = new TreeSet<TagPregunta>(new TagPregunta.CountComparator());
+		if (limit >= tags.size()) {
+			rv.addAll(tags);
+		} else {
+			for (int i = 0; i < limit; i++) {
+				rv.add(tags.get(i));
+			}
+		}
+		return rv;
 	}
 
 	public Pregunta getPregunta(int id) {
@@ -314,6 +309,10 @@ public class PreguntaDAO implements PreguntaDao {
 			rv.remove(rv.size() - 1);
 		}
 		return rv;
+	}
+
+	private void countTag(TagPregunta t) {
+		t.setCount(t.getCount()+1);
 	}
 
 }
