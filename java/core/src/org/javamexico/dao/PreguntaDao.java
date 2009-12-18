@@ -28,6 +28,9 @@ public interface PreguntaDao {
 	/** Devuelve todas las preguntas que tengan al menos uno de los tags especificados. */
 	public List<Pregunta> getPreguntasConTags(Set<TagPregunta> tags);
 
+	/** Devuelve las preguntas que contienen el tag especificado. */
+	public List<Pregunta> getPreguntasConTag(String tag);
+
 	/** Devuelve los tags mas utilizados en preguntas.
 	 * @param limit El numero maximo de tags a devolver. */
 	public Set<TagPregunta> getTagsPopulares(int limit);

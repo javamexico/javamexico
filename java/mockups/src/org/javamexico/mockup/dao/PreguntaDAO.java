@@ -197,6 +197,19 @@ public class PreguntaDAO implements PreguntaDao {
 		return getPreguntasConTags(java.util.Collections.singleton(tag));
 	}
 
+	public List<Pregunta> getPreguntasConTag(String tag) {
+		ArrayList<Pregunta> rv = new ArrayList<Pregunta>();
+		for (Pregunta p : pregs) {
+			for (TagPregunta t : p.getTags()) {
+				if (tag.equals(t.getTag())) {
+					rv.add(p);
+					continue;
+				}
+			}
+		}
+		return rv;
+	}
+
 	public List<Pregunta> getPreguntasConTags(Set<TagPregunta> tags) {
 		ArrayList<Pregunta> rv = new ArrayList<Pregunta>();
 		for (Pregunta p : pregs) {
@@ -204,6 +217,7 @@ public class PreguntaDAO implements PreguntaDao {
 				for (TagPregunta t2 : tags) {
 					if (t.getTid() == t2.getTid()) {
 						rv.add(p);
+						continue;
 					}
 				}
 			}
