@@ -1,0 +1,12 @@
+<html t:type="layout" t:title="Foros"
+      t:sidebarTitle="Foros activos"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+<p>Pagina principal para los foros.</p>
+
+    <p:sidebar>
+    Podriamos poner los foros mas activos o bien los foros con actividad muy reciente.
+    </p:sidebar>
+
+</html>

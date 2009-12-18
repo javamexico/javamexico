@@ -1,4 +1,5 @@
-<html t:type="layout" title="JavaMexico :: Preguntas :: ${pregunta.titulo}"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout" t:title="JavaMexico :: Preguntas :: ${pregunta.titulo}"
       t:sidebarTitle="Preguntas similares"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
@@ -7,10 +8,10 @@
 	<h2>${pregunta.titulo}</h2>
 	<cite>${pregunta.autor.nombre}</cite>
     <p>${pregunta.pregunta}</p>
-    Tags: - <t:loop t:source="pregunta.tags" t:value="tag">
-    	${tag.tag} -
-    </t:loop>
-
+    <div><t:loop t:source="pregunta.tags" t:value="tag">
+    	<t:pagelink t:context="${tag.tag}" t:page="preguntas/portag" class="qtag">${tag.tag}</t:pagelink>&nbsp;
+    </t:loop></div>
+<br/>
 	<h2>Respuestas:</h2>
 	<ul><t:loop t:source="respuestas" t:value="resp" t:element="li">
 		${resp.respuesta}

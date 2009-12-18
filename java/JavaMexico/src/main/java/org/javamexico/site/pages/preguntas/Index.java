@@ -1,9 +1,10 @@
-package org.javamexico.site.pages;
+package org.javamexico.site.pages.preguntas;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.tapestry5.annotations.IncludeStylesheet;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -15,7 +16,8 @@ import org.javamexico.entity.pregunta.TagPregunta;
  * 
  * @author Enrique Zamudio
  */
-public class Preguntas {
+@IncludeStylesheet("context:layout/preguntas.css")
+public class Index {
 
 	@Inject
 	@Service("preguntaDao")

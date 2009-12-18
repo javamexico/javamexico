@@ -1,0 +1,17 @@
+<html t:type="layout" t:title="Preguntas"
+      t:sidebarTitle="Tags comunes"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+        <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
+
+	<ul><t:loop t:source="preguntas" t:value="pregunta" t:element="li">
+		<t:pagelink t:page="preguntas/ver" t:context="${pregunta.pid}">${pregunta.titulo}</t:pagelink> - ${pregunta.autor.nombre} (${pregunta.fechaPregunta})
+	</t:loop></ul>
+
+    <p:sidebar>
+    	<ol><t:loop t:source="popTags" t:value="tag" t:element="div">
+    		<t:pagelink t:context="${tag.tag}" t:page="preguntas/portag" class="qtag">${tag.tag}</t:pagelink> (${tag.count})
+    	</t:loop></ol>
+    </p:sidebar>
+
+</html>
