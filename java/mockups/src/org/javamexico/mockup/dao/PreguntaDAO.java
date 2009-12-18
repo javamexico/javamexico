@@ -95,6 +95,7 @@ public class PreguntaDAO implements PreguntaDao {
 		p.setFechaPregunta(new Date(System.currentTimeMillis() - (86006000L*7)));
 		tags = new TreeSet<TagPregunta>();
 		tags.add(t3); countTag(t3);
+		tags.add(t6); countTag(t6);
 		p.setTags(tags);
 		p.setAutor(users.get(rng.nextInt(users.size())));
 		pregs.add(p);
@@ -232,55 +233,60 @@ public class PreguntaDAO implements PreguntaDao {
 	}
 
 	public List<Respuesta> getRespuestas(Pregunta q, int pageSize, int page, boolean crono) {
-		ArrayList<Usuario> users = new ArrayList<Usuario>();
-		users.addAll(udao.getAllUsers());
-		ArrayList<Respuesta> rv = new ArrayList<Respuesta>();
-		Respuesta resp = new Respuesta();
-		resp.setRid(1);
-		resp.setPregunta(q);
-		resp.setAutor(users.get(rng.nextInt(users.size())));
-		resp.setFecha(new Date(q.getFechaPregunta().getTime() + 43500500l));
-		resp.setRespuesta("Una respuesta");
-		rv.add(resp);
+		if (q.getRespuestas() == null) {
+			ArrayList<Usuario> users = new ArrayList<Usuario>();
+			users.addAll(udao.getAllUsers());
+			TreeSet<Respuesta> ts = new TreeSet<Respuesta>();
+			Respuesta resp = new Respuesta();
+			resp.setRid(1);
+			resp.setPregunta(q);
+			resp.setAutor(users.get(rng.nextInt(users.size())));
+			resp.setFecha(new Date(q.getFechaPregunta().getTime() + 43500500l));
+			resp.setRespuesta("Una respuesta");
+			ts.add(resp);
 
-		resp = new Respuesta();
-		resp.setRid(2);
-		resp.setPregunta(q);
-		resp.setAutor(users.get(rng.nextInt(users.size())));
-		resp.setFecha(new Date(q.getFechaPregunta().getTime() + 49500500l));
-		resp.setRespuesta("Otra respuesta");
-		rv.add(resp);
+			resp = new Respuesta();
+			resp.setRid(2);
+			resp.setPregunta(q);
+			resp.setAutor(users.get(rng.nextInt(users.size())));
+			resp.setFecha(new Date(q.getFechaPregunta().getTime() + 49500500l));
+			resp.setRespuesta("Otra respuesta");
+			ts.add(resp);
 
-		resp = new Respuesta();
-		resp.setRid(3);
-		resp.setPregunta(q);
-		resp.setAutor(users.get(rng.nextInt(users.size())));
-		resp.setFecha(new Date(q.getFechaPregunta().getTime() + 52500500l));
-		resp.setRespuesta("Una respuesta mas");
-		rv.add(resp);
+			resp = new Respuesta();
+			resp.setRid(3);
+			resp.setPregunta(q);
+			resp.setAutor(users.get(rng.nextInt(users.size())));
+			resp.setFecha(new Date(q.getFechaPregunta().getTime() + 52500500l));
+			resp.setRespuesta("Una respuesta mas");
+			ts.add(resp);
 
-		resp = new Respuesta();
-		resp.setRid(4);
-		resp.setPregunta(q);
-		resp.setAutor(users.get(rng.nextInt(users.size())));
-		resp.setFecha(new Date(q.getFechaPregunta().getTime() + 95250704l));
-		resp.setRespuesta("Cuarta respuesta");
-		rv.add(resp);
+			resp = new Respuesta();
+			resp.setRid(4);
+			resp.setPregunta(q);
+			resp.setAutor(users.get(rng.nextInt(users.size())));
+			resp.setFecha(new Date(q.getFechaPregunta().getTime() + 95250704l));
+			resp.setRespuesta("Cuarta respuesta");
+			ts.add(resp);
 
-		if (q.getStatus() == 2) {
-			if (q.getRespuestaElegida() == null) {
-				//La seleccionada
-				resp = new Respuesta();
-				resp.setRid(5);
-				resp.setPregunta(q);
-				resp.setAutor(users.get(rng.nextInt(users.size())));
-				resp.setFecha(new Date(q.getFechaRespuesta().getTime() + 28456129l));
-				resp.setRespuesta("Esta fue la respuesta elegida por el que hizo la pregunta");
-				q.setRespuestaElegida(resp);
+			if (q.getStatus() == 2) {
+				if (q.getRespuestaElegida() == null) {
+					//La seleccionada
+					resp = new Respuesta();
+					resp.setRid(5);
+					resp.setPregunta(q);
+					resp.setAutor(users.get(rng.nextInt(users.size())));
+					resp.setFecha(new Date(q.getFechaRespuesta().getTime() + 28456129l));
+					resp.setRespuesta("Esta fue la respuesta elegida por el que hizo la pregunta");
+					q.setRespuestaElegida(resp);
+				}
+				ts.add(q.getRespuestaElegida());
 			}
-			rv.add(q.getRespuestaElegida());
+			q.setRespuestas(ts);
 		}
-		return rv;
+		ArrayList<Respuesta> resps = new ArrayList<Respuesta>();
+		resps.addAll(q.getRespuestas());
+		return resps;
 	}
 
 	public List<Pregunta> getPreguntasMasVotadas(int limit) {

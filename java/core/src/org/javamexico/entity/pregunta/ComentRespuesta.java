@@ -32,7 +32,7 @@ public class ComentRespuesta {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="rid", referencedColumnName="rid")
+	@JoinColumn(name="rid")
 	public Respuesta getRespuesta() {
 		return resp;
 	}
@@ -41,7 +41,7 @@ public class ComentRespuesta {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="uid", referencedColumnName="uid")
+	@JoinColumn(name="uid")
 	public Usuario getAutor() {
 		return user;
 	}

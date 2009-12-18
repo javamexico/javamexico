@@ -87,6 +87,9 @@ public class UserDAO implements UserDao {
 	}
 
 	public Usuario validaLogin(String username, String password) {
+		if (username == null) {
+			return null;
+		}
 		for (Usuario x : users) {
 			if (username.equals(x.getUsername())) {
 				return x;

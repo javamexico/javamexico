@@ -1,4 +1,4 @@
-<html t:type="layout" title="About JavaMexico"
+<html t:type="layout" t:title="About JavaMexico"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
 

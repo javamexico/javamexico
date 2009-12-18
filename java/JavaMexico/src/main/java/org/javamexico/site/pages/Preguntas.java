@@ -25,10 +25,12 @@ public class Preguntas {
 	@Property
 	private TagPregunta tag;
 
+	/** Devuelve las preguntas mas recientes para mostrarlas en la pagina. */
 	public List<Pregunta> getPreguntas() {
 		return pdao.getPreguntasRecientes(new Date(System.currentTimeMillis()-864000000l));
 	}
 
+	/** Devuelve los 5 tags mas utilizados en el modulo. */
 	public Set<TagPregunta> getPopTags() {
 		return pdao.getTagsPopulares(5);
 	}

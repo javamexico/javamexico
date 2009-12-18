@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 /** Representa una pregunta que un usuario hace en el sistema.
  * 
@@ -29,6 +31,8 @@ public class Pregunta implements Comparable<Pregunta> {
 	private Date fechaP; //la fecha en que se hizo la pregunta
 	private Date fechaR; //la respuesta en que fue seleccionada la respuesta
 	private Set<TagPregunta> tags;
+	private Set<ComentPregunta> coments;
+	private Set<Respuesta> resps;
 
 	@Id
 	public int getPid() {
@@ -97,6 +101,24 @@ public class Pregunta implements Comparable<Pregunta> {
 	}
 	public void setTags(Set<TagPregunta> value) {
 		tags = value;
+	}
+
+	@OneToMany(mappedBy="pid")
+	@OrderBy("fecha")
+	public Set<Respuesta> getRespuestas() {
+		return resps;
+	}
+	public void setRespuestas(Set<Respuesta> value) {
+		resps = value;
+	}
+
+	@OneToMany(mappedBy="pid")
+	@OrderBy("fecha")
+	public Set<ComentPregunta> getComentarios() {
+		return coments;
+	}
+	public void setComentarios(Set<ComentPregunta> value) {
+		coments = value;
 	}
 
 	public int compareTo(Pregunta o) {

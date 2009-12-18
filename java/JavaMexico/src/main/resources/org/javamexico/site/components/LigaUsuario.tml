@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+
+<t:if t:test="userExists">
+<t:actionlink t:zone="innerZone" t:id="loggedLink">${text}</t:actionlink>
+<t:zone t:id="innerZone" t:visible="false"><t:body/></t:zone>
+<p:else><t:actionlink t:zone="loginZone" t:id="loginLink">${text}</t:actionlink>
+<t:zone t:id="loginZone" t:visible="false">
+Debe registrarse primero
+<t:form t:id="login" t:zone="loginZone">
+Usuario: <t:textfield t:value="uname" />
+Password: <t:passwordfield t:value="passwd" />
+<t:submit value="Validar" />
+<t:if t:test="loginErr"><br/>${loginErr}</t:if>
+</t:form></t:zone>
+</p:else></t:if>
+
+</t:container>

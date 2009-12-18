@@ -5,8 +5,9 @@
         <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
 
 	<h2>${pregunta.titulo}</h2>
+	<cite>${pregunta.autor.nombre}</cite>
     <p>${pregunta.pregunta}</p>
-    - <t:loop t:source="pregunta.tags" t:value="tag">
+    Tags: - <t:loop t:source="pregunta.tags" t:value="tag">
     	${tag.tag} -
     </t:loop>
 
@@ -16,6 +17,14 @@
 		<br/>
 		por ${resp.autor.nombre} el ${resp.fecha}
 	</t:loop></ul>
+
+	<t:ligausuario text="Agregar una respuesta">
+	<t:form t:id="respform" context="${pregunta.pid}">
+	<t:textarea t:value="resptext" cols="40" rows="10" />
+	<br/><t:submit value="Contestar" />
+	</t:form></t:ligausuario>
+
+
     <p:sidebar>
 		Aqui podriamos poner preguntas similares (la similaridad la determinamos por los tags, etc)
     </p:sidebar>
