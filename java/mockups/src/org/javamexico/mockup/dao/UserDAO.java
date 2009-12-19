@@ -17,9 +17,9 @@ package org.javamexico.mockup.dao;
 import org.javamexico.dao.UserDao;
 import org.javamexico.entity.Usuario;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -29,11 +29,11 @@ import javax.annotation.PostConstruct;
  */
 public class UserDAO implements UserDao {
 
-	private Set<Usuario> users;
+	private List<Usuario> users;
 
 	@PostConstruct
 	public void init() {
-		users = new TreeSet<Usuario>();
+		users = new ArrayList<Usuario>();
 		Usuario u = new Usuario();
 		u.setUid(1);
 		u.setUsername("admin");
@@ -112,7 +112,7 @@ public class UserDAO implements UserDao {
 		return null;
 	}
 
-	public Set<Usuario> getAllUsers() {
+	public List<Usuario> getAllUsers() {
 		return users;
 	}
 
@@ -123,6 +123,18 @@ public class UserDAO implements UserDao {
 			}
 		}
 		return null;
+	}
+
+	public void delete(Usuario u) {
+		users.remove(u);
+	}
+
+	public void insert(Usuario u) {
+		users.add(u);
+	}
+
+	public void update(Usuario u) {
+		//nada...
 	}
 
 }

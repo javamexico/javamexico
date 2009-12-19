@@ -16,7 +16,6 @@ package org.javamexico.test.dao;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -63,7 +62,7 @@ public class TestPreguntaDao {
 
 	@Test
 	public void testUsers() {
-		Set<Usuario> all = udao.getAllUsers();
+		List<Usuario> all = udao.getAllUsers();
 		for (Usuario u : all) {
 			System.out.printf("Usuario %s nombre %s id %d alta %s%n",
 					u.getUsername(), u.getNombre(), u.getUid(), u.getFechaAlta());

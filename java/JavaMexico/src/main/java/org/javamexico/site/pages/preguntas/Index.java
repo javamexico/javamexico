@@ -16,7 +16,6 @@ package org.javamexico.site.pages.preguntas;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.tapestry5.annotations.IncludeStylesheet;
 import org.apache.tapestry5.annotations.Property;
@@ -47,7 +46,7 @@ public class Index {
 	}
 
 	/** Devuelve los 5 tags mas utilizados en el modulo. */
-	public Set<TagPregunta> getPopTags() {
+	public List<TagPregunta> getPopTags() {
 		return pdao.getTagsPopulares(5);
 	}
 

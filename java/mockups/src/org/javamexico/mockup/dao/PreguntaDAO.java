@@ -239,8 +239,8 @@ public class PreguntaDAO implements PreguntaDao {
 		return rv;
 	}
 
-	public Set<TagPregunta> getTagsPopulares(int limit) {
-		Set<TagPregunta> rv = new TreeSet<TagPregunta>(new TagPregunta.CountComparator());
+	public List<TagPregunta> getTagsPopulares(int limit) {
+		List<TagPregunta> rv = new ArrayList<TagPregunta>();
 		if (limit >= tags.size()) {
 			rv.addAll(tags);
 		} else {
@@ -248,6 +248,7 @@ public class PreguntaDAO implements PreguntaDao {
 				rv.add(tags.get(i));
 			}
 		}
+		Collections.sort(rv, new TagPregunta.CountComparator());
 		return rv;
 	}
 
