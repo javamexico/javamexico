@@ -16,14 +16,20 @@ package org.javamexico.dao;
 
 import org.javamexico.entity.Usuario;
 
-import java.util.Set;
+import java.util.List;
 
 public interface UserDao {
 
 	public Usuario validaLogin(String username, String password);
 
-	public Set<Usuario> getAllUsers();
+	public List<Usuario> getAllUsers();
 
 	public Usuario getUser(int id);
+
+	public void insert(Usuario u);
+
+	public void update(Usuario u);
+
+	public void delete(Usuario u);
 
 }

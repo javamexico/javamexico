@@ -9,6 +9,8 @@ JavaMexico/target
 core/.settings
 mockups/.settings
 JavaMexico/.settings
+daos-hib3/.settings
+daos-hib3/target
 
 #Ignorar las librerias del lib
 core/lib/*.jar

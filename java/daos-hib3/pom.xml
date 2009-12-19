@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.javamexico</groupId>
+  <artifactId>javamexico-hibernate3</artifactId>
+  <name>JavaMexico Hibernate 3 DAOs</name>
+  <version>0.0.1-SNAPSHOT</version>
+  <repositories>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>org.javamexico</groupId>
+      <artifactId>javamexico-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.hibernate</groupId>
+    	<artifactId>hibernate-core</artifactId>
+    	<version>3.3.2.GA</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-hibernate3</artifactId>
+    	<version>2.0.8</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -47,7 +47,7 @@ public interface PreguntaDao {
 
 	/** Devuelve los tags mas utilizados en preguntas.
 	 * @param limit El numero maximo de tags a devolver. */
-	public Set<TagPregunta> getTagsPopulares(int limit);
+	public List<TagPregunta> getTagsPopulares(int limit);
 
 	/** Devuelve la pregunta con el id especificado. */
 	public Pregunta getPregunta(int id);
