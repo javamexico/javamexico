@@ -18,18 +18,29 @@ import org.javamexico.entity.Usuario;
 
 import java.util.List;
 
+/** Define la funcionalidad del DAO para manejo de usuarios.
+ * 
+ * @author Enrique Zamudio
+ */
 public interface UserDao {
 
+	/** Busca un usuario con el nombre especificado; si existe, valida su
+	 * password y si es correcto devuelve el usuario. */
 	public Usuario validaLogin(String username, String password);
 
+	/** Devuelve una lista con todos los usuarios registrados en el sistema. */
 	public List<Usuario> getAllUsers();
 
+	/** Devuelve al usuario con la clave especificada. */
 	public Usuario getUser(int id);
 
+	/** Inserta un nuevo usuario a la base de datos. */
 	public void insert(Usuario u);
 
+	/** Actualiza los datos de un usuario en base de datos. */
 	public void update(Usuario u);
 
+	/** Elimina de la base de datos al usuario especificado. */
 	public void delete(Usuario u);
 
 }

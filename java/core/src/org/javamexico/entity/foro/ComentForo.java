@@ -15,15 +15,86 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.entity.foro;
 
 import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import org.javamexico.entity.Usuario;
 
+/** Representa un comentario hecho en un foro por un usuario registrado.
+ * 
+ * @author Enrique Zamudio
+ */
+@Entity
 public class ComentForo {
 
 	private int cfid;
 	private Foro foro;
 	private Usuario autor;
 	private ComentForo rt; //para manejar threads de comentarios
+	private Set<ComentForo> replies;
 	private Date fecha;
 	private String coment;
+
+	@Id
+	public int getCfid() {
+		return cfid;
+	}
+	public void setCfid(int value) {
+		cfid = value;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="fid")
+	public Foro getForo() {
+		return foro;
+	}
+	public void setForo(Foro value) {
+		foro = value;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="uid")
+	public Usuario getAutor() {
+		return autor;
+	}
+	public void setAutor(Usuario value) {
+		autor = value;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+	public void setFecha(Date value) {
+		fecha = value;
+	}
+
+	public String getComentario() {
+		return coment;
+	}
+	public void setComentario(String value) {
+		coment = value;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="rt")
+	public ComentForo getInReplyTo() {
+		return rt;
+	}
+	public void setInReplyTo(ComentForo value) {
+		rt = value;
+	}
+
+	@OneToMany(mappedBy="rt")
+	public Set<ComentForo> getRespuestas() {
+		return replies;
+	}
+	public void setRespuestas(Set<ComentForo> value) {
+		replies = value;
+	}
 
 }

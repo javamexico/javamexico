@@ -15,15 +15,88 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.entity.blog;
 
 import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 import org.javamexico.entity.Usuario;
 
+/** Representa una entrada en el blog de un usuario.
+ * 
+ * @author Enrique Zamudio
+ */
 public class BlogPost {
 
 	private int bid;
+	private int status;
 	private Usuario user;
 	private Date fecha;
 	private String titulo;
 	private String texto;
+	private Set<BlogComent> comms;
 	private boolean coments; //permite comentarios o no
+
+	@Id
+	public int getBid() {
+		return bid;
+	}
+	public void setBid(int value) {
+		bid = value;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int value) {
+		status = value;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="uid")
+	public Usuario getAutor() {
+		return user;
+	}
+	public void setAutor(Usuario value) {
+		user = value;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+	public void setFecha(Date value) {
+		fecha = value;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+	public void setTitulo(String value) {
+		titulo = value;
+	}
+
+	public String getTexto() {
+		return texto;
+	}
+	public void setTexto(String value) {
+		texto = value;
+	}
+
+	public boolean isPermiteComentarios() {
+		return coments;
+	}
+	public void setPermiteComentarios(boolean flag) {
+		coments = flag;
+	}
+
+	@OneToMany(mappedBy="bid")
+	public Set<BlogComent> getComentarios() {
+		return comms;
+	}
+	public void setComentarios(Set<BlogComent> value) {
+		comms = value;
+	}
 
 }

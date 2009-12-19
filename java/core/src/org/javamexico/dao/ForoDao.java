@@ -21,12 +21,21 @@ import org.javamexico.entity.Usuario;
 import java.util.Set;
 import java.util.Date;
 
+/** Define la funcionalidad del DAO para la seccion de foros.
+ * 
+ * @author Enrique Zamudio
+ */
 public interface ForoDao {
 
-	public Set<Foro> getForosByUser(Usuario user);
+	/** Devuelve los foros creados por el usuario especificado.
+	 * @param user El creador de los foros
+	 * @param published Indica si se deben devolver solamente sus foros publicados, o todos. */
+	public Set<Foro> getForosByUser(Usuario user, boolean published);
 
+	/** Devuelve los foros creados a partir de la fecha especificada, sin importar el autor. */
 	public Set<Foro> getForosRecientes(Date desde);
 
+	/** Devuelve los foros con mayor actividad (numero de comentarios). */
 	public Set<Foro> getForosMasActivos(int limit);
 
 	/** Devuelve el foro con el ID especificado. */
@@ -40,5 +49,18 @@ public interface ForoDao {
 	 *         (el mas viejo primero).
 	 */
 	public Set<ComentForo> getComentarios(Foro foro, int pageSize, int page, boolean crono);
+
+	/** Inserta nuevo foro en la base de datos. */
+	public void insert(Foro foro);
+	/** Actualiza los datos del foro en la base de datos. */
+	public void update(Foro foro);
+	/** Elimina de la base de datos el foro especificado. */
+	public void delete(Foro foro);
+
+	/** Agrega un comentario al foro especificado, como respuesta a otro comentario.
+	 * @param coment El comentario a agregar.
+	 * @param foro El foro donde se va a agregar el comentario.
+	 * @param parent El comentario al cual se esta respondiendo (opcional). */
+	public void addComment(ComentForo coment, Foro foro, ComentForo parent);
 
 }

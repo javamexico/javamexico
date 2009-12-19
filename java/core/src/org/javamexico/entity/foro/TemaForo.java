@@ -16,11 +16,48 @@ package org.javamexico.entity.foro;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+/** Representa un tema para los foros.
+ * 
+ * @author Enrique Zamudio
+ */
+@Entity
 public class TemaForo {
 
 	private int tid;
 	private String tema;
 	private String descrip;
 	private Date fechaAlta;
+
+	@Id
+	public int getTid() {
+		return tid;
+	}
+	public void setTid(int value) {
+		tid = value;
+	}
+
+	public String getTema() {
+		return tema;
+	}
+	public void setTema(String value) {
+		tema = value;
+	}
+
+	public String getDescripcion() {
+		return descrip;
+	}
+	public void setDescripcion(String value) {
+		descrip = value;
+	}
+
+	public Date getFechaAlta() {
+		return fechaAlta;
+	}
+	public void setFechaAlta(Date value) {
+		fechaAlta = value;
+	}
 
 }

@@ -19,16 +19,38 @@ import org.javamexico.entity.blog.BlogComent;
 import org.javamexico.entity.Usuario;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
+/** Define la funcionalidad del DAO para manejo de la seccion de blogs.
+ * 
+ * @author Enrique Zamudio
+ */
 public interface BlogDao {
 
-	public Set<BlogPost> getUserBlog(Usuario user);
+	/** Devuelve todas las entradas de blog de un usuario, empezando por la mas reciente.
+	 * @param user El usuario cuyas entradas se deben devolver.
+	 * @param published Indica si solamente se deben devolver las entradas publicadas, o todas. */
+	public List<BlogPost> getUserBlog(Usuario user, boolean published);
 
-	public Set<BlogPost> getBlogsRecientes(Date desde);
+	/** Devuelve las entradas mas recientes de blogs publicadas, sin importar el autor.
+	 * @param desde La fecha a partir de la cual se toman los blogs. */
+	public List<BlogPost> getBlogsRecientes(Date desde);
 
+	/** Devuelve la entrada de blog con la clave especificada. */
 	public BlogPost getBlog(int id);
 
-	public Set<BlogComent> getComentarios(BlogPost blog, int pageSize, int page, boolean crono);
+	public List<BlogComent> getComentarios(BlogPost blog, int pageSize, int page, boolean crono);
+
+	public void insert(BlogPost post);
+
+	public void update(BlogPost post);
+
+	public void delete(BlogPost post);
+
+	/** Agrega un comentario al blog indicado, como respuesta al comentario especificado.
+	 * @param coment El comentario a agregar
+	 * @param post El blog al cual se va a agregar el comentario
+	 * @param parent El comentario al cual se esta contestando (opcional). */
+	public void addComment(BlogComent coment, BlogPost post, BlogComent parent);
 
 }
