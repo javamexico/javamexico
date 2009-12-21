@@ -19,7 +19,10 @@ import org.javamexico.dao.UserDao;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.TagPregunta;
 import org.javamexico.entity.pregunta.Respuesta;
+import org.javamexico.entity.pregunta.VotoPregunta;
+import org.javamexico.entity.pregunta.VotoRespuesta;
 import org.javamexico.entity.Usuario;
+import org.javamexico.util.PrivilegioInsuficienteException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -348,6 +351,42 @@ public class PreguntaDAO implements PreguntaDao {
 
 	private void countTag(TagPregunta t) {
 		t.setCount(t.getCount()+1);
+	}
+
+	public VotoPregunta vota(Usuario user, Pregunta pregunta, boolean up)
+			throws PrivilegioInsuficienteException {
+		if (!up && user.getReputacion() < 10) {
+			throw new PrivilegioInsuficienteException();
+		}
+		VotoPregunta v = new VotoPregunta();
+		v.setFecha(new Date());
+		v.setPregunta(pregunta);
+		v.setUp(up);
+		v.setUser(user);
+		return v;
+	}
+
+	public VotoRespuesta vota(Usuario user, Respuesta resp, boolean up)
+			throws PrivilegioInsuficienteException {
+		if (!up && user.getReputacion() < 10) {
+			throw new PrivilegioInsuficienteException();
+		}
+		VotoRespuesta v = new VotoRespuesta();
+		v.setFecha(new Date());
+		v.setRespuesta(resp);
+		v.setUp(up);
+		v.setUser(user);
+		return v;
+	}
+
+	public VotoPregunta findVoto(Usuario user, Pregunta pregunta) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public VotoRespuesta findVoto(Usuario user, Respuesta respuesta) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

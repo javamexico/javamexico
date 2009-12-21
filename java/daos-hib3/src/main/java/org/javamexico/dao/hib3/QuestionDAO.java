@@ -27,6 +27,9 @@ import org.javamexico.entity.Usuario;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
+import org.javamexico.entity.pregunta.VotoPregunta;
+import org.javamexico.entity.pregunta.VotoRespuesta;
+import org.javamexico.util.PrivilegioInsuficienteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,6 +128,50 @@ public class QuestionDAO implements PreguntaDao {
 		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).addOrder(
 				Order.desc("count")).setFetchSize(limit).list();
 		return tags;
+	}
+
+	public VotoPregunta vota(Usuario user, Pregunta pregunta, boolean up) throws PrivilegioInsuficienteException {
+		if (!up && user.getReputacion() < 10) {
+			throw new PrivilegioInsuficienteException();
+		}
+		VotoPregunta v = new VotoPregunta();
+		v.setFecha(new Date());
+		v.setPregunta(pregunta);
+		v.setUp(up);
+		v.setUser(user);
+		Session sess = sfact.getCurrentSession();
+		sess.save(v);
+		return v;
+	}
+
+	public VotoRespuesta vota(Usuario user, Respuesta resp, boolean up) throws PrivilegioInsuficienteException {
+		if (!up && user.getReputacion() < 10) {
+			throw new PrivilegioInsuficienteException();
+		}
+		VotoRespuesta v = new VotoRespuesta();
+		v.setFecha(new Date());
+		v.setRespuesta(resp);
+		v.setUp(up);
+		v.setUser(user);
+		Session sess = sfact.getCurrentSession();
+		sess.save(v);
+		return v;
+	}
+
+	public VotoPregunta findVoto(Usuario user, Pregunta pregunta) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<VotoPregunta> v = sess.createCriteria(VotoPregunta.class).add(Restrictions.eq("user", user)).add(
+				Restrictions.eq("pregunta", pregunta)).setFetchSize(1).list();
+		return v.size() > 0 ? v.get(0) : null;
+	}
+
+	public VotoRespuesta findVoto(Usuario user, Respuesta respuesta) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<VotoRespuesta> v = sess.createCriteria(VotoPregunta.class).add(Restrictions.eq("user", user)).add(
+				Restrictions.eq("respuesta", respuesta)).setFetchSize(1).list();
+		return v.size() > 0 ? v.get(0) : null;
 	}
 
 }
