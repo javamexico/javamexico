@@ -25,7 +25,7 @@ import javax.persistence.ManyToMany;
  * 
  * @author Enrique Zamudio
  */
-@Entity
+@Entity(name="tag_foro")
 public class TagForo {
 
 	private int tid;

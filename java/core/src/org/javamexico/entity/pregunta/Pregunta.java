@@ -21,13 +21,17 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 
 /** Representa una pregunta que un usuario hace en el sistema.
  * 
@@ -49,6 +53,8 @@ public class Pregunta implements Comparable<Pregunta> {
 	private Set<Respuesta> resps;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="pregunta_pid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getPid() {
 		return pid;
 	}
@@ -109,7 +115,8 @@ public class Pregunta implements Comparable<Pregunta> {
 		resp = value;
 	}
 
-	@ManyToMany(cascade=CascadeType.PERSIST)
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name="tag_pregunta_join")
 	public Set<TagPregunta> getTags() {
 		return tags;
 	}

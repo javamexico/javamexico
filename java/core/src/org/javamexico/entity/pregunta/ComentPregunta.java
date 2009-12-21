@@ -17,9 +17,12 @@ package org.javamexico.entity.pregunta;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -38,6 +41,8 @@ public class ComentPregunta {
 	private String coment;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="coment_pregunta_cid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getCid() {
 		return cid;
 	}

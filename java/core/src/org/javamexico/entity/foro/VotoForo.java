@@ -15,14 +15,65 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.entity.foro;
 
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import org.javamexico.entity.Usuario;
 
+/** Representa un voto de un usuario a un foro hecho por otro usuario.
+ * 
+ * @author Enrique Zamudio
+ */
+@Entity(name="voto_foro")
 public class VotoForo {
 
-	//TODO pkey compuesta de foro, usuario
+	private int vid;
 	private Foro foro;
 	private Usuario user;
 	private Date fecha;
 	private boolean up;
+
+	@Id
+	public int getVid() {
+		return vid;
+	}
+	public void setVid(int value) {
+		vid = value;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="fid")
+	public Foro getForo() {
+		return foro;
+	}
+	public void setForo(Foro value) {
+		foro = value;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="uid")
+	public Usuario getUser() {
+		return user;
+	}
+	public void setUser(Usuario value) {
+		user = value;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+	public void setFecha(Date value) {
+		fecha = value;
+	}
+
+	public boolean isUp() {
+		return up;
+	}
+	public void setUp(boolean flag) {
+		up = flag;
+	}
 
 }

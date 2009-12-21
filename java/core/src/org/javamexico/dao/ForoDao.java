@@ -16,7 +16,10 @@ package org.javamexico.dao;
 
 import org.javamexico.entity.foro.Foro;
 import org.javamexico.entity.foro.ComentForo;
+import org.javamexico.entity.foro.VotoComentForo;
+import org.javamexico.entity.foro.VotoForo;
 import org.javamexico.entity.Usuario;
+import org.javamexico.util.PrivilegioInsuficienteException;
 
 import java.util.Set;
 import java.util.Date;
@@ -62,5 +65,19 @@ public interface ForoDao {
 	 * @param foro El foro donde se va a agregar el comentario.
 	 * @param parent El comentario al cual se esta respondiendo (opcional). */
 	public void addComment(ComentForo coment, Foro foro, ComentForo parent);
+
+	/** Registra un voto que un usuario hace a un foro.
+	 * @param user El usuario que hace el voto.
+	 * @param foro El foro al cual se aplica el voto.
+	 * @param up Indica si el voto es positivo (true) o negativo (false).
+	 * @throws PrivilegioInsuficienteException si el usuario no tiene reputacion suficiente para dar un voto negativo. */
+	public VotoForo vota(Usuario user, Foro foro, boolean up) throws PrivilegioInsuficienteException;
+
+	/** Registra un voto que un usuario hace a un comentario en un foro.
+	 * @param user El usuario que hace el voto.
+	 * @param coment El comentario de foro al cual se aplica el voto.
+	 * @param up Indica si el voto es positivo (true) o negativo (false).
+	 * @throws PrivilegioInsuficienteException si el usuario no tiene reputacion suficiente para dar un voto negativo. */
+	public VotoComentForo vota(Usuario user, ComentForo coment, boolean up) throws PrivilegioInsuficienteException;
 
 }

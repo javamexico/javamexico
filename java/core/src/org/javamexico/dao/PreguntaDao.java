@@ -17,7 +17,10 @@ package org.javamexico.dao;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
+import org.javamexico.entity.pregunta.VotoPregunta;
+import org.javamexico.entity.pregunta.VotoRespuesta;
 import org.javamexico.entity.Usuario;
+import org.javamexico.util.PrivilegioInsuficienteException;
 
 import java.util.Date;
 import java.util.List;
@@ -68,5 +71,25 @@ public interface PreguntaDao {
 
 	/** Devuelve la lista de preguntas cuyo autor no ha elegido una respuesta. */
 	public List<Pregunta> getPreguntasSinResolver(int limit);
+
+	/** Registra un voto que un usuario hace a una pregunta.
+	 * @param user El usuario que hace el voto
+	 * @param pregunta La pregunta a la cual se aplica el voto
+	 * @param up Indica si el voto es positivo (true) o negativo (false).
+	 * @throws PrivilegioInsuficienteException si el usuario no tiene reputacion suficiente para dar un voto negativo. */
+	public VotoPregunta vota(Usuario user, Pregunta pregunta, boolean up) throws PrivilegioInsuficienteException;
+
+	/** Registra un voto que un usuario hace a una respuesta que se hizo a una pregunta.
+	 * @param user El usuario que hace el voto.
+	 * @param resp La respuesta a la cual se aplica el voto.
+	 * @param up Indica si el voto es positivo (true) o negativo (false).
+	 * @throws PrivilegioInsuficienteException si el usuario no tiene reputacion suficiente para dar un voto negativo. */
+	public VotoRespuesta vota(Usuario user, Respuesta resp, boolean up) throws PrivilegioInsuficienteException;
+
+	/** Busca y devuelve el voto realizado por el usuario indicado a la pregunta especificada, si es que existe. */
+	public VotoPregunta findVoto(Usuario user, Pregunta pregunta);
+
+	/** Busca y devuelve el voto hecho por el usuario indicado a la respuesta especificada, si es que existe. */
+	public VotoRespuesta findVoto(Usuario user, Respuesta respuesta);
 
 }

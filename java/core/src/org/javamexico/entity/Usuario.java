@@ -16,8 +16,12 @@ package org.javamexico.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /** Representa un usuario del sistema.
  * 
@@ -36,6 +40,8 @@ public class Usuario implements Comparable<Usuario> {
 	private boolean verif;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="usuario_uid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getUid() {
 		return uid;
 	}
@@ -43,6 +49,7 @@ public class Usuario implements Comparable<Usuario> {
 		uid = value;
 	}
 
+	@Column(unique=true)
 	public String getUsername() {
 		return uname;
 	}

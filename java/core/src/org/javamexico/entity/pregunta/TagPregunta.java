@@ -17,7 +17,10 @@ package org.javamexico.entity.pregunta;
 import java.util.Comparator;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /** Representa un tag que el autor de una pregunta le pone, para indicar los temas
  * relacionados.
@@ -32,6 +35,8 @@ public class TagPregunta implements Comparable<TagPregunta> {
 	private String tag;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="tag_pregunta_tid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getTid() {
 		return tid;
 	}

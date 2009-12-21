@@ -29,7 +29,7 @@ import org.javamexico.entity.Usuario;
  * 
  * @author Enrique Zamudio
  */
-@Entity
+@Entity(name="coment_foro")
 public class ComentForo {
 
 	private int cfid;

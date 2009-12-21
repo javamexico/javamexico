@@ -23,7 +23,7 @@ import javax.persistence.Id;
  * 
  * @author Enrique Zamudio
  */
-@Entity
+@Entity(name="tema_foro")
 public class TemaForo {
 
 	private int tid;

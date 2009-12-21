@@ -17,8 +17,12 @@ package org.javamexico.entity.pregunta;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -30,11 +34,21 @@ import org.javamexico.entity.Usuario;
 @Entity(name="voto_respuesta")
 public class VotoRespuesta {
 
-	//TODO pkey compuesta a respuesta y usuario
+	private int vid;
 	private Respuesta resp;
 	private Usuario user;
 	private Date fecha;
 	private boolean up;
+
+	@Id
+	@SequenceGenerator(name="pk", sequenceName="voto_respuesta_vid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
+	public int getVid() {
+		return vid;
+	}
+	public void setVid(int value) {
+		vid = value;
+	}
 
 	@ManyToOne
 	@JoinColumn(name="rid", referencedColumnName="rid")
