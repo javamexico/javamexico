@@ -100,7 +100,9 @@ public interface PreguntaDao {
 
 	public void delete(Pregunta p);
 
-	public void addRespuesta(Respuesta r, Pregunta p);
+	/** Crea una respuesta con el texto especificado, para la pregunta especificada, por el autor especificado.
+	 * @return La respuesta recien creada. */
+	public Respuesta addRespuesta(String resp, Pregunta p, Usuario autor);
 
 	/** Agrega un comentario a la pregunta especificada, a nombre del usuario especificado. */
 	public ComentPregunta addComentario(String c, Pregunta p, Usuario autor);

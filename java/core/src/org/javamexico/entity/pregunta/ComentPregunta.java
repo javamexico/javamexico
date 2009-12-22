@@ -16,6 +16,7 @@ package org.javamexico.entity.pregunta;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -75,6 +76,7 @@ public class ComentPregunta {
 		fecha = value;
 	}
 
+	@Column(name="coment")
 	public String getComentario() {
 		return coment;
 	}

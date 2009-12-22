@@ -90,4 +90,22 @@ public class TagPregunta implements Comparable<TagPregunta> {
 		
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TagPregunta)) {
+			return false;
+		}
+		return ((TagPregunta)obj).getTid() == tid;
+	}
+
+	@Override
+	public int hashCode() {
+		return tid;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Tag:%s", tag);
+	}
+
 }
