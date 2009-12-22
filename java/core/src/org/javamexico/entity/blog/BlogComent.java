@@ -18,10 +18,13 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -29,7 +32,7 @@ import org.javamexico.entity.Usuario;
  * 
  * @author Enrique Zamudio
  */
-@Entity
+@Entity(name="blog_coment")
 public class BlogComent {
 
 	private int cid;
@@ -41,6 +44,8 @@ public class BlogComent {
 	private Set<BlogComent> resps;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="blog_coment_cid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getCid() {
 		return cid;
 	}
@@ -89,7 +94,7 @@ public class BlogComent {
 		rt = value;
 	}
 
-	@OneToMany(mappedBy="rt")
+	@OneToMany(mappedBy="cid")
 	public Set<BlogComent> getRespuestas() {
 		return resps;
 	}

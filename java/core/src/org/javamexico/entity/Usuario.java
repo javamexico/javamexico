@@ -15,12 +15,17 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.entity;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
 /** Representa un usuario del sistema.
@@ -38,6 +43,7 @@ public class Usuario implements Comparable<Usuario> {
 	private int status;
 	private int rep;
 	private boolean verif;
+	private Set<TagUsuario> tags;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="usuario_uid_seq", allocationSize=1)
@@ -49,7 +55,7 @@ public class Usuario implements Comparable<Usuario> {
 		uid = value;
 	}
 
-	@Column(unique=true)
+	@Column(unique=true, name="uname")
 	public String getUsername() {
 		return uname;
 	}
@@ -71,6 +77,7 @@ public class Usuario implements Comparable<Usuario> {
 		passwd = value;
 	}
 
+	@Column(name="fecha_alta")
 	public Date getFechaAlta() {
 		return alta;
 	}
@@ -104,6 +111,17 @@ public class Usuario implements Comparable<Usuario> {
 			return 1;
 		}
 		return o.getUid() > uid ? -1 : o.getUid() < uid ? 1 : 0;
+	}
+
+	@ManyToMany(targetEntity=TagUsuario.class, cascade={ CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+	@JoinTable(name="tag_usuario_join",
+			joinColumns=@JoinColumn(name="uid"),
+			inverseJoinColumns=@JoinColumn(name="tid"))
+	public Set<TagUsuario> getTags() {
+		return tags;
+	}
+	public void setTags(Set<TagUsuario> value) {
+		tags = value;
 	}
 
 }

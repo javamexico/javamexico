@@ -85,7 +85,7 @@ public class Respuesta implements Comparable<Respuesta> {
 		respuesta = value;
 	}
 
-	@OneToMany(mappedBy="rid")
+	@OneToMany(mappedBy="cid")
 	@OrderBy("fecha")
 	public Set<ComentRespuesta> getComentarios() {
 		return coments;

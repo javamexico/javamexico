@@ -14,6 +14,7 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.dao;
 
+import org.javamexico.entity.TagUsuario;
 import org.javamexico.entity.Usuario;
 
 import java.util.List;
@@ -42,5 +43,11 @@ public interface UserDao {
 
 	/** Elimina de la base de datos al usuario especificado. */
 	public void delete(Usuario u);
+
+	/** Agrega el tag indicado al usuario. Si no existe el tag aun, se registra primero en base de datos. */
+	public void addTag(String tag, Usuario u);
+
+	/** Devuelve una lista de tags cuyo texto contenga la cadena parcial especificada. */
+	public List<TagUsuario> findMatchingTags(String parcial);
 
 }

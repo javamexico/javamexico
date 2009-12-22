@@ -17,10 +17,14 @@ package org.javamexico.entity.blog;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -28,6 +32,7 @@ import org.javamexico.entity.Usuario;
  * 
  * @author Enrique Zamudio
  */
+@Entity(name="blog_post")
 public class BlogPost {
 
 	private int bid;
@@ -40,6 +45,8 @@ public class BlogPost {
 	private boolean coments; //permite comentarios o no
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="blog_post_bid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getBid() {
 		return bid;
 	}
@@ -91,7 +98,7 @@ public class BlogPost {
 		coments = flag;
 	}
 
-	@OneToMany(mappedBy="bid")
+	@OneToMany(mappedBy="blog")
 	public Set<BlogComent> getComentarios() {
 		return comms;
 	}

@@ -14,6 +14,8 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.dao;
 
+import org.javamexico.entity.pregunta.ComentPregunta;
+import org.javamexico.entity.pregunta.ComentRespuesta;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
@@ -91,5 +93,23 @@ public interface PreguntaDao {
 
 	/** Busca y devuelve el voto hecho por el usuario indicado a la respuesta especificada, si es que existe. */
 	public VotoRespuesta findVoto(Usuario user, Respuesta respuesta);
+
+	public void insert(Pregunta p);
+
+	public void update(Pregunta p);
+
+	public void delete(Pregunta p);
+
+	public void addRespuesta(Respuesta r, Pregunta p);
+
+	/** Agrega un comentario a la pregunta especificada, a nombre del usuario especificado. */
+	public ComentPregunta addComentario(String c, Pregunta p, Usuario autor);
+
+	/** Agrega un comentario a la respuesta especificada, a nombre del usuario especificado. */
+	public ComentRespuesta addComentario(String c, Respuesta r, Usuario autor);
+
+	public void addTag(String tag, Pregunta p);
+
+	public List<TagPregunta> findMatchingTags(String parcial);
 
 }

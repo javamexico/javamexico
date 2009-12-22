@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -71,6 +72,7 @@ public class Pregunta implements Comparable<Pregunta> {
 		autor = value;
 	}
 
+	@Column(name="fecha_p")
 	public Date getFechaPregunta() {
 		return fechaP;
 	}
@@ -99,6 +101,7 @@ public class Pregunta implements Comparable<Pregunta> {
 		pregunta = value;
 	}
 
+	@Column(name="fecha_r")
 	public Date getFechaRespuesta() {
 		return fechaR;
 	}
@@ -115,8 +118,10 @@ public class Pregunta implements Comparable<Pregunta> {
 		resp = value;
 	}
 
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name="tag_pregunta_join")
+	@ManyToMany(cascade=CascadeType.PERSIST)
+	@JoinTable(name="tag_pregunta_join",
+			joinColumns=@JoinColumn(name="pid"),
+			inverseJoinColumns=@JoinColumn(name="tid"))
 	public Set<TagPregunta> getTags() {
 		return tags;
 	}
@@ -124,7 +129,7 @@ public class Pregunta implements Comparable<Pregunta> {
 		tags = value;
 	}
 
-	@OneToMany(mappedBy="pid")
+	@OneToMany(mappedBy="pregunta")
 	@OrderBy("fecha")
 	public Set<Respuesta> getRespuestas() {
 		return resps;
@@ -133,7 +138,7 @@ public class Pregunta implements Comparable<Pregunta> {
 		resps = value;
 	}
 
-	@OneToMany(mappedBy="pid")
+	@OneToMany(mappedBy="pregunta")
 	@OrderBy("fecha")
 	public Set<ComentPregunta> getComentarios() {
 		return coments;

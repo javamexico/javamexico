@@ -18,10 +18,13 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -41,6 +44,8 @@ public class ComentForo {
 	private String coment;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="coment_foro_cfid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getCfid() {
 		return cfid;
 	}
@@ -89,7 +94,7 @@ public class ComentForo {
 		rt = value;
 	}
 
-	@OneToMany(mappedBy="rt")
+	@OneToMany(mappedBy="foro")
 	public Set<ComentForo> getRespuestas() {
 		return replies;
 	}

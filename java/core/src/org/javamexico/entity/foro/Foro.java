@@ -18,10 +18,14 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -43,6 +47,8 @@ public class Foro {
 	private String texto;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="foro_fid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getFid() {
 		return fid;
 	}
@@ -69,6 +75,7 @@ public class Foro {
 	}
 
 	@ManyToMany
+	@JoinTable(name="tag_foro_join")
 	public Set<TagForo> getTags() {
 		return tags;
 	}
