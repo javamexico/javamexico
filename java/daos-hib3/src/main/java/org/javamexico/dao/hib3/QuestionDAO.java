@@ -15,7 +15,6 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.dao.hib3;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,10 +55,14 @@ public class QuestionDAO implements PreguntaDao {
 	public Pregunta getPregunta(int id) {
 		Session sess = sfact.getCurrentSession();
 		Pregunta p = (Pregunta)sess.get(Pregunta.class, id);
-		p.getRespuestas();
-		p.getTags();
-		p.getComentarios();
-		p.getRespuestaElegida();
+		p.getTags().size();
+		p.getComentarios().size();
+		for (Respuesta r : p.getRespuestas()) {
+			r.getComentarios().size();
+		}
+		if (p.getRespuestaElegida() != null) {
+			p.getRespuestaElegida().getComentarios().size();
+		}
 		return p;
 	}
 
@@ -205,15 +208,18 @@ public class QuestionDAO implements PreguntaDao {
 		sess.delete(p);
 	}
 
-	public void addRespuesta(Respuesta r, Pregunta p) {
+	public Respuesta addRespuesta(String resp, Pregunta p, Usuario autor) {
 		Session sess = sfact.getCurrentSession();
-		if (r.getFecha() == null) {
-			r.setFecha(new Date());
-		}
+		Respuesta r = new Respuesta();
+		r.setFecha(new Date());
+		r.setAutor(autor);
 		r.setPregunta(p);
+		r.setRespuesta(resp);
 		sess.save(r);
+		sess.flush();
 		sess.refresh(p);
-		p.getRespuestas();
+		p.getRespuestas().size();
+		return r;
 	}
 
 	public ComentPregunta addComentario(String c, Pregunta p, Usuario autor) {
@@ -224,8 +230,9 @@ public class QuestionDAO implements PreguntaDao {
 		cp.setFecha(new Date());
 		cp.setPregunta(p);
 		sess.save(cp);
+		sess.flush();
 		sess.refresh(p);
-		p.getComentarios();
+		p.getComentarios().size();
 		return cp;
 	}
 
@@ -237,8 +244,9 @@ public class QuestionDAO implements PreguntaDao {
 		cr.setComentario(c);
 		cr.setFecha(new Date());
 		sess.save(cr);
+		sess.flush();
 		sess.refresh(r);
-		r.getComentarios();
+		r.getComentarios().size();
 		return cr;
 	}
 
@@ -253,21 +261,18 @@ public class QuestionDAO implements PreguntaDao {
 			utag = new TagPregunta();
 			utag.setTag(tag);
 			sess.save(utag);
+			sess.flush();
 		} else {
 			utag = tags.get(0);
 		}
 		if (p.getTags() == null) {
-			HashSet<TagPregunta> set = new HashSet<TagPregunta>();
-			set.add(utag);
-			p.setTags(set);
-		} else {
-			p.getTags().add(utag);
+			sess.refresh(p);
 		}
 		utag.setCount(utag.getCount() + 1);
 		sess.update(utag);
+		p.getTags().add(utag);
 		sess.update(p);
-		sess.refresh(p);
-		p.getTags();
+		p.getTags().size();
 	}
 
 	public List<TagPregunta> findMatchingTags(String parcial) {
