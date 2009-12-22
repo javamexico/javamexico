@@ -80,7 +80,6 @@ CREATE TABLE escuela_usuario(
 --Tags que un usuario se quiera poner
 CREATE TABLE tag_usuario(
 	tid   SERIAL PRIMARY KEY,
-	count INTEGER NOT NULL DEFAULT 1,
 	tag   VARCHAR(40) NOT NULL UNIQUE
 );
 
@@ -126,26 +125,25 @@ CREATE TABLE coment_foro(
 CREATE TABLE tag_foro(
 	tid   SERIAL PRIMARY KEY,
 	fid   INTEGER REFERENCES foro(fid) NOT NULL ON DELETE CASCADE,
-	count INTEGER NOT NULL DEFAULT 1,
 	tag   VARCHAR(80) NOT NULL UNIQUE,
 );
 
 --votos que los usuarios le dan a un foro
 CREATE TABLE voto_foro(
+	vid   SERIAL PRIMARY  KEY,
 	fid   INTEGER REFERENCES foro(fid) NOT NULL ON DELETE CASCADE,
 	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
-	up    BOOLEAN NOT NULL DEFAULT true,
-	PRIMARY KEY(fid, uid)
+	up    BOOLEAN NOT NULL DEFAULT true
 );
 
 --votos que los usuarios le dan a los comentarios en un foro
 CREATE TABLE voto_coment_foro(
+	vid   SERIAL PRIMARY  KEY,
 	cfid  INTEGER REFERENCES coment_foro(cfid) NOT NULL ON DELETE CASCADE,
 	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
 	up    BOOLEAN NOT NULL DEFAULT true,
-	fecha TIMESTAMP NOT NULL,
-	PRIMARY KEY(cfid, uid)
+	fecha TIMESTAMP NOT NULL
 );
 
 --
@@ -196,7 +194,6 @@ CREATE TABLE coment_respuesta(
 --Tags que el usuario le pone a sus preguntas
 CREATE TABLE tag_pregunta(
 	tid   SERIAL PRIMARY KEY,
-	count INTEGER NOT NULL DEFAULT 0,
 	tag   VARCHAR(80) NOT NULL UNIQUE
 );
 
@@ -208,20 +205,20 @@ CREATE TABLE tag_pregunta_join(
 
 --Votos que los usuarios le dan a una pregunta
 CREATE TABLE voto_pregunta(
+	vid   SERIAL PRIMARY  KEY,
 	pid   INTEGER NOT NULL REFERENCES pregunta(pid) ON DELETE CASCADE,
 	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
-	up    BOOLEAN NOT NULL DEFAULT true,
-	PRIMARY KEY(pid, uid)
+	up    BOOLEAN NOT NULL DEFAULT true
 );
 
 --Votos que los usuarios le dan a sus respuestas
 CREATE TABLE voto_respuesta(
+	vid   SERIAL PRIMARY  KEY,
 	rid   INTEGER NOT NULL REFERENCES respuesta(rid) ON DELETE CASCADE,
 	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
-	up    BOOLEAN NOT NULL DEFAULT true,
-	PRIMARY KEY(rid, uid)
+	up    BOOLEAN NOT NULL DEFAULT true
 );
 
 --
@@ -248,13 +245,16 @@ CREATE TABLE blog_coment(
 	coment VARCHAR(2000) NOT NULL
 );
 
-CREATE TABLE tag_blog(
-	bid   INTEGER REFERENCES blod(bid) NOT NULL ON DELETE CASCADE,
-	tid   INTEGER,
-	count INTEGER NOT NULL DEFAULT 1,
+CREATE TABLE blog_tag(
+	tid   serial primary key,
 	tag   VARCHAR(80) NOT NULL UNIQUE,
-	PRIMARY KEY(bid, tid)
 );
+CREATE TABLE tag_blog_join(
+	tid INTEGER,
+	bid INTEGER,
+	primary key(tid, bid);
+);
+
 
 CREATE TABLE voto_blog(
 	bid   INTEGER REFERENCES blod(bid) NOT NULL ON DELETE CASCADE,
