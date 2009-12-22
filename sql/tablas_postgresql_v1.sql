@@ -79,11 +79,15 @@ CREATE TABLE escuela_usuario(
 
 --Tags que un usuario se quiera poner
 CREATE TABLE tag_usuario(
-	uid INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	tid INTEGER,
+	tid   SERIAL PRIMARY KEY,
 	count INTEGER NOT NULL DEFAULT 1,
-	tag   VARCHAR(40) NOT NULL UNIQUE,
-	PRIMARY KEY(uid, tid)
+	tag   VARCHAR(40) NOT NULL UNIQUE
+);
+
+CREATE TABLE tag_usuario_join(
+	tid INTEGER,
+	uid INTEGER,
+	PRIMARY KEY(tid,uid)
 );
 
 --
@@ -151,9 +155,10 @@ CREATE TABLE voto_coment_foro(
 --Una pregunta que publica un usuario
 CREATE TABLE pregunta(
 	pid      SERIAL PRIMARY KEY,
-	uid      INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	uid      INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha_p  TIMESTAMP NOT NULL,
 	status   INTEGER NOT NULL DEFAULT 1,
+	titulo   VARCHAR(200) NOT NULL,
 	pregunta VARCHAR(2000) NOT NULL,
 	resp_sel INTEGER, -- REFERENCES respuesta(rid) NULL ON DELETE nullify,
 	fecha_r  TIMESTAMP
@@ -162,17 +167,19 @@ CREATE TABLE pregunta(
 --Una respuesta que pone un usuario a una pregunta
 CREATE TABLE respuesta(
 	rid   SERIAL PRIMARY KEY,
-	pid   INTEGER REFERENCES pregunta(pid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	pid   INTEGER NOT NULL REFERENCES pregunta(pid) ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
 	respuesta VARCHAR(2000) NOT NULL
 );
 
+ALTER TABLE pregunta ADD FOREIGN KEY(resp_sel) REFERENCES respuesta(rid);
+
 --Comentarios a preguntas (no es lo mismo que respuestas)
 CREATE TABLE coment_pregunta(
 	cid    SERIAL PRIMARY KEY,
-	pid    INTEGER REFERENCES pregunta(pid) NOT NULL ON DELETE CASCADE,
-	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	pid    INTEGER NOT NULL REFERENCES pregunta(pid) ON DELETE CASCADE,
+	uid    INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha  TIMESTAMP NOT NULL,
 	coment VARCHAR(400) NOT NULL
 );
@@ -180,8 +187,8 @@ CREATE TABLE coment_pregunta(
 --Comentarios a respuestas
 CREATE TABLE coment_respuesta(
 	cid    SERIAL PRIMARY KEY,
-	rid    INTEGER REFERENCES respuesta(rid) NOT NULL ON DELETE CASCADE,
-	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	rid    INTEGER NOT NULL REFERENCES respuesta(rid) ON DELETE CASCADE,
+	uid    INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha  TIMESTAMP NOT NULL,
 	coment VARCHAR(400) NOT NULL
 );
@@ -201,8 +208,8 @@ CREATE TABLE tag_pregunta_join(
 
 --Votos que los usuarios le dan a una pregunta
 CREATE TABLE voto_pregunta(
-	pid   INTEGER REFERENCES pregunta(pid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	pid   INTEGER NOT NULL REFERENCES pregunta(pid) ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
 	up    BOOLEAN NOT NULL DEFAULT true,
 	PRIMARY KEY(pid, uid)
@@ -210,8 +217,8 @@ CREATE TABLE voto_pregunta(
 
 --Votos que los usuarios le dan a sus respuestas
 CREATE TABLE voto_respuesta(
-	rid   INTEGER REFERENCES respuesta(rid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	rid   INTEGER NOT NULL REFERENCES respuesta(rid) ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
 	up    BOOLEAN NOT NULL DEFAULT true,
 	PRIMARY KEY(rid, uid)
