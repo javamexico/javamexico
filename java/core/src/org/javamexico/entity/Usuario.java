@@ -27,6 +27,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /** Representa un usuario del sistema.
  * 
@@ -55,7 +57,7 @@ public class Usuario implements Comparable<Usuario> {
 		uid = value;
 	}
 
-	@Column(unique=true, name="uname")
+	@Column(unique=true, name="uname", updatable=false)
 	public String getUsername() {
 		return uname;
 	}
@@ -78,6 +80,7 @@ public class Usuario implements Comparable<Usuario> {
 	}
 
 	@Column(name="fecha_alta")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFechaAlta() {
 		return alta;
 	}

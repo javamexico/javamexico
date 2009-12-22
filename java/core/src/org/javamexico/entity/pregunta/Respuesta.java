@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,7 +27,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Formula;
 import org.javamexico.entity.Usuario;
 
 /** Representa una respuesta que un usuario da a una pregunta hecha por otro usuario.
@@ -42,6 +46,7 @@ public class Respuesta implements Comparable<Respuesta> {
 	private Date fecha;
 	private String respuesta;
 	private Set<ComentRespuesta> coments;
+	private int votos;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="respuesta_rid_seq", allocationSize=1)
@@ -71,6 +76,7 @@ public class Respuesta implements Comparable<Respuesta> {
 		user = value;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFecha() {
 		return fecha;
 	}
@@ -85,13 +91,21 @@ public class Respuesta implements Comparable<Respuesta> {
 		respuesta = value;
 	}
 
-	@OneToMany(mappedBy="respuesta")
+	@OneToMany(mappedBy="respuesta", fetch=FetchType.EAGER)
 	@OrderBy("fecha")
 	public Set<ComentRespuesta> getComentarios() {
 		return coments;
 	}
 	public void setComentarios(Set<ComentRespuesta> value) {
 		coments = value;
+	}
+
+	@Formula("(select count(*) from voto_respuesta vr where vr.rid=rid)")
+	public int getVotos() {
+		return votos;
+	}
+	public void setVotos(int value) {
+		votos = value;
 	}
 
 	public int compareTo(Respuesta o) {

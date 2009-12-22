@@ -14,6 +14,7 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.entity.pregunta;
 
+import org.hibernate.annotations.Formula;
 import org.javamexico.entity.Usuario;
 
 import java.util.Date;
@@ -33,6 +34,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /** Representa una pregunta que un usuario hace en el sistema.
  * 
@@ -52,6 +55,7 @@ public class Pregunta implements Comparable<Pregunta> {
 	private Set<TagPregunta> tags;
 	private Set<ComentPregunta> coments;
 	private Set<Respuesta> resps;
+	private int votos;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="pregunta_pid_seq", allocationSize=1)
@@ -73,6 +77,7 @@ public class Pregunta implements Comparable<Pregunta> {
 	}
 
 	@Column(name="fecha_p")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFechaPregunta() {
 		return fechaP;
 	}
@@ -101,7 +106,9 @@ public class Pregunta implements Comparable<Pregunta> {
 		pregunta = value;
 	}
 
+	/** La fecha en que la respuesta fue elegida por el usuario que hizo la pregunta. */
 	@Column(name="fecha_r")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFechaRespuesta() {
 		return fechaR;
 	}
@@ -145,6 +152,14 @@ public class Pregunta implements Comparable<Pregunta> {
 	}
 	public void setComentarios(Set<ComentPregunta> value) {
 		coments = value;
+	}
+
+	@Formula("(select count(*) from voto_pregunta vp where vp.pid=pid)")
+	public int getVotos() {
+		return votos;
+	}
+	public void setVotos(int value) {
+		votos = value;
 	}
 
 	public int compareTo(Pregunta o) {

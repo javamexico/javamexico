@@ -24,6 +24,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.javamexico.entity.Usuario;
 
@@ -69,6 +71,7 @@ public class ComentPregunta {
 		user = value;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFecha() {
 		return fecha;
 	}

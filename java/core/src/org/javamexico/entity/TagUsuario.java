@@ -20,6 +20,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.Formula;
+
 /** Representa un tag que se le puede poner a los usuarios.
  * 
  * @author Enrique Zamudio
@@ -41,6 +43,7 @@ public class TagUsuario {
 		tid = value;
 	}
 
+	@Formula("(select count(*) from tag_usuario_join j where j.tid=tid)")
 	public int getCount() {
 		return count;
 	}
