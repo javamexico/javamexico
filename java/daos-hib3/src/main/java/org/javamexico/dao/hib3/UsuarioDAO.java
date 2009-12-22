@@ -14,15 +14,18 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.dao.hib3;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.javamexico.dao.UserDao;
+import org.javamexico.entity.TagUsuario;
 import org.javamexico.entity.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementacion del DAO para usuarios, usando Hibernate 3 y soporte de Spring (indirecto).
  * 
@@ -58,11 +61,15 @@ public class UsuarioDAO implements UserDao {
 				Restrictions.eq("username", username)).setFetchSize(1).list();
 		Usuario u = us.size() > 0 ? us.get(0) : null;
 		//TODO validar el password
+		u.getTags().size();
 		return u;
 	}
 
 	public void insert(Usuario u) {
 		Session sess = sfact.getCurrentSession();
+		if (u.getFechaAlta() == null) {
+			u.setFechaAlta(new Date());
+		}
 		sess.save(u);
 	}
 
@@ -74,6 +81,37 @@ public class UsuarioDAO implements UserDao {
 	public void delete(Usuario u) {
 		Session sess = sfact.getCurrentSession();
 		sess.delete(u);
+	}
+
+	@Transactional
+	public void addTag(String tag, Usuario u) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TagUsuario> tags = sess.createCriteria(TagUsuario.class).add(Restrictions.ilike("tag", tag)).setFetchSize(1).list();
+		TagUsuario utag = null;
+		if (tags.size() == 0) {
+			utag = new TagUsuario();
+			utag.setTag(tag);
+			sess.save(utag);
+			sess.flush();
+		} else {
+			utag = tags.get(0);
+		}
+		if (u.getTags() == null) {
+			sess.refresh(u);
+		}
+		utag.setCount(utag.getCount() + 1);
+		sess.update(utag);
+		u.getTags().add(utag);
+		sess.update(u);
+		u.getTags().size();
+	}
+
+	public List<TagUsuario> findMatchingTags(String parcial) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TagUsuario> tags = sess.createCriteria(TagUsuario.class).add(Restrictions.ilike("tag", String.format("*%s*", parcial))).list();
+		return tags;
 	}
 
 }

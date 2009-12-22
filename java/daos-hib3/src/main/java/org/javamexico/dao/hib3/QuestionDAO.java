@@ -15,6 +15,7 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.dao.hib3;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +25,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.javamexico.dao.PreguntaDao;
 import org.javamexico.entity.Usuario;
+import org.javamexico.entity.pregunta.ComentPregunta;
+import org.javamexico.entity.pregunta.ComentRespuesta;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
@@ -32,6 +35,7 @@ import org.javamexico.entity.pregunta.VotoRespuesta;
 import org.javamexico.util.PrivilegioInsuficienteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementacion del DAO de preguntas, usando Hibernate 3 y el soporte de Spring.
  * 
@@ -51,7 +55,12 @@ public class QuestionDAO implements PreguntaDao {
 
 	public Pregunta getPregunta(int id) {
 		Session sess = sfact.getCurrentSession();
-		return (Pregunta)sess.get(Pregunta.class, id);
+		Pregunta p = (Pregunta)sess.get(Pregunta.class, id);
+		p.getRespuestas();
+		p.getTags();
+		p.getComentarios();
+		p.getRespuestaElegida();
+		return p;
 	}
 
 	public List<Pregunta> getPreguntasConTag(TagPregunta tag) {
@@ -84,7 +93,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.ge("fecha", desde)).addOrder(Order.desc("fecha")).list();
+				Restrictions.ge("fechaPregunta", desde)).addOrder(Order.desc("fechaPregunta")).list();
 		return qus;
 	}
 
@@ -92,7 +101,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.eq("status", 1)).addOrder(Order.desc("fecha")).list();
+				Restrictions.eq("status", 1)).addOrder(Order.desc("fechaPregunta")).list();
 		return qus;
 	}
 
@@ -100,7 +109,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.sizeEq("respuestas", 0)).addOrder(Order.desc("fecha")).setFetchSize(limit).list();
+				Restrictions.sizeEq("respuestas", 0)).addOrder(Order.desc("fechaPregunta")).setFetchSize(limit).list();
 		return qus;
 	}
 
@@ -108,7 +117,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.eq("autor", user)).addOrder(Order.desc("fecha")).list();
+				Restrictions.eq("autor", user)).addOrder(Order.desc("fechaPregunta")).list();
 		return qus;
 	}
 
@@ -172,6 +181,101 @@ public class QuestionDAO implements PreguntaDao {
 		List<VotoRespuesta> v = sess.createCriteria(VotoPregunta.class).add(Restrictions.eq("user", user)).add(
 				Restrictions.eq("respuesta", respuesta)).setFetchSize(1).list();
 		return v.size() > 0 ? v.get(0) : null;
+	}
+
+	public void insert(Pregunta p) {
+		Session sess = sfact.getCurrentSession();
+		if (p.getFechaPregunta() == null) {
+			p.setFechaPregunta(new Date());
+		}
+		sess.save(p);
+	}
+
+	public void update(Pregunta p) {
+		Session sess = sfact.getCurrentSession();
+		if (p.getFechaPregunta() == null) {
+			p.setFechaPregunta(new Date());
+		}
+		sess.update(p);
+	}
+
+	@Transactional
+	public void delete(Pregunta p) {
+		Session sess = sfact.getCurrentSession();
+		sess.delete(p);
+	}
+
+	public void addRespuesta(Respuesta r, Pregunta p) {
+		Session sess = sfact.getCurrentSession();
+		if (r.getFecha() == null) {
+			r.setFecha(new Date());
+		}
+		r.setPregunta(p);
+		sess.save(r);
+		sess.refresh(p);
+		p.getRespuestas();
+	}
+
+	public ComentPregunta addComentario(String c, Pregunta p, Usuario autor) {
+		Session sess = sfact.getCurrentSession();
+		ComentPregunta cp = new ComentPregunta();
+		cp.setAutor(autor);
+		cp.setComentario(c);
+		cp.setFecha(new Date());
+		cp.setPregunta(p);
+		sess.save(cp);
+		sess.refresh(p);
+		p.getComentarios();
+		return cp;
+	}
+
+	public ComentRespuesta addComentario(String c, Respuesta r, Usuario autor) {
+		Session sess = sfact.getCurrentSession();
+		ComentRespuesta cr = new ComentRespuesta();
+		cr.setRespuesta(r);
+		cr.setAutor(autor);
+		cr.setComentario(c);
+		cr.setFecha(new Date());
+		sess.save(cr);
+		sess.refresh(r);
+		r.getComentarios();
+		return cr;
+	}
+
+	@Transactional
+	public void addTag(String tag, Pregunta p) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).add(
+				Restrictions.ilike("tag", tag)).setFetchSize(1).list();
+		TagPregunta utag = null;
+		if (tags.size() == 0) {
+			utag = new TagPregunta();
+			utag.setTag(tag);
+			sess.save(utag);
+		} else {
+			utag = tags.get(0);
+		}
+		if (p.getTags() == null) {
+			HashSet<TagPregunta> set = new HashSet<TagPregunta>();
+			set.add(utag);
+			p.setTags(set);
+		} else {
+			p.getTags().add(utag);
+		}
+		utag.setCount(utag.getCount() + 1);
+		sess.update(utag);
+		sess.update(p);
+		sess.refresh(p);
+		p.getTags();
+	}
+
+	public List<TagPregunta> findMatchingTags(String parcial) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).add(
+				Restrictions.ilike("tag", String.format("*%s*", parcial))).list();
+		return tags;
 	}
 
 }

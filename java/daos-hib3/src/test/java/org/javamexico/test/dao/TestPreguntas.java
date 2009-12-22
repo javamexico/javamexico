@@ -9,6 +9,7 @@ import org.javamexico.dao.PreguntaDao;
 import org.javamexico.dao.UserDao;
 import org.javamexico.entity.Usuario;
 import org.javamexico.entity.pregunta.Pregunta;
+import org.javamexico.entity.pregunta.Respuesta;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Enrique Zamudio
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/org/javamexico/test/dao/spring.xml"})
+@ContextConfiguration(locations={"/org/javamexico/test/dao/spring.xml", "/org/javamexico/test/dao/postgres.xml"})
 public class TestPreguntas {
 
-	@Resource(name="userDao")
+	@Resource(name="usuarioDao")
 	private UserDao udao;
 	@Resource(name="preguntaDao")
 	private PreguntaDao qdao;
@@ -48,6 +49,38 @@ public class TestPreguntas {
 		for (Pregunta q : pregs) {
 			Assert.assertTrue(q.getFechaPregunta().getTime() > oldest);
 		}
+	}
+
+	@Test
+	public void testPreguntas2() {
+		List<Usuario> users = udao.getAllUsers();
+		Usuario u1 = users.get(0);
+		Usuario u2 = users.get(users.size() - 1);
+		System.out.println("Creando una pregunta");
+		Pregunta p = new Pregunta();
+		p.setAutor(u1);
+		p.setPregunta("Una pregunta de prueba, creada de manera automatica");
+		p.setStatus(1);
+		p.setTitulo("Titulo de pregunta de prueba");
+		qdao.insert(p);
+		qdao.addTag("jee", p);
+		qdao.addTag("spring", p);
+		qdao.addTag("hibernate", p);
+		qdao.addTag("servlet", p);
+		qdao.addTag("jsp", p);
+		qdao.addTag("ant", p);
+		Respuesta r = new Respuesta();
+		r.setAutor(u2);
+		r.setRespuesta("Esta es una respuesta");
+		qdao.addRespuesta(r, p);
+		qdao.addComentario("Un comentario a la pregunta", p, u2);
+		qdao.addComentario("Un comentario a la respuesta", r, u1);
+		if (System.console() != null) {
+			System.out.println("Revisa la base de datos y oprime ENTER");
+			System.console().readLine();
+		}
+		System.out.println("Borrando todo");
+		qdao.delete(p);
 	}
 
 }
