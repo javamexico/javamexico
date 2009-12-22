@@ -57,4 +57,59 @@ public class TestUsuarios {
 		try { Thread.sleep(1000); } catch (InterruptedException ex) {}
 	}
 
+	@Test //esta prueba genera datos que se quedan en la base de datos
+	public void testData() {
+		Usuario u = udao.validaLogin("ezl", "test");
+		if (u == null) {
+			u = new Usuario();
+			u.setNombre("Enrique Zamudio");
+			u.setUsername("ezl");
+			u.setPassword("test");
+			u.setReputacion(50);
+			u.setStatus(1);
+			udao.insert(u);
+		}
+		udao.addTag("tapestry", u);
+		udao.addTag("spring", u);
+		u = udao.validaLogin("jb", "test");
+		if (u == null) {
+			u = new Usuario();
+			u.setNombre("Javier Benek");
+			u.setUsername("jb");
+			u.setPassword("test");
+			u.setReputacion(80);
+			u.setStatus(1);
+			udao.insert(u);
+		}
+		udao.addTag("jsf", u);
+		udao.addTag("icefaces", u);
+		udao.addTag("scala", u);
+		u = udao.validaLogin("ecamacho", "test");
+		if (u == null) {
+			u = new Usuario();
+			u.setNombre("Eric Camacho");
+			u.setUsername("ecamacho");
+			u.setPassword("test");
+			u.setReputacion(30);
+			u.setStatus(1);
+			udao.insert(u);
+		}
+		udao.addTag("spring", u);
+		udao.addTag("groovy", u);
+		udao.addTag("flex", u);
+		u = udao.validaLogin("domix", "test");
+		if (u == null) {
+			u = new Usuario();
+			u.setNombre("Domingo Suarez");
+			u.setUsername("domix");
+			u.setPassword("test");
+			u.setReputacion(40);
+			u.setStatus(1);
+			udao.insert(u);
+		}
+		udao.addTag("spring", u);
+		udao.addTag("grails", u);
+		udao.addTag("ria", u);
+	}
+
 }

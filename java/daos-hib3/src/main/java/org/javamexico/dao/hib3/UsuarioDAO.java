@@ -14,6 +14,8 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.dao.hib3;
 
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +25,11 @@ import org.hibernate.criterion.Restrictions;
 import org.javamexico.dao.UserDao;
 import org.javamexico.entity.TagUsuario;
 import org.javamexico.entity.Usuario;
+import org.javamexico.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Implementacion del DAO para usuarios, usando Hibernate 3 y soporte de Spring (indirecto).
@@ -36,6 +41,7 @@ public class UsuarioDAO implements UserDao {
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	private SessionFactory sfact;
 
+	@Required
 	public void setSessionFactory(SessionFactory value) {
 		sfact = value;
 	}
@@ -60,21 +66,73 @@ public class UsuarioDAO implements UserDao {
 		List<Usuario> us = sess.createCriteria(Usuario.class).add(
 				Restrictions.eq("username", username)).setFetchSize(1).list();
 		Usuario u = us.size() > 0 ? us.get(0) : null;
-		//TODO validar el password
-		u.getTags().size();
+		if (u != null) {
+			//Validar el password
+			if (u.getPassword() != null && u.getPassword().length() > 0) {
+				try {
+					//TODO esto se puede optimizar pero sin usar mucha memoria, tal vez un pool de MD's
+					MessageDigest md = MessageDigest.getInstance("SHA-1");
+					md.update(String.format("%d:%s/%s", u.getUid(), u.getUsername(), password).getBytes());
+					byte[] sha = md.digest();
+					//Codificar a base 64
+					password = Base64.base64Encode(sha, 0, sha.length);
+					if (!password.equals(u.getPassword())) {
+						u = null;
+					}
+				} catch (GeneralSecurityException ex) {
+					//No se pudo
+					log.error(String.format("Cifrando password usuario %s", username), ex);
+					u = null;
+				}
+			}
+			if (u != null) {
+				u.getTags().size();
+			}
+		}
 		return u;
 	}
 
+	@Transactional
 	public void insert(Usuario u) {
 		Session sess = sfact.getCurrentSession();
 		if (u.getFechaAlta() == null) {
 			u.setFechaAlta(new Date());
 		}
 		sess.save(u);
+		sess.flush();
+		try {
+			//TODO esto se puede optimizar pero sin usar mucha memoria, tal vez un pool de MD's
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			md.update(String.format("%d:%s/%s", u.getUid(), u.getUsername(), u.getPassword()).getBytes());
+			byte[] sha = md.digest();
+			//Codificar a base 64
+			u.setPassword(Base64.base64Encode(sha, 0, sha.length));
+			//Actualizar el usuario
+			sess.update(u);
+		} catch (GeneralSecurityException ex) {
+			//No se pudo
+			log.error(String.format("Cifrando password de nuevo usuario %s", u.getUsername()), ex);
+			throw new DataIntegrityViolationException("No se puede cifrar el password", ex);
+		}
 	}
 
 	public void update(Usuario u) {
 		Session sess = sfact.getCurrentSession();
+		Usuario u2 = (Usuario)sess.get(Usuario.class, u.getUid());
+		if (u2.getPassword() == null || !u2.getPassword().equals(u.getPassword())) {
+			try {
+				//TODO esto se puede optimizar pero sin usar mucha memoria, tal vez un pool de MD's
+				MessageDigest md = MessageDigest.getInstance("SHA-1");
+				md.update(String.format("%d:%s/%s", u.getUid(), u.getUsername(), u.getPassword()).getBytes());
+				byte[] sha = md.digest();
+				//Codificar a base 64
+				u.setPassword(Base64.base64Encode(sha, 0, sha.length));
+			} catch (GeneralSecurityException ex) {
+				//No se pudo
+				log.error(String.format("Cifrando password de nuevo usuario %s", u.getUsername()), ex);
+				throw new DataIntegrityViolationException("No se puede modificar el password", ex);
+			}
+		}
 		sess.update(u);
 	}
 
@@ -110,7 +168,8 @@ public class UsuarioDAO implements UserDao {
 	public List<TagUsuario> findMatchingTags(String parcial) {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<TagUsuario> tags = sess.createCriteria(TagUsuario.class).add(Restrictions.ilike("tag", String.format("*%s*", parcial))).list();
+		List<TagUsuario> tags = sess.createCriteria(TagUsuario.class).add(
+				Restrictions.ilike("tag", String.format("*%s*", parcial))).list();
 		return tags;
 	}
 

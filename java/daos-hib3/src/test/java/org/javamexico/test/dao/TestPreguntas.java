@@ -110,4 +110,44 @@ public class TestPreguntas {
 		qdao.delete(p);
 	}
 
+	@Test
+	public void testData() {
+		Usuario u1 = udao.validaLogin("ezl", "test");
+		Usuario u2 = udao.validaLogin("jb", "test");
+		Usuario u3 = udao.validaLogin("domix", "test");
+		assert u1 != null && u2 != null && u3 != null;
+		Pregunta p = new Pregunta();
+		p.setTitulo("Columnas agregadas en JPA/EJB3");
+		p.setPregunta("Alguien sabe si se pueden definir columnas agregadas con anotaciones de EJB3/JPA?");
+		p.setAutor(u1);
+		p.setFechaPregunta(new Date(System.currentTimeMillis() - 86405430l));
+		qdao.insert(p);
+		qdao.addTag("jpa", p);
+		qdao.addTag("ejb3", p);
+		qdao.addTag("hibernate", p);
+		qdao.addComentario("No entendi bien lo que quieres", p, u2);
+		qdao.addComentario("Por ejemplo una columna que realmente sea un count(*) y obviamente es read-only", p, u1);
+		qdao.addRespuesta("Con JPA solito no se puede eso, pero creo que Hibernate tiene unas anotaciones para poder hacerlo porque desde antes ya se podia", p, u2);
+		Respuesta r = qdao.addRespuesta("Segun yo si se puede, pero no recuerdo con que anotaciones es", p, u3);
+		qdao.addComentario("Chale pues cuando te acuerdes me dices, no?", r, u1);
+
+		try { Thread.sleep(5432); } catch (InterruptedException ex) {}
+		p = new Pregunta();
+		p.setTitulo("Patron OSIV en Tapestry 5");
+		p.setPregunta("Alguien sabe como se puede implementar el patron 'open session in view' en Tapestry 5?");
+		p.setAutor(u2);
+		p.setFechaPregunta(new Date(System.currentTimeMillis() - 89930125l));
+		qdao.insert(p);
+		qdao.addTag("tapestry5", p);
+		qdao.addTag("tapestry", p);
+		qdao.addTag("open-session-in-view", p);
+		r = qdao.addRespuesta("Si, hay una libreria tapestry-hibernate que da soporte precisamente para eso", p, u1);
+		try { Thread.sleep(5432); } catch (InterruptedException ex) {}
+		qdao.addComentario("Pero como funciona o que?", r, u3);
+		qdao.addComentario("Te inyecta un SessionFactory en la pagina y lo cierra al final del ciclo request-response", p, u1);
+		qdao.vota(u2, r, true);
+		p.setRespuestaElegida(r);
+		qdao.update(p);
+	}
+
 }

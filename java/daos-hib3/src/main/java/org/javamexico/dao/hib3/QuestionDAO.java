@@ -55,13 +55,10 @@ public class QuestionDAO implements PreguntaDao {
 	public Pregunta getPregunta(int id) {
 		Session sess = sfact.getCurrentSession();
 		Pregunta p = (Pregunta)sess.get(Pregunta.class, id);
-		p.getTags().size();
-		p.getComentarios().size();
-		for (Respuesta r : p.getRespuestas()) {
-			r.getComentarios().size();
-		}
-		if (p.getRespuestaElegida() != null) {
-			p.getRespuestaElegida().getComentarios().size();
+		if (p != null) {
+			p.getTags().size();
+			p.getComentarios().size();
+			p.getRespuestas().size();
 		}
 		return p;
 	}
@@ -87,7 +84,6 @@ public class QuestionDAO implements PreguntaDao {
 	public List<Pregunta> getPreguntasMasVotadas(int limit) {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		//TODO esto no va a jalar porque no hay votos en pregunta
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).addOrder(Order.desc("votos")).setFetchSize(limit).list();
 		return qus;
 	}
@@ -146,12 +142,12 @@ public class QuestionDAO implements PreguntaDao {
 		if (!up && user.getReputacion() < 10) {
 			throw new PrivilegioInsuficienteException();
 		}
+		Session sess = sfact.getCurrentSession();
 		VotoPregunta v = new VotoPregunta();
 		v.setFecha(new Date());
 		v.setPregunta(pregunta);
 		v.setUp(up);
 		v.setUser(user);
-		Session sess = sfact.getCurrentSession();
 		sess.save(v);
 		return v;
 	}
@@ -160,12 +156,12 @@ public class QuestionDAO implements PreguntaDao {
 		if (!up && user.getReputacion() < 10) {
 			throw new PrivilegioInsuficienteException();
 		}
+		Session sess = sfact.getCurrentSession();
 		VotoRespuesta v = new VotoRespuesta();
 		v.setFecha(new Date());
 		v.setRespuesta(resp);
 		v.setUp(up);
 		v.setUser(user);
-		Session sess = sfact.getCurrentSession();
 		sess.save(v);
 		return v;
 	}
