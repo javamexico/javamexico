@@ -107,7 +107,7 @@ public class TestPreguntas {
 			printPregunta(p);
 		}
 		System.out.println("Borrando todo");
-		//qdao.delete(p);
+		qdao.delete(p);
 	}
 
 }
