@@ -87,4 +87,17 @@ public class ComentRespuesta {
 		coment = value;
 	}
 
+	@Override
+	public int hashCode() {
+		return cid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof ComentRespuesta)) {
+			return false;
+		}
+		return ((ComentRespuesta)obj).getCid() == cid;
+	}
+
 }

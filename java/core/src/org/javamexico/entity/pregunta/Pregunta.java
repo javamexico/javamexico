@@ -31,7 +31,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -46,8 +45,8 @@ public class Pregunta implements Comparable<Pregunta> {
 
 	private int pid;
 	private int status; //abierta, contestada, etc
+	private Integer respId; //cuando ya fue seleccionada una respuesta por el usuario que hizo la pregunta original
 	private Usuario autor;
-	private Respuesta resp; //cuando ya fue seleccionada una respuesta por el usuario que hizo la pregunta original
 	private String titulo;
 	private String pregunta;
 	private Date fechaP; //la fecha en que se hizo la pregunta
@@ -116,13 +115,12 @@ public class Pregunta implements Comparable<Pregunta> {
 		fechaR = value;
 	}
 
-	@OneToOne
-	@JoinColumn(name="resp_sel", referencedColumnName="rid")
-	public Respuesta getRespuestaElegida() {
-		return resp;
+	@Column(name="resp_sel")
+	public Integer getRespuestaElegida() {
+		return respId;
 	}
-	public void setRespuestaElegida(Respuesta value) {
-		resp = value;
+	public void setRespuestaElegida(Integer value) {
+		respId = value;
 	}
 
 	@ManyToMany(cascade=CascadeType.PERSIST)
@@ -137,7 +135,7 @@ public class Pregunta implements Comparable<Pregunta> {
 	}
 
 	@OneToMany(mappedBy="pregunta")
-	@OrderBy("fecha")
+	@OrderBy("fecha DESC")
 	public Set<Respuesta> getRespuestas() {
 		return resps;
 	}
@@ -167,6 +165,19 @@ public class Pregunta implements Comparable<Pregunta> {
 			return 1;
 		}
 		return o.getPid() > pid ? -1 : o.getPid() < pid ? 1 : 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return pid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof Pregunta)) {
+			return false;
+		}
+		return ((Pregunta)obj).getPid() == pid;
 	}
 
 }

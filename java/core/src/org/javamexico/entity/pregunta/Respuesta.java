@@ -118,4 +118,17 @@ public class Respuesta implements Comparable<Respuesta> {
 		return fecha.compareTo(o.getFecha());
 	}
 
+	@Override
+	public int hashCode() {
+		return rid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof Respuesta)) {
+			return false;
+		}
+		return ((Respuesta)obj).getRid() == rid;
+	}
+
 }

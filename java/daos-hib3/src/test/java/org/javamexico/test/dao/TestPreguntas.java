@@ -43,6 +43,7 @@ public class TestPreguntas {
 				if (q.getFechaPregunta().getTime() < oldest) {
 					oldest = q.getFechaPregunta().getTime();
 				}
+				printPregunta(qdao.getPregunta(q.getPid()));
 			}
 		}
 		//Vamos a obtener todas excepto la mas vieja
@@ -65,7 +66,7 @@ public class TestPreguntas {
 		}
 		System.out.println("Respuestas:");
 		for (Respuesta r : p.getRespuestas()) {
-			if (p.getRespuestaElegida() != null && p.getRespuestaElegida().getRid() == r.getRid()) {
+			if (p.getRespuestaElegida() != null && p.getRespuestaElegida().intValue() == r.getRid()) {
 				System.out.println("***** ELEGIDA: ");
 			}
 			System.out.printf("%s: %s (%s)%n", r.getAutor().getUsername(), r.getRespuesta(), r.getFecha());
@@ -79,7 +80,7 @@ public class TestPreguntas {
 		}
 	}
 
-	@Test
+	//@Test
 	public void testPreguntas1() {
 		List<Usuario> users = udao.getAllUsers();
 		Usuario u1 = users.get(0);
@@ -110,7 +111,7 @@ public class TestPreguntas {
 		qdao.delete(p);
 	}
 
-	@Test
+	//@Test
 	public void testData() {
 		Usuario u1 = udao.validaLogin("ezl", "test");
 		Usuario u2 = udao.validaLogin("jb", "test");
@@ -146,7 +147,7 @@ public class TestPreguntas {
 		qdao.addComentario("Pero como funciona o que?", r, u3);
 		qdao.addComentario("Te inyecta un SessionFactory en la pagina y lo cierra al final del ciclo request-response", p, u1);
 		qdao.vota(u2, r, true);
-		p.setRespuestaElegida(r);
+		p.setRespuestaElegida(r.getRid());
 		qdao.update(p);
 	}
 

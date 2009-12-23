@@ -84,7 +84,7 @@ public class QuestionDAO implements PreguntaDao {
 	public List<Pregunta> getPreguntasMasVotadas(int limit) {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<Pregunta> qus = sess.createCriteria(Pregunta.class).addOrder(Order.desc("votos")).setFetchSize(limit).list();
+		List<Pregunta> qus = sess.createCriteria(Pregunta.class).addOrder(Order.desc("votos")).setMaxResults(limit).list();
 		return qus;
 	}
 
@@ -108,7 +108,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.sizeEq("respuestas", 0)).addOrder(Order.desc("fechaPregunta")).setFetchSize(limit).list();
+				Restrictions.sizeEq("respuestas", 0)).addOrder(Order.desc("fechaPregunta")).setMaxResults(limit).list();
 		return qus;
 	}
 
@@ -125,7 +125,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Respuesta> resps = sess.createCriteria(Respuesta.class).add(
-				Restrictions.eq("pregunta", q)).setFetchSize(pageSize).setFirstResult((page-1)*pageSize).addOrder(
+				Restrictions.eq("pregunta", q)).setMaxResults(pageSize).setFirstResult((page-1)*pageSize).addOrder(
 						crono ? Order.desc("fecha") : Order.desc("votos")).list();
 		return resps;
 	}
@@ -134,7 +134,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).addOrder(
-				Order.desc("count")).setFetchSize(limit).list();
+				Order.desc("count")).setMaxResults(limit).list();
 		return tags;
 	}
 
@@ -170,7 +170,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<VotoPregunta> v = sess.createCriteria(VotoPregunta.class).add(Restrictions.eq("user", user)).add(
-				Restrictions.eq("pregunta", pregunta)).setFetchSize(1).list();
+				Restrictions.eq("pregunta", pregunta)).setMaxResults(1).list();
 		return v.size() > 0 ? v.get(0) : null;
 	}
 
@@ -178,7 +178,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<VotoRespuesta> v = sess.createCriteria(VotoPregunta.class).add(Restrictions.eq("user", user)).add(
-				Restrictions.eq("respuesta", respuesta)).setFetchSize(1).list();
+				Restrictions.eq("respuesta", respuesta)).setMaxResults(1).list();
 		return v.size() > 0 ? v.get(0) : null;
 	}
 
@@ -251,7 +251,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).add(
-				Restrictions.ilike("tag", tag)).setFetchSize(1).list();
+				Restrictions.ilike("tag", tag)).setMaxResults(1).list();
 		TagPregunta utag = null;
 		if (tags.size() == 0) {
 			utag = new TagPregunta();
