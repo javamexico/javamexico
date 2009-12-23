@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.javamexico.dao.PreguntaDao;
@@ -84,7 +85,8 @@ public class QuestionDAO implements PreguntaDao {
 	public List<Pregunta> getPreguntasMasVotadas(int limit) {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<Pregunta> qus = sess.createCriteria(Pregunta.class).addOrder(Order.desc("votos")).setMaxResults(limit).list();
+		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
+				Restrictions.gt("status", 0)).addOrder(Order.desc("votos")).setMaxResults(limit).list();
 		return qus;
 	}
 
@@ -92,6 +94,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
+				Restrictions.gt("status", 0)).add(
 				Restrictions.ge("fechaPregunta", desde)).addOrder(Order.desc("fechaPregunta")).list();
 		return qus;
 	}
@@ -275,7 +278,7 @@ public class QuestionDAO implements PreguntaDao {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).add(
-				Restrictions.ilike("tag", String.format("*%s*", parcial))).list();
+				Restrictions.ilike("tag", parcial, MatchMode.ANYWHERE)).list();
 		return tags;
 	}
 
