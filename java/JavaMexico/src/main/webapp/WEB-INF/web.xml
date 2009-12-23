@@ -16,7 +16,10 @@ of where to look for pages, components and mixins. -->
     </context-param>
     <context-param>
     	<param-name>contextConfigLocation</param-name>
-    	<param-value>/WEB-INF/daos.xml</param-value>
+    	<param-value>
+    		/WEB-INF/daos.xml
+    		/WEB-INF/postgres.xml
+    	</param-value>
     </context-param>
     <filter>
         <filter-name>app</filter-name>

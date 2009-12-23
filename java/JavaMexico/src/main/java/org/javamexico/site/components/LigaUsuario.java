@@ -14,6 +14,7 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.components;
 
+import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
@@ -39,18 +40,20 @@ public class LigaUsuario extends Pagina {
 	private Logger log;
 	@Parameter(required=true, defaultPrefix="literal") @Property
 	private String text;
+	@Parameter(required=true, defaultPrefix="literal") @Property
+	private String id;
 	@Property
 	private String uname;
 	@Property
 	private String passwd;
 	@Property
 	private String loginErr;
-	@InjectComponent
+	@InjectComponent @Property
 	private Zone innerZone;
-	@InjectComponent
+	@InjectComponent @Property 
 	private Zone loginZone;
 	@Inject
-	@Service("userDao")
+	@Service("usuarioDao")
 	private UserDao udao;
 
 	Object onSuccessFromLogin() {

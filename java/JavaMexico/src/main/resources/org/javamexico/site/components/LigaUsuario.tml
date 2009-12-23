@@ -2,17 +2,17 @@
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 
 <t:if t:test="userExists">
-<t:actionlink t:zone="innerZone" t:id="loggedLink">${text}</t:actionlink>
 <t:zone t:id="innerZone" t:visible="false"><t:body/></t:zone>
-<p:else><t:actionlink t:zone="loginZone" t:id="loginLink">${text}</t:actionlink>
+<t:actionlink t:zone="prop:innerZone.clientId" t:id="loggedLink">${text}</t:actionlink>
+<p:else>
 <t:zone t:id="loginZone" t:visible="false">
 Debe registrarse primero
-<t:form t:id="login" t:zone="loginZone">
+<t:form t:id="login" t:zone="prop:loginZone.clientId">
 Usuario: <t:textfield t:value="uname" />
 Password: <t:passwordfield t:value="passwd" />
 <t:submit value="Validar" />
 <t:if t:test="loginErr"><br/>${loginErr}</t:if>
-</t:form></t:zone>
+</t:form></t:zone><t:actionlink t:zone="prop:loginZone.clientId" t:id="loginLink">${text}</t:actionlink>
 </p:else></t:if>
 
 </t:container>

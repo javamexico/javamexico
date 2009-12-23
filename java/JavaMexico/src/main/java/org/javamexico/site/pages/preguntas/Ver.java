@@ -13,19 +13,20 @@ You should have received a copy of the GNU General Public License along with Jav
 If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.pages.preguntas;
-
-import java.util.Date;
-import java.util.List;
-
+	
 import org.apache.tapestry5.annotations.IncludeStylesheet;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.javamexico.dao.PreguntaDao;
+import org.javamexico.entity.pregunta.ComentPregunta;
+import org.javamexico.entity.pregunta.ComentRespuesta;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
 import org.javamexico.site.base.Pagina;
+import org.slf4j.Logger;
 
 /** Esta pagina muestra una sola pregunta, con sus respuestas. Permite agregar una respuesta
  * 
@@ -34,6 +35,8 @@ import org.javamexico.site.base.Pagina;
 @IncludeStylesheet("context:layout/preguntas.css")
 public class Ver extends Pagina {
 
+	@Inject
+	private Logger log;
 	@Inject
 	@Service("preguntaDao")
 	private PreguntaDao pdao;
@@ -45,32 +48,71 @@ public class Ver extends Pagina {
 	private TagPregunta tag;
 	@Property
 	private String resptext;
+	@Property
+	private ComentPregunta pcomm;
+	@Property
+	private ComentRespuesta rcomm;
+	private int rid;
+	@Inject
+	private Request req;
 
 	/** Con esto obtenemos la pregunta con la clave indicada en el URL */
-	void onActivate(int pid) {
-		pregunta = pdao.getPregunta(pid);
-		
+	Object onActivate(String ids) {
+		int pid = 0;
+		if (ids.indexOf('-') > 0) {
+			pid = Integer.parseInt(ids.substring(0, ids.indexOf('-')));
+			rid = Integer.parseInt(ids.substring(ids.indexOf('-') + 1));
+		} else {
+			pid = Integer.parseInt(ids);
+		}
+		if (pid > 0) {
+			pregunta = pdao.getPregunta(pid);
+		}
+		if (pregunta == null) {
+			//Redirigir al indice
+			return Index.class;
+		}
+		return null;
 	}
 	/** Con esto volvemos a poner la clave de la pregunta en el URL */
-	int onPassivate() {
-		return pregunta.getPid();
-	}
-
-	/** Devuelve las respuestas a la pregunta mostrada. */
-	public List<Respuesta> getRespuestas() {
-		return pdao.getRespuestas(pregunta, 8, 1, false);
+	Object onPassivate() {
+		return resp == null ? pregunta.getPid() : String.format("%d-%d", pregunta.getPid(), resp.getRid());
 	}
 
 	void onSuccessFromRespform(int pid) {
 		pregunta = pdao.getPregunta(pid);
-		resp = new Respuesta();
-		resp.setAutor(getUser());
-		resp.setFecha(new Date());
-		resp.setPregunta(pregunta);
-		resp.setRespuesta(resptext);
-		pregunta.getRespuestas().add(resp);
-		//TODO falta salvar en base de datos este cambio
-		//seguramente con el DAO se agregara directamente la respuesta en vez de ese add
+		if (resptext == null) {
+			resptext = req.getParameter("resptext");
+		}
+		resp = pdao.addRespuesta(resptext, pregunta, getUser());
+	}
+
+	void onSuccessFromPcform(int pid) {
+		pregunta = pdao.getPregunta(pid);
+		if (resptext == null) {
+			resptext = req.getParameter("qcomment");
+		}
+		pcomm = pdao.addComentario(resptext, pregunta, getUser());
+	}
+
+	void onSuccessFromRcform(String ids) {
+		onActivate(ids);
+		for (Respuesta r : pregunta.getRespuestas()) {
+			if (r.getRid() == rid) {
+				resp = r;
+				break;
+			}
+		}
+		if (resptext == null) {
+			resptext = req.getParameter("rcomment");
+		}
+		log.info("Agregando comentario '{}' a resp {}", resptext, resp);
+		pdao.addComentario(resptext, resp, getUser());
+		resp = null;
+	}
+
+	public String getRcformContext() {
+		return String.format("%d-%d", pregunta.getPid(), resp == null ? rid : resp.getRid());
 	}
 
 }

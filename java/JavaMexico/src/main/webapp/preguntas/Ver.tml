@@ -6,22 +6,38 @@
         <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
 
 	<h2>${pregunta.titulo}</h2>
-	<cite>${pregunta.autor.nombre}</cite>
+	<cite>Por ${pregunta.autor.username} en ${pregunta.fechaPregunta}</cite>
+	<div>${pregunta.votos} votos</div>
     <p>${pregunta.pregunta}</p>
     <div><t:loop t:source="pregunta.tags" t:value="tag">
     	<t:pagelink t:context="${tag.tag}" t:page="preguntas/portag" class="qtag">${tag.tag}</t:pagelink>&nbsp;
     </t:loop></div>
-<br/>
+    <t:if test="pregunta.comentarios"><ul><t:loop t:source="pregunta.comentarios" t:value="pcomm" t:element="li">
+    	${pcomm.comentario} - <cite>${pcomm.autor.username} ${pcomm.fecha}</cite>
+    </t:loop></ul></t:if>
+    <t:ligausuario id="lu1" text="Agregar un comentario"><t:form t:id="pcform" context="${pregunta.pid}">
+    <t:textarea t:value="resptext" cols="40" rows="3" t:id="qcomment" /><br/><t:submit value="Comentar" />
+    </t:form></t:ligausuario>
+
+	<br/>
 	<h2>Respuestas:</h2>
-	<ul><t:loop t:source="respuestas" t:value="resp" t:element="li">
+	<ul><t:loop t:source="pregunta.respuestas" t:value="resp" t:element="li">
+		<div>${resp.votos} votos</div>
 		${resp.respuesta}
 		<br/>
-		por ${resp.autor.nombre} el ${resp.fecha}
+		por ${resp.autor.username} el ${resp.fecha}
+	    <ul><t:loop t:source="resp.comentarios" t:value="rcomm" t:element="li">
+    		${rcomm.comentario} - <cite>${rcomm.autor.username} ${rcomm.fecha}</cite>
+   		</t:loop><li><t:ligausuario id="lu2" text="Agregar comentario">
+   		<t:form t:id="rcform" context="${rcformContext}">
+	    <t:textarea t:value="resptext" cols="40" rows="3" t:id="rcomment" /><br/><t:submit value="Comentar" />
+	    </t:form></t:ligausuario>
+   		</li></ul>
 	</t:loop></ul>
 
-	<t:ligausuario text="Agregar una respuesta">
+	<t:ligausuario id="lu3" text="Agregar una respuesta">
 	<t:form t:id="respform" context="${pregunta.pid}">
-	<t:textarea t:value="resptext" cols="40" rows="10" />
+	<t:textarea t:value="resptext" cols="40" rows="10" t:id="resptext" />
 	<br/><t:submit value="Contestar" />
 	</t:form></t:ligausuario>
 
