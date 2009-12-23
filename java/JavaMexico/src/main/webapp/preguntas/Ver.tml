@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html t:type="layout" t:title="JavaMexico :: Preguntas :: ${pregunta.titulo}"
-      t:sidebarTitle="Preguntas similares"
+      t:sidebarTitle="Otras preguntas"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
         <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
@@ -10,40 +10,47 @@
 	<div>${pregunta.votos} votos</div>
     <p>${pregunta.pregunta}</p>
     <div><t:loop t:source="pregunta.tags" t:value="tag">
-    	<t:pagelink t:context="${tag.tag}" t:page="preguntas/portag" class="qtag">${tag.tag}</t:pagelink>&nbsp;
+    	<t:pagelink t:context="${tag.tag}" t:page="preguntas/index" class="qtag">${tag.tag}</t:pagelink>&nbsp;
     </t:loop></div>
     <t:if test="pregunta.comentarios"><ul><t:loop t:source="pregunta.comentarios" t:value="pcomm" t:element="li">
     	${pcomm.comentario} - <cite>${pcomm.autor.username} ${pcomm.fecha}</cite>
     </t:loop></ul></t:if>
-    <t:ligausuario id="lu1" text="Agregar un comentario"><t:form t:id="pcform" context="${pregunta.pid}">
+    <t:ligausuario id="lu1" text="Agregar un comentario"><t:form t:id="comentarPregunta" context="${pregunta.pid}">
     <t:textarea t:value="resptext" cols="40" rows="3" t:id="qcomment" /><br/><t:submit value="Comentar" />
     </t:form></t:ligausuario>
 
 	<br/>
 	<h2>Respuestas:</h2>
 	<ul><t:loop t:source="pregunta.respuestas" t:value="resp" t:element="li">
-		<div>${resp.votos} votos</div>
+		<div>${resp.votos} votos (TODO: permitir un voto)</div>
+		<t:if test="chosenAnswer"><div><strong>Esta fue la respuesta elegida por el que hizo la pregunta</strong></div></t:if>
 		${resp.respuesta}
 		<br/>
 		por ${resp.autor.username} el ${resp.fecha}
+		<div><t:if test="responderCurrentUser"><t:actionlink t:id="pickAnswer" t:context="${rcformContext}">Elegir esta respuesta</t:actionlink></t:if></div>
 	    <ul><t:loop t:source="resp.comentarios" t:value="rcomm" t:element="li">
     		${rcomm.comentario} - <cite>${rcomm.autor.username} ${rcomm.fecha}</cite>
-   		</t:loop><li><t:ligausuario id="lu2" text="Agregar comentario">
-   		<t:form t:id="rcform" context="${rcformContext}">
+   		</t:loop><li>
+   		<t:ligausuario id="lu2" text="Agregar comentario">
+   		<t:form t:id="comentarRespuesta" context="${rcformContext}">
 	    <t:textarea t:value="resptext" cols="40" rows="3" t:id="rcomment" /><br/><t:submit value="Comentar" />
 	    </t:form></t:ligausuario>
    		</li></ul>
 	</t:loop></ul>
 
 	<t:ligausuario id="lu3" text="Agregar una respuesta">
-	<t:form t:id="respform" context="${pregunta.pid}">
+	<t:form t:id="responder" context="${pregunta.pid}">
 	<t:textarea t:value="resptext" cols="40" rows="10" t:id="resptext" />
 	<br/><t:submit value="Contestar" />
 	</t:form></t:ligausuario>
 
 
     <p:sidebar>
-		Aqui podriamos poner preguntas similares (la similaridad la determinamos por los tags, etc)
+    	TODO: preguntas similares (por tags)
+    	<t:if test="userExists"><div>Mis preguntas:</div>
+    	<t:loop t:source="misPreguntas" t:value="otrap" t:element="div">
+    		<t:pagelink t:page="preguntas/ver" t:context="${otrap.pid}">${otrap.titulo}</t:pagelink>
+    	</t:loop></t:if>
     </p:sidebar>
 
 </html>

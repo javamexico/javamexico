@@ -24,13 +24,14 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.javamexico.dao.PreguntaDao;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.TagPregunta;
+import org.javamexico.site.base.Pagina;
 
 /** La pagina principal del modulo de preguntas; muestra una lista de las preguntas mas recientes.
  * 
  * @author Enrique Zamudio
  */
 @IncludeStylesheet("context:layout/preguntas.css")
-public class Index {
+public class Index extends Pagina {
 
 	@Inject
 	@Service("preguntaDao")
@@ -39,15 +40,29 @@ public class Index {
 	private Pregunta pregunta;
 	@Property
 	private TagPregunta tag;
+	//El tag para buscar preguntas
+	private String stag;
+
+	public void onActivate(String value) {
+		stag = value;
+	}
 
 	/** Devuelve las preguntas mas recientes para mostrarlas en la pagina. */
 	public List<Pregunta> getPreguntas() {
-		return pdao.getPreguntasRecientes(new Date(System.currentTimeMillis()-864000000l));
+		if (stag == null) {
+			return pdao.getPreguntasRecientes(new Date(System.currentTimeMillis()-864000000l));
+		} else {
+			return pdao.getPreguntasConTag(stag);
+		}
 	}
 
 	/** Devuelve los 5 tags mas utilizados en el modulo. */
 	public List<TagPregunta> getPopTags() {
-		return pdao.getTagsPopulares(5);
+		return pdao.getTagsPopulares(6);
+	}
+
+	public List<Pregunta> getMisPreguntas() {
+		return pdao.getPreguntasUsuario(getUser());
 	}
 
 }

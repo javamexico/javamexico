@@ -10,8 +10,14 @@
 
     <p:sidebar>
     	<ol><t:loop t:source="popTags" t:value="tag" t:element="div">
-    		<t:pagelink t:context="${tag.tag}" t:page="preguntas/portag" class="qtag">${tag.tag}</t:pagelink> (${tag.count})
+    		<t:pagelink t:context="${tag.tag}" t:page="preguntas/index" class="qtag">${tag.tag}</t:pagelink> (${tag.count})
     	</t:loop></ol>
+    	No encuentras la pregunta que buscas?
+    	<t:pagelink t:page="preguntas/nueva">Haz tu propia pregunta</t:pagelink>
+    	<t:if test="userExists">
+    	<div>Mis preguntas:</div><t:loop t:source="misPreguntas" t:value="pregunta" t:element="div">
+    		<t:pagelink t:page="preguntas/ver" t:context="${pregunta.pid}">${pregunta.titulo}</t:pagelink>
+    	</t:loop></t:if>
     </p:sidebar>
 
 </html>

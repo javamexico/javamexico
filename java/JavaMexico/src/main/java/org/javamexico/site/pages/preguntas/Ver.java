@@ -14,6 +14,8 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.pages.preguntas;
 	
+import java.util.List;
+
 import org.apache.tapestry5.annotations.IncludeStylesheet;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
@@ -42,6 +44,8 @@ public class Ver extends Pagina {
 	private PreguntaDao pdao;
 	@Property
 	private Pregunta pregunta;
+	@Property
+	private Pregunta otrap;
 	@Property
 	private Respuesta resp;
 	@Property
@@ -79,7 +83,7 @@ public class Ver extends Pagina {
 		return resp == null ? pregunta.getPid() : String.format("%d-%d", pregunta.getPid(), resp.getRid());
 	}
 
-	void onSuccessFromRespform(int pid) {
+	void onSuccessFromResponder(int pid) {
 		pregunta = pdao.getPregunta(pid);
 		if (resptext == null) {
 			resptext = req.getParameter("resptext");
@@ -87,7 +91,7 @@ public class Ver extends Pagina {
 		resp = pdao.addRespuesta(resptext, pregunta, getUser());
 	}
 
-	void onSuccessFromPcform(int pid) {
+	void onSuccessFromComentarPregunta(int pid) {
 		pregunta = pdao.getPregunta(pid);
 		if (resptext == null) {
 			resptext = req.getParameter("qcomment");
@@ -95,7 +99,7 @@ public class Ver extends Pagina {
 		pcomm = pdao.addComentario(resptext, pregunta, getUser());
 	}
 
-	void onSuccessFromRcform(String ids) {
+	void onSuccessFromComentarRespuesta(String ids) {
 		onActivate(ids);
 		for (Respuesta r : pregunta.getRespuestas()) {
 			if (r.getRid() == rid) {
@@ -113,6 +117,33 @@ public class Ver extends Pagina {
 
 	public String getRcformContext() {
 		return String.format("%d-%d", pregunta.getPid(), resp == null ? rid : resp.getRid());
+	}
+
+	public List<Pregunta> getMisPreguntas() {
+		return pdao.getPreguntasUsuario(getUser());
+	}
+
+	public boolean isResponderCurrentUser() {
+		if (getUserExists()) {
+			return getUser().getUid() == pregunta.getAutor().getUid();
+		}
+		return false;
+	}
+
+	void onActionFromPickAnswer(String ctxt) {
+		int idx = ctxt.indexOf('-');
+		if (idx > 0) {
+			pregunta = pdao.getPregunta(Integer.parseInt(ctxt.substring(0, idx)));
+			if (pregunta != null) {
+				log.info("Seleccionando respuesta", ctxt);
+				pregunta.setRespuestaElegida(new Integer(ctxt.substring(idx + 1)));
+				pdao.update(pregunta);
+			}
+		}
+	}
+
+	public boolean isChosenAnswer() {
+		return pregunta.getRespuestaElegida() != null && pregunta.getRespuestaElegida().intValue() == resp.getRid();
 	}
 
 }

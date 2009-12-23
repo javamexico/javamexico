@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout" t:title="Editar una pregunta"
+      t:sidebarTitle="Tags"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+<h2>Editar pregunta</h2>
+
+<t:form t:id="editar"> <t:errors/>
+<t:label for="titulo" />
+<t:textfield t:id="titulo" value="pregunta.titulo" size="50" maxlength="200" t:validate="required,minLength=30,maxLength=200" />
+<t:label for="pregunta" />
+<t:textarea t:id="pregunta" value="pregunta.pregunta" rows="5" cols="50" t:validate="required,minLength=30" />
+<br/>
+<input type="submit" value="Guardar cambios" />
+[ <t:pagelink t:page="preguntas/index">Cancelar</t:pagelink> ]
+[ <t:actionlink t:id="eliminar">Eliminar esta pregunta</t:actionlink> ]
+</t:form>
+<hr/>
+<h3>Modificar tags</h3>
+Teclea los tags que quieras agregar y oprime ENTER. Puedes hacer click en un tag asignado para quitarlo de la pregunta.
+    <t:form t:id="addtags"> <t:errors/>
+    <t:textfield t:id="addtag" value="newtag" t:mixins="autocomplete" size="40" t:frequency="0.6" t:minChars="3" t:validate="required,maxLength=20" />
+    </t:form>
+<t:zone t:id="tagzone">
+    <t:loop t:source="pregunta.tags" t:value="tag">
+    	<t:actionlink t:id="rmtag" t:context="${tagContext}" class="qtag" t:zone="tagzone">${tag.tag}</t:actionlink>&nbsp;
+    </t:loop>
+</t:zone>
+<hr/>
+<div align="center"><t:pagelink t:page="preguntas/ver" t:context="pregunta.pid">Ver la p&aacute;gina de esta pregunta</t:pagelink></div>
+</html>
