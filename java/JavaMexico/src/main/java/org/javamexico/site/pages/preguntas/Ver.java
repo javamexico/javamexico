@@ -27,7 +27,6 @@ import org.javamexico.entity.pregunta.ComentRespuesta;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
-import org.javamexico.entity.pregunta.VotoPregunta;
 import org.javamexico.site.base.Pagina;
 import org.slf4j.Logger;
 
@@ -43,20 +42,13 @@ public class Ver extends Pagina {
 	@Inject
 	@Service("preguntaDao")
 	private PreguntaDao pdao;
-	@Property
-	private Pregunta pregunta;
-	@Property
-	private Pregunta otrap;
-	@Property
-	private Respuesta resp;
-	@Property
-	private TagPregunta tag;
-	@Property
-	private String resptext;
-	@Property
-	private ComentPregunta pcomm;
-	@Property
-	private ComentRespuesta rcomm;
+	@Property private Pregunta pregunta;
+	@Property private Pregunta otrap;
+	@Property private Respuesta resp;
+	@Property private TagPregunta tag;
+	@Property private String resptext;
+	@Property private ComentPregunta pcomm;
+	@Property private ComentRespuesta rcomm;
 	private int rid;
 	@Inject
 	private Request req;
@@ -81,6 +73,9 @@ public class Ver extends Pagina {
 	}
 	/** Con esto volvemos a poner la clave de la pregunta en el URL */
 	Object onPassivate() {
+		if (pregunta == null) {
+			return null;
+		}
 		return resp == null ? pregunta.getPid() : String.format("%d-%d", pregunta.getPid(), resp.getRid());
 	}
 

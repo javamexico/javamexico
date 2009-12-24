@@ -14,6 +14,9 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.components;
 
+import org.apache.tapestry5.Block;
+import org.apache.tapestry5.ComponentResources;
+import org.apache.tapestry5.RenderSupport;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
@@ -41,14 +44,12 @@ public class LigaUsuario extends Pagina {
 	private Logger log;
 	@Parameter(required=true, defaultPrefix="literal")
 	@Property private String text;
-	@Parameter(required=true, defaultPrefix="literal")
-	@Property private String id;
 	@Property private String uname;
 	@Property private String passwd;
-	@InjectComponent
-	private Zone innerZone;
-	@InjectComponent
-	private Zone loginZone;
+	@Inject
+	private Block innerBlock;
+	@Inject
+	private Block loginBlock;
 	@Inject
 	@Service("usuarioDao")
 	private UserDao udao;
@@ -56,46 +57,56 @@ public class LigaUsuario extends Pagina {
 	private Form login;
 	@Inject
 	private Request request;
-	@Property private boolean showInnerZone;
-	@Property private boolean showLoginZone;
+	@InjectComponent
+	private Zone vzone;
+	private String vzid;
+	@Inject
+	private ComponentResources resources;
+	@Inject
+	private RenderSupport renderSupport;
 
-	Object onSuccessFromLogin() {
-		log.info("Validando {}/{}", uname, passwd);
+	Object onSuccessFromLogin(String zid) {
+		vzid = zid;
 		Usuario u = udao.validaLogin(uname, passwd);
 		if (u == null) {
 			login.recordError("Usuario inexistente, o password invalido.");
 			if (request.isXHR()) {
-				return loginZone.getBody();
+				return loginBlock;
 			} else {
-				showLoginZone = true;
-				return null;
+				log.info("mostrando forma de login nuevamente");
 			}
 		} else {
 			//Con esto ya se queda el usuario en la sesion
 			setUser(u);
 			if (request.isXHR()) {
-				return innerZone.getClientId();
+				return innerBlock;
 			} else {
-				showInnerZone = true;
+				log.info("login OK, mostrando contenido...");
 				return null;
 			}
 		}
+		return null;
 	}
 
-	Object onActionFromLoggedLink() {
-		return innerZone.getBody();
+	Object onActionFromLoggedLink(String zid) {
+		vzid = zid;
+		return innerBlock;
 	}
 
-	Object onActionFromLoginLink() {
-		return loginZone.getBody();
+	Object onActionFromLoginLink(String zid) {
+		vzid = zid;
+		return loginBlock;
 	}
 
-	public String getInnerZoneClientId() {
-		return innerZone.getClientId();
+	public String getZoneClientId() {
+		if (vzid == null) {
+			vzid = vzone.getClientId();
+		}
+		return vzid;
 	}
 
-	public String getLoginZoneClientId() {
-		return loginZone.getClientId();
+	public void afterRender() {
+		vzid = null;
 	}
 
 }

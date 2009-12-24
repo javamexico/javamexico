@@ -1,17 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 
-<t:if t:test="userExists">
-<t:zone t:id="innerZone" t:visible="showInnerZone"><t:body/></t:zone>
-<t:actionlink t:zone="prop:innerZoneClientId" t:id="loggedLink">${text}</t:actionlink>
-<p:else>
-<t:zone t:id="loginZone" t:visible="showLoginZone">
+<t:zone t:id="vzone" t:visible="false"></t:zone>
+<t:block t:id="loginBlock">
+<!-- aqui va la forma de login -->
 Debe registrarse primero
-<t:form t:id="login"><t:errors/>
+<t:form t:id="login" t:context="${zoneClientId}" t:zone="${zoneClientId}"><t:errors/>
 Usuario: <t:textfield t:value="uname" size="16" validate="required,maxLength=20" />
 Password: <t:passwordfield t:value="passwd" size="16" validate="required" />
 <t:submit value="Validar" />
-</t:form></t:zone><t:actionlink t:zone="prop:loginZoneClientId" t:id="loginLink">${text}</t:actionlink>
+</t:form>
+</t:block>
+<t:block t:id="innerBlock">
+<!-- aqui va el otro contenido -->
+<t:body/>
+</t:block>
+<t:if t:test="userExists">
+<t:actionlink t:zone="${zoneClientId}" t:id="loggedLink" t:context="${zoneClientId}">${text}</t:actionlink>
+<p:else>
+<t:actionlink t:zone="${zoneClientId}" t:id="loginLink" t:context="${zoneClientId}">${text}</t:actionlink>
 </p:else></t:if>
 
 </t:container>

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html t:type="layout" t:title="JavaMexico :: Preguntas :: ${pregunta.titulo}"
+<html t:type="layout" t:title="JavaMexico :: Preguntas"
       t:sidebarTitle="Otras preguntas"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
@@ -17,7 +17,7 @@
     <t:if test="pregunta.comentarios"><ul><t:loop t:source="pregunta.comentarios" t:value="pcomm" t:element="li">
     	${pcomm.comentario} - <cite>${pcomm.autor.username} ${pcomm.fecha}</cite>
     </t:loop></ul></t:if>
-    <t:ligausuario id="lu1" text="Agregar un comentario"><t:form t:id="comentarPregunta" context="${pregunta.pid}">
+    <t:ligausuario text="Agregar un comentario"><t:form t:id="comentarPregunta" context="${pregunta.pid}">
     <t:textarea t:value="resptext" cols="40" rows="3" t:id="qcomment" /><br/><t:submit value="Comentar" />
     </t:form></t:ligausuario>
 
@@ -34,14 +34,14 @@
 	    <ul><t:loop t:source="resp.comentarios" t:value="rcomm" t:element="li">
     		${rcomm.comentario} - <cite>${rcomm.autor.username} ${rcomm.fecha}</cite>
    		</t:loop><li>
-   		<t:ligausuario id="lu2" text="Agregar comentario">
+   		<t:ligausuario text="Agregar comentario" t:id="lu">
    		<t:form t:id="comentarRespuesta" context="${rcformContext}">
 	    <t:textarea t:value="resptext" cols="40" rows="3" t:id="rcomment" /><br/><t:submit value="Comentar" />
 	    </t:form></t:ligausuario>
    		</li></ul>
 	</t:loop></ul>
 
-	<t:ligausuario id="lu3" text="Agregar una respuesta">
+	<t:ligausuario text="Agregar una respuesta">
 	<t:form t:id="responder" context="${pregunta.pid}">
 	<t:textarea t:value="resptext" cols="40" rows="10" t:id="resptext" />
 	<br/><t:submit value="Contestar" />
