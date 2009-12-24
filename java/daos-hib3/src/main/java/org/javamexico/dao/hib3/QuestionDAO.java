@@ -146,12 +146,19 @@ public class QuestionDAO implements PreguntaDao {
 			throw new PrivilegioInsuficienteException();
 		}
 		Session sess = sfact.getCurrentSession();
-		VotoPregunta v = new VotoPregunta();
-		v.setFecha(new Date());
-		v.setPregunta(pregunta);
-		v.setUp(up);
-		v.setUser(user);
-		sess.save(v);
+		VotoPregunta v = findVoto(user, pregunta);
+		if (v == null) {
+			v = new VotoPregunta();
+			v.setFecha(new Date());
+			v.setPregunta(pregunta);
+			v.setUp(up);
+			v.setUser(user);
+			sess.save(v);
+		} else if (v.isUp() != up) {
+			v.setUp(up);
+			v.setFecha(new Date());
+			sess.update(v);
+		}
 		return v;
 	}
 
@@ -160,12 +167,19 @@ public class QuestionDAO implements PreguntaDao {
 			throw new PrivilegioInsuficienteException();
 		}
 		Session sess = sfact.getCurrentSession();
-		VotoRespuesta v = new VotoRespuesta();
-		v.setFecha(new Date());
-		v.setRespuesta(resp);
-		v.setUp(up);
-		v.setUser(user);
-		sess.save(v);
+		VotoRespuesta v = findVoto(user, resp);
+		if (v == null) {
+			v = new VotoRespuesta();
+			v.setFecha(new Date());
+			v.setRespuesta(resp);
+			v.setUp(up);
+			v.setUser(user);
+			sess.save(v);
+		} else if (v.isUp() != up) {
+			v.setUp(up);
+			v.setFecha(new Date());
+			sess.update(v);
+		}
 		return v;
 	}
 
@@ -180,7 +194,7 @@ public class QuestionDAO implements PreguntaDao {
 	public VotoRespuesta findVoto(Usuario user, Respuesta respuesta) {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<VotoRespuesta> v = sess.createCriteria(VotoPregunta.class).add(Restrictions.eq("user", user)).add(
+		List<VotoRespuesta> v = sess.createCriteria(VotoRespuesta.class).add(Restrictions.eq("user", user)).add(
 				Restrictions.eq("respuesta", respuesta)).setMaxResults(1).list();
 		return v.size() > 0 ? v.get(0) : null;
 	}
