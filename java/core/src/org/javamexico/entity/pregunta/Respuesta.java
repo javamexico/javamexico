@@ -100,7 +100,7 @@ public class Respuesta implements Comparable<Respuesta> {
 		coments = value;
 	}
 
-	@Formula("(select count(*) from voto_respuesta vr where vr.rid=rid)")
+	@Formula("((select count(*) from voto_respuesta vr where vr.rid=rid and vr.up)-(select count(*) from voto_respuesta vr where vr.rid=rid and not vr.up))")
 	public int getVotos() {
 		return votos;
 	}

@@ -152,7 +152,7 @@ public class Pregunta implements Comparable<Pregunta> {
 		coments = value;
 	}
 
-	@Formula("(select count(*) from voto_pregunta vp where vp.pid=pid)")
+	@Formula("((select count(*) from voto_pregunta vp where vp.pid=pid and vp.up)-(select count(*) from voto_pregunta vp where vp.pid=pid and not vp.up))")
 	public int getVotos() {
 		return votos;
 	}
