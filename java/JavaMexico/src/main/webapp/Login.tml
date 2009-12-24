@@ -1,0 +1,13 @@
+<html t:type="layout" t:title="JavaMexico Login"
+      t:sidebarTitle="nothing"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+<t:loginpanel t:page="${page}" />
+
+<br/>
+Olvidaste tu password?
+<br/>
+No estas registrado? Date de alta aqui
+
+</html>

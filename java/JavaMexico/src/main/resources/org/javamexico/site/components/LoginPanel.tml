@@ -1,13 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 
-<t:form t:id="login">
-Usuario: <t:textfield t:value="uname" />
+<t:form t:id="login"><t:errors/>
+Usuario: <t:textfield t:value="uname" t:validate="required,maxLength=20" />
 <br/>
 Password: <t:passwordfield t:value="passwd" />
 <br/>
 <t:submit value="Validar" />
-<t:if t:test="loginErr"><br/>${loginErr}</t:if>
 </t:form>
 
 </t:container>

@@ -30,7 +30,11 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
                     <li t:type="loop" t:source="pageNames" t:value="pageName" class="prop:classForPageName">
                         <t:pagelink page="prop:pageName">${pageName}</t:pagelink>
                     </li>
-                    <t:if test="userExists"><li><t:actionlink t:id="logout">Cerrar sesi&oacute;n</t:actionlink></li></t:if>
+                    <t:if test="userExists">
+                    	<li><t:actionlink t:id="logout">Cerrar sesi&oacute;n</t:actionlink></li>
+                    <p:else>
+                    	<li><t:pagelink t:page="login" t:context="componentResources.pageName">Registrarse</t:pagelink></li>
+                    </p:else></t:if>
                 </ul>
             </div>
         </div>
@@ -42,7 +46,7 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
                 <ul>
                     <li id="search" style="background: none;">
                     </li>
-                    <li t:type="if" test="sidebar">
+                    <li t:type="if" t:test="sidebar">
                         <h2>${sidebarTitle}</h2>
                         <div class="sidebar-content">
                             <t:delegate to="sidebar"/>
