@@ -39,7 +39,10 @@ public class Pagina {
 
 	/** Este es el metodo que se debe utilizar para ver si hay usuario registrado. */
 	public boolean getUserExists() {
-		return userExists;
+		if (userExists) {
+			return user != null;
+		}
+		return false;
 	}
 
 }

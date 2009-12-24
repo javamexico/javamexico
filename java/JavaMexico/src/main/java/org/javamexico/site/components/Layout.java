@@ -3,14 +3,16 @@ package org.javamexico.site.components;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.Session;
 import org.apache.tapestry5.BindingConstants;
+import org.javamexico.site.base.Pagina;
 
 /**
  * Layout component for pages of application JavaMexico.
  */
 @IncludeStylesheet("context:layout/layout.css")
-public class Layout
-{
+public class Layout extends Pagina {
     /** The page title, for the <title> element and the <h1> element. */
     @Property
     @Parameter(required = true, defaultPrefix = BindingConstants.LITERAL)
@@ -29,6 +31,8 @@ public class Layout
 
     @Inject
     private ComponentResources resources;
+    @Inject
+    private Request req;
 
     public String getClassForPageName()
     {
@@ -41,4 +45,12 @@ public class Layout
     {
       return new String[] { "Index", "Foros", "Preguntas" };
     }
+
+    void onActionFromLogout() {
+    	Session sesion = req.getSession(false);
+    	if (sesion != null) {
+    		sesion.invalidate();
+    	}
+    }
+
 }

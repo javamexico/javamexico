@@ -14,13 +14,14 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.components;
 
-import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
+import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.javamexico.dao.UserDao;
 import org.javamexico.entity.Usuario;
 import org.javamexico.site.base.Pagina;
@@ -38,34 +39,46 @@ public class LigaUsuario extends Pagina {
 
 	@Inject
 	private Logger log;
-	@Parameter(required=true, defaultPrefix="literal") @Property
-	private String text;
-	@Parameter(required=true, defaultPrefix="literal") @Property
-	private String id;
-	@Property
-	private String uname;
-	@Property
-	private String passwd;
-	@Property
-	private String loginErr;
-	@InjectComponent @Property
+	@Parameter(required=true, defaultPrefix="literal")
+	@Property private String text;
+	@Parameter(required=true, defaultPrefix="literal")
+	@Property private String id;
+	@Property private String uname;
+	@Property private String passwd;
+	@InjectComponent
 	private Zone innerZone;
-	@InjectComponent @Property 
+	@InjectComponent
 	private Zone loginZone;
 	@Inject
 	@Service("usuarioDao")
 	private UserDao udao;
+	@InjectComponent
+	private Form login;
+	@Inject
+	private Request request;
+	@Property private boolean showInnerZone;
+	@Property private boolean showLoginZone;
 
 	Object onSuccessFromLogin() {
 		log.info("Validando {}/{}", uname, passwd);
 		Usuario u = udao.validaLogin(uname, passwd);
 		if (u == null) {
-			loginErr = "Usuario inexistente, o password invalido.";
-			return loginZone.getBody();
+			login.recordError("Usuario inexistente, o password invalido.");
+			if (request.isXHR()) {
+				return loginZone.getBody();
+			} else {
+				showLoginZone = true;
+				return null;
+			}
 		} else {
 			//Con esto ya se queda el usuario en la sesion
 			setUser(u);
-			return innerZone.getBody();
+			if (request.isXHR()) {
+				return innerZone.getClientId();
+			} else {
+				showInnerZone = true;
+				return null;
+			}
 		}
 	}
 
@@ -75,6 +88,14 @@ public class LigaUsuario extends Pagina {
 
 	Object onActionFromLoginLink() {
 		return loginZone.getBody();
+	}
+
+	public String getInnerZoneClientId() {
+		return innerZone.getClientId();
+	}
+
+	public String getLoginZoneClientId() {
+		return loginZone.getClientId();
 	}
 
 }

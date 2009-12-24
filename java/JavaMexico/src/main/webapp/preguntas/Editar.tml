@@ -20,7 +20,7 @@
 <h3>Modificar tags</h3>
 Teclea los tags que quieras agregar y oprime ENTER. Puedes hacer click en un tag asignado para quitarlo de la pregunta.
     <t:form t:id="addtags"> <t:errors/>
-    <t:textfield t:id="addtag" value="newtag" t:mixins="autocomplete" size="40" t:frequency="0.6" t:minChars="3" t:validate="required,maxLength=20" />
+    <t:textfield t:id="addtag" value="newtag" t:mixins="autocomplete" size="20" t:frequency="0.6" t:minChars="3" t:validate="required,maxLength=20" />
     </t:form>
 <t:zone t:id="tagzone">
     <t:loop t:source="pregunta.tags" t:value="tag">

@@ -27,6 +27,7 @@ import org.javamexico.entity.pregunta.ComentRespuesta;
 import org.javamexico.entity.pregunta.Pregunta;
 import org.javamexico.entity.pregunta.Respuesta;
 import org.javamexico.entity.pregunta.TagPregunta;
+import org.javamexico.entity.pregunta.VotoPregunta;
 import org.javamexico.site.base.Pagina;
 import org.slf4j.Logger;
 
@@ -99,14 +100,18 @@ public class Ver extends Pagina {
 		pcomm = pdao.addComentario(resptext, pregunta, getUser());
 	}
 
-	void onSuccessFromComentarRespuesta(String ids) {
-		onActivate(ids);
+	private Respuesta findRespuesta() {
 		for (Respuesta r : pregunta.getRespuestas()) {
 			if (r.getRid() == rid) {
-				resp = r;
-				break;
+				return r;
 			}
 		}
+		return null;
+	}
+
+	void onSuccessFromComentarRespuesta(String ids) {
+		onActivate(ids);
+		resp = findRespuesta();
 		if (resptext == null) {
 			resptext = req.getParameter("rcomment");
 		}
@@ -144,6 +149,28 @@ public class Ver extends Pagina {
 
 	public boolean isChosenAnswer() {
 		return pregunta.getRespuestaElegida() != null && pregunta.getRespuestaElegida().intValue() == resp.getRid();
+	}
+
+	void onActionFromVoteQuestionUp(String ctxt) {
+		onActivate(ctxt);
+		pdao.vota(getUser(), pregunta, true);
+	}
+
+	void onActionFromVoteQuestionDown(String ctxt) {
+		onActivate(ctxt);
+		pdao.vota(getUser(), pregunta, false);
+	}
+
+	void onActionFromVoteAnswerUp(String ctxt) {
+		onActivate(ctxt);
+		resp = findRespuesta();
+		pdao.vota(getUser(), resp, true);
+	}
+
+	void onActionFromVoteAnswerDown(String ctxt) {
+		onActivate(ctxt);
+		resp = findRespuesta();
+		pdao.vota(getUser(), resp, false);
 	}
 
 }

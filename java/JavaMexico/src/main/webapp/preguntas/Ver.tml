@@ -7,7 +7,9 @@
 
 	<h2>${pregunta.titulo}</h2>
 	<cite>Por ${pregunta.autor.username} en ${pregunta.fechaPregunta}</cite>
-	<div>${pregunta.votos} votos</div>
+	<div>${pregunta.votos} votos
+	<t:if test="userExists"><t:actionlink t:id="voteQuestionUp" t:context="${pregunta.pid}">Voto UP</t:actionlink>
+		<t:actionlink t:id="voteQuestionDown" t:context="${pregunta.pid}">Voto DOWN</t:actionlink> <!-- TODO buscar voto previo del usuario --></t:if></div>
     <p>${pregunta.pregunta}</p>
     <div><t:loop t:source="pregunta.tags" t:value="tag">
     	<t:pagelink t:context="${tag.tag}" t:page="preguntas/index" class="qtag">${tag.tag}</t:pagelink>&nbsp;
@@ -22,7 +24,8 @@
 	<br/>
 	<h2>Respuestas:</h2>
 	<ul><t:loop t:source="pregunta.respuestas" t:value="resp" t:element="li">
-		<div>${resp.votos} votos (TODO: permitir un voto)</div>
+		<div>${resp.votos} votos <t:if test="userExists"><t:actionlink t:id="voteAnswerUp" t:context="${rcformContext}">Voto UP</t:actionlink>
+		<t:actionlink t:id="voteAnswerDown" t:context="${rcformContext}">Voto DOWN</t:actionlink> <!-- TODO buscar voto previo del usuario --></t:if></div>
 		<t:if test="chosenAnswer"><div><strong>Esta fue la respuesta elegida por el que hizo la pregunta</strong></div></t:if>
 		${resp.respuesta}
 		<br/>

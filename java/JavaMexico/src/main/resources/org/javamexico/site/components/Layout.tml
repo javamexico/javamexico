@@ -22,14 +22,15 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
         <div id="header">
             <div id="logo">
                 <h1>
-                    <t:pagelink page="index">org.javamexico:JavaMexico</t:pagelink>
+                    <t:pagelink page="index">JavaMexico.org</t:pagelink>
                 </h1>
             </div>
             <div id="menu">
                 <ul>
-                    <li t:type="loop" source="pageNames" value="pageName" class="prop:classForPageName">
+                    <li t:type="loop" t:source="pageNames" t:value="pageName" class="prop:classForPageName">
                         <t:pagelink page="prop:pageName">${pageName}</t:pagelink>
                     </li>
+                    <t:if test="userExists"><li><t:actionlink t:id="logout">Cerrar sesi&oacute;n</t:actionlink></li></t:if>
                 </ul>
             </div>
         </div>
