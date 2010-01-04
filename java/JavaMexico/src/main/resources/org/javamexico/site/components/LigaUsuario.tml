@@ -1,7 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <t:container xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
 
-<t:zone t:id="vzone" t:visible="false"></t:zone>
+<t:zone t:id="vzone" t:visible="true"><t:if t:test="userExists">
+<t:actionlink t:zone="${zoneClientId}" t:id="loggedLink" t:context="${zoneClientId}">${text}</t:actionlink>
+<p:else>
+<t:actionlink t:zone="${zoneClientId}" t:id="loginLink" t:context="${zoneClientId}">${text}</t:actionlink>
+</p:else></t:if></t:zone>
+
 <t:block t:id="loginBlock">
 <!-- aqui va la forma de login -->
 Debe registrarse primero
@@ -15,10 +20,6 @@ Password: <t:passwordfield t:value="passwd" size="16" validate="required" />
 <!-- aqui va el otro contenido -->
 <t:body/>
 </t:block>
-<t:if t:test="userExists">
-<t:actionlink t:zone="${zoneClientId}" t:id="loggedLink" t:context="${zoneClientId}">${text}</t:actionlink>
-<p:else>
-<t:actionlink t:zone="${zoneClientId}" t:id="loginLink" t:context="${zoneClientId}">${text}</t:actionlink>
-</p:else></t:if>
+
 
 </t:container>

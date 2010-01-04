@@ -59,11 +59,16 @@ public class Ver extends Pagina {
 		if (ids.indexOf('-') > 0) {
 			pid = Integer.parseInt(ids.substring(0, ids.indexOf('-')));
 			rid = Integer.parseInt(ids.substring(ids.indexOf('-') + 1));
+			log.warn("Me activan con pid {} rid {}", pid, rid);
 		} else {
 			pid = Integer.parseInt(ids);
 		}
 		if (pid > 0) {
 			pregunta = pdao.getPregunta(pid);
+			if (pregunta != null && rid > 0) {
+				log.warn("Buscando respuesta {}", rid);
+				resp = findRespuesta();
+			}
 		}
 		if (pregunta == null) {
 			//Redirigir al indice
@@ -107,6 +112,10 @@ public class Ver extends Pagina {
 	void onSuccessFromComentarRespuesta(String ids) {
 		onActivate(ids);
 		resp = findRespuesta();
+		if (resp == null) {
+			log.warn("No se puede agregar comentario a respuesta nula");
+			return;
+		}
 		if (resptext == null) {
 			resptext = req.getParameter("rcomment");
 		}
@@ -166,6 +175,14 @@ public class Ver extends Pagina {
 		onActivate(ctxt);
 		resp = findRespuesta();
 		pdao.vota(getUser(), resp, false);
+	}
+
+	public boolean isPreguntaVotada() {
+		return pregunta != null && pdao.findVoto(getUser(), pregunta) != null;
+	}
+
+	public boolean isRespuestaVotada() {
+		return resp != null && pdao.findVoto(getUser(), resp) != null;
 	}
 
 }
