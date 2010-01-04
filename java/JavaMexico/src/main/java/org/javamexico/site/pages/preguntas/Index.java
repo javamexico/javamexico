@@ -14,7 +14,6 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.pages.preguntas;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.tapestry5.annotations.IncludeStylesheet;
@@ -50,7 +49,7 @@ public class Index extends Pagina {
 	/** Devuelve las preguntas mas recientes para mostrarlas en la pagina. */
 	public List<Pregunta> getPreguntas() {
 		if (stag == null) {
-			return pdao.getPreguntasRecientes(new Date(System.currentTimeMillis()-864000000l));
+			return pdao.getPreguntasRecientes(1, 10);
 		} else {
 			return pdao.getPreguntasConTag(stag);
 		}

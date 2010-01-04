@@ -90,12 +90,12 @@ public class QuestionDAO implements PreguntaDao {
 		return qus;
 	}
 
-	public List<Pregunta> getPreguntasRecientes(Date desde) {
+	public List<Pregunta> getPreguntasRecientes(int page, int pageSize) {
 		Session sess = sfact.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.gt("status", 0)).add(
-				Restrictions.ge("fechaPregunta", desde)).addOrder(Order.desc("fechaPregunta")).list();
+				Restrictions.gt("status", 0)).addOrder(Order.desc("fechaPregunta")
+						).setMaxResults(pageSize).setFirstResult((page-1)*pageSize).list();
 		return qus;
 	}
 

@@ -24,7 +24,6 @@ import org.javamexico.entity.pregunta.VotoRespuesta;
 import org.javamexico.entity.Usuario;
 import org.javamexico.util.PrivilegioInsuficienteException;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +34,9 @@ import java.util.Set;
 public interface PreguntaDao {
 
 	/** Devuelve las preguntas mas recientes, ordenadas desde la mas reciente hacia la mas antigua.
-	 * @param desde El limite inferior de fecha que deben tener las preguntas. */
-	public List<Pregunta> getPreguntasRecientes(Date desde);
+	 * @param page La pagina de preguntas (comienza de la 1)
+	 * @param pageSize El numero de resultados a devolver por pagina. */
+	public List<Pregunta> getPreguntasRecientes(int page, int pageSize);
 
 	/** Devuelve las preguntas hechas por el usuario indicado. */
 	public List<Pregunta> getPreguntasUsuario(Usuario user);
