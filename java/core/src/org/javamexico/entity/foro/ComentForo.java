@@ -17,6 +17,7 @@ package org.javamexico.entity.foro;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Formula;
 import org.javamexico.entity.Usuario;
@@ -74,6 +77,7 @@ public class ComentForo implements Comparable<ComentForo> {
 		autor = value;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFecha() {
 		return fecha;
 	}
@@ -81,6 +85,7 @@ public class ComentForo implements Comparable<ComentForo> {
 		fecha = value;
 	}
 
+	@Column(name="coment")
 	public String getComentario() {
 		return coment;
 	}
@@ -89,7 +94,7 @@ public class ComentForo implements Comparable<ComentForo> {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="rt")
+	@JoinColumn(name="rt", referencedColumnName="cfid")
 	public ComentForo getInReplyTo() {
 		return rt;
 	}
@@ -98,7 +103,7 @@ public class ComentForo implements Comparable<ComentForo> {
 	}
 
 	@OneToMany(mappedBy="inReplyTo")
-	@OrderBy("votos DESC")
+	@OrderBy("fecha DESC")
 	public Set<ComentForo> getRespuestas() {
 		return replies;
 	}

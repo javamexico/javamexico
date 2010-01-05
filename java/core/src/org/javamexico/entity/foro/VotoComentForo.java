@@ -17,9 +17,12 @@ package org.javamexico.entity.foro;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
@@ -37,6 +40,8 @@ public class VotoComentForo {
 	private boolean up;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="voto_coment_foro_vid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getVid() {
 		return vid;
 	}

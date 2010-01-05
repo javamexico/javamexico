@@ -17,6 +17,7 @@ package org.javamexico.entity.foro;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +27,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Formula;
 import org.javamexico.entity.Usuario;
 
 /** Representa un foro, creado por un usuario,
@@ -45,6 +49,7 @@ public class Foro {
 	private Date fecha;
 	private String titulo;
 	private String texto;
+	private int votos;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="foro_fid_seq", allocationSize=1)
@@ -74,8 +79,10 @@ public class Foro {
 		creador = value;
 	}
 
-	@ManyToMany
-	@JoinTable(name="tag_foro_join")
+	@ManyToMany(cascade=CascadeType.PERSIST)
+	@JoinTable(name="tag_foro_join",
+			joinColumns=@JoinColumn(name="fid"),
+			inverseJoinColumns=@JoinColumn(name="tid"))
 	public Set<TagForo> getTags() {
 		return tags;
 	}
@@ -90,6 +97,7 @@ public class Foro {
 		status = value;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getFecha() {
 		return fecha;
 	}
@@ -109,6 +117,27 @@ public class Foro {
 	}
 	public void setTexto(String value) {
 		texto = value;
+	}
+
+	@Formula("((select count(*) from voto_foro vr where vr.fid=fid and vr.up)-(select count(*) from voto_foro vr where vr.fid=fid and not vr.up))")
+	public int getVotos() {
+		return votos;
+	}
+	public void setVotos(int value) {
+		votos = value;
+	}
+
+	@Override
+	public int hashCode() {
+		return fid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Foro) {
+			return ((Foro)obj).getFid() == fid;
+		}
+		return false;
 	}
 
 }

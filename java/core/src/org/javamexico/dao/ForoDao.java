@@ -17,6 +17,7 @@ package org.javamexico.dao;
 import org.javamexico.entity.foro.Foro;
 import org.javamexico.entity.foro.ComentForo;
 import org.javamexico.entity.foro.TagForo;
+import org.javamexico.entity.foro.TemaForo;
 import org.javamexico.entity.foro.VotoComentForo;
 import org.javamexico.entity.foro.VotoForo;
 import org.javamexico.entity.Usuario;
@@ -44,20 +45,26 @@ public interface ForoDao {
 	/** Devuelve los foros con mayor actividad (numero de comentarios). */
 	public List<Foro> getForosMasActivos(int limit);
 
+	/** Devuelve una lista de los foros con el tema especificado. */
+	public List<Foro> getForosConTema(TemaForo tema, int page, int pageSize);
+
 	/** Devuelve el foro con el ID especificado. */
 	public Foro getForo(int id);
+
+	/** Devuelve una lista de todos los temas de foros registrados. */
+	public List<TemaForo> getTemas();
 
 	/** Devuelve los comentarios del foro indicado, segun se pida: puede ser en orden
 	 * cronologico inverso, o por numero de votos (el mas votado primero).
 	 * IMPORTANTE: Solamente se devuelven comentarios directos al foro; los comentarios
 	 * que son respuestas a otros comentarios se deben obtener con el metodo {@link #getRespuestas(ComentForo)}
 	 *  @param foro El foro cuyos comentarios se quieren obtener.
-	 *  @param pageSize El numero de comentarios por pagina.
 	 *  @param page El numero de pagina a obtener (la primera es 1)
+	 *  @param pageSize El numero de comentarios por pagina.
 	 *  @param crono Indica si los comentarios se deben mostrar en orden cronologico
 	 *         (el mas nuevo primero); "false" significa ordenar por los mas votados primero.
 	 */
-	public List<ComentForo> getComentarios(Foro foro, int pageSize, int page, boolean crono);
+	public List<ComentForo> getComentarios(Foro foro, int page, int pageSize, boolean crono);
 
 	/** Devuelve las respuestas al comentario especificado (solamente navega un nivel). */
 	public Set<ComentForo> getRespuestas(ComentForo coment);
@@ -68,6 +75,10 @@ public interface ForoDao {
 	public void update(Foro foro);
 	/** Elimina de la base de datos el foro especificado. */
 	public void delete(Foro foro);
+
+	public void insert(TemaForo tema);
+	public void update(TemaForo tema);
+	public void delete(TemaForo tema);
 
 	/** Agrega un comentario al foro especificado.
 	 * @param coment El comentario a agregar.
@@ -103,5 +114,14 @@ public interface ForoDao {
 
 	/** Devuelve los tags de foros que contienen el texto parcial especificado. */
 	public List<TagForo> findMatchingTags(String parcial);
+
+	/** Devuelve los tags mas utilizados en el modulo de foros. */
+	public List<TagForo> getTagsPopulares(int max);
+
+	public List<Foro> getForosConTag(TagForo tag);
+
+	public List<Foro> getForosConTag(String tag);
+
+	public List<Foro> getForosConTags(List<TagForo> tags);
 
 }

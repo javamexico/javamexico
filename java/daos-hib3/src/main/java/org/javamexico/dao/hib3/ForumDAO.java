@@ -1,9 +1,24 @@
+/*
+This file is part of JavaMexico.
+
+JavaMexico is free software: you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation, either version 3
+of the License, or (at your option) any later version.
+
+JavaMexico is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with JavaMexico.
+If not, see <http://www.gnu.org/licenses/>.
+*/
 package org.javamexico.dao.hib3;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
@@ -14,6 +29,7 @@ import org.javamexico.entity.Usuario;
 import org.javamexico.entity.foro.ComentForo;
 import org.javamexico.entity.foro.Foro;
 import org.javamexico.entity.foro.TagForo;
+import org.javamexico.entity.foro.TemaForo;
 import org.javamexico.entity.foro.VotoComentForo;
 import org.javamexico.entity.foro.VotoForo;
 import org.javamexico.util.PrivilegioInsuficienteException;
@@ -127,7 +143,7 @@ public class ForumDAO implements ForoDao {
 		return v.size() > 0 ? v.get(0) : null;
 	}
 
-	public List<ComentForo> getComentarios(Foro foro, int pageSize, int page,
+	public List<ComentForo> getComentarios(Foro foro, int page, int pageSize,
 			boolean crono) {
 		Session sess = sfact.getCurrentSession();
 		Order order = crono ? Order.desc("fecha") : Order.desc("votos");
@@ -159,9 +175,13 @@ public class ForumDAO implements ForoDao {
 
 	public List<Foro> getForosByUser(Usuario user, boolean published) {
 		Session sess = sfact.getCurrentSession();
+		Criteria crit = sess.createCriteria(Foro.class).add(
+				Restrictions.eq("autor", user)).addOrder(Order.desc("fecha"));
+		if (published) {
+			crit = crit.add(Restrictions.gt("status", 0));
+		}
 		@SuppressWarnings("unchecked")
-		List<Foro> qus = sess.createCriteria(Foro.class).add(
-				Restrictions.eq("autor", user)).addOrder(Order.desc("fecha")).list();
+		List<Foro> qus = crit.list();
 		return qus;
 	}
 
@@ -240,6 +260,77 @@ public class ForumDAO implements ForoDao {
 			sess.update(voto);
 		}
 		return voto;
+	}
+
+	public List<TagForo> getTagsPopulares(int limit) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TagForo> tags = sess.createCriteria(TagForo.class).addOrder(
+				Order.desc("count")).setMaxResults(limit).list();
+		return tags;
+	}
+
+	public List<Foro> getForosConTag(TagForo tag) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<Foro> list = sess.createCriteria(Foro.class).add(Restrictions.in("tags", new Object[]{ tag })).list();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Foro> getForosConTag(String tag) {
+		Session sess = sfact.getCurrentSession();
+		List<TagForo> tags = sess.createCriteria(TagForo.class).add(Restrictions.ilike("tag", tag, MatchMode.EXACT)).setMaxResults(1).list();
+		List<Foro> list = null;
+		if (tags.size() > 0) {
+			list = sess.createCriteria(Foro.class).add(Restrictions.in(
+					"tags", new Object[]{ tags.get(0) })).list();
+		}
+		return list;
+	}
+
+	public List<Foro> getForosConTags(List<TagForo> tags) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void insert(TemaForo tema) {
+		if (tema.getFechaAlta() == null) {
+			tema.setFechaAlta(new Date());
+		}
+		Session sess = sfact.getCurrentSession();
+		sess.save(tema);
+	}
+
+	public void update(TemaForo tema) {
+		if (tema.getFechaAlta() == null) {
+			tema.setFechaAlta(new Date());
+		}
+		Session sess = sfact.getCurrentSession();
+		sess.update(tema);
+	}
+
+	public void delete(TemaForo tema) {
+		if (tema.getFechaAlta() == null) {
+			tema.setFechaAlta(new Date());
+		}
+		Session sess = sfact.getCurrentSession();
+		//TODO ver si hay foros y negar borrado si hay.
+		sess.delete(tema);
+	}
+
+	public List<Foro> getForosConTema(TemaForo tema, int page, int pageSize) {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<Foro> list = sess.createCriteria(Foro.class).add(Restrictions.eq("tema", tema)).setMaxResults(pageSize).setFirstResult((page-1)*pageSize).addOrder(Order.desc("votos")).list();
+		return list;
+	}
+
+	public List<TemaForo> getTemas() {
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TemaForo> temas = sess.createCriteria(TemaForo.class).list();
+		return temas;
 	}
 
 }
