@@ -104,35 +104,41 @@ CREATE TABLE tema_foro(
 --Un foro, con un tema, creado por un usuario
 CREATE TABLE foro(
 	fid SERIAL PRIMARY KEY,
-	tid INTEGER REFERENCES tema_foro(tid) NOT NULL ON DELETE RESTRICT,
-	uid INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	tid INTEGER NOT NULL REFERENCES tema_foro(tid) ON DELETE RESTRICT,
+	uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+	status INTEGER NOT NULL DEFAULT 0,
 	fecha timestamp NOT NULL,
 	titulo VARCHAR(400),
 	texto varchar(4000)
 );
 
---comentario en un foro, hecho por un usuario
-CREATE TABLE coment_foro(
-	cfid SERIAL PRIMARY KEY,
-	fid  INTEGER REFERENCES foro(fid) NOT NULL ON DELETE RESTRICT,
-	uid  INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	rt   INTEGER REFERENCES coment_foro(cfid) NOT NULL ON DELETE RESTRICT --nullify
-	fecha TIMESTAMP NOT NULL,
-	coment VARCHAR(2000) NOT NULL
-);
-
 --tags que el autor le puede poner a su foro
 CREATE TABLE tag_foro(
 	tid   SERIAL PRIMARY KEY,
-	fid   INTEGER REFERENCES foro(fid) NOT NULL ON DELETE CASCADE,
-	tag   VARCHAR(80) NOT NULL UNIQUE,
+	tag   VARCHAR(80) NOT NULL UNIQUE
+);
+
+CREATE TABLE tag_foro_join(
+	tid INTEGER NOT NULL REFERENCES tag_foro(tid) ON DELETE CASCADE,
+	fid INTEGER NOT NULL REFERENCES foro(fid) ON DELETE CASCADE,
+	PRIMARY KEY(tid,fid)
+);
+
+--comentario en un foro, hecho por un usuario
+CREATE TABLE coment_foro(
+	cfid SERIAL PRIMARY KEY,
+	fid  INTEGER NOT NULL REFERENCES foro(fid) ON DELETE RESTRICT,
+	uid  INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+	rt   INTEGER REFERENCES coment_foro(cfid) ON DELETE RESTRICT, --nullify
+	fecha TIMESTAMP NOT NULL,
+	coment VARCHAR(2000) NOT NULL
 );
 
 --votos que los usuarios le dan a un foro
 CREATE TABLE voto_foro(
 	vid   SERIAL PRIMARY  KEY,
-	fid   INTEGER REFERENCES foro(fid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	fid   INTEGER NOT NULL REFERENCES foro(fid) ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
 	up    BOOLEAN NOT NULL DEFAULT true
 );
@@ -140,8 +146,8 @@ CREATE TABLE voto_foro(
 --votos que los usuarios le dan a los comentarios en un foro
 CREATE TABLE voto_coment_foro(
 	vid   SERIAL PRIMARY  KEY,
-	cfid  INTEGER REFERENCES coment_foro(cfid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	cfid  INTEGER NOT NULL REFERENCES coment_foro(cfid) ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	up    BOOLEAN NOT NULL DEFAULT true,
 	fecha TIMESTAMP NOT NULL
 );
@@ -198,8 +204,8 @@ CREATE TABLE tag_pregunta(
 );
 
 CREATE TABLE tag_pregunta_join(
-	tid INTEGER NOT NULL,
-	pid INTEGER NOT NULL,
+	tid INTEGER NOT NULL REFERENCES tag_pregunta(tid) ON DELETE CASCADE,
+	pid INTEGER NOT NULL REFERENCES pregunta(pid) ON DELETE CASCADE,
 	PRIMARY KEY(tid,pid)
 );
 
