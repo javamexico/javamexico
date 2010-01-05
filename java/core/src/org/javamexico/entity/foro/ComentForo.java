@@ -24,8 +24,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.Formula;
 import org.javamexico.entity.Usuario;
 
 /** Representa un comentario hecho en un foro por un usuario registrado.
@@ -33,7 +35,7 @@ import org.javamexico.entity.Usuario;
  * @author Enrique Zamudio
  */
 @Entity(name="coment_foro")
-public class ComentForo {
+public class ComentForo implements Comparable<ComentForo> {
 
 	private int cfid;
 	private Foro foro;
@@ -42,6 +44,7 @@ public class ComentForo {
 	private Set<ComentForo> replies;
 	private Date fecha;
 	private String coment;
+	private int votos;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="coment_foro_cfid_seq", allocationSize=1)
@@ -94,12 +97,44 @@ public class ComentForo {
 		rt = value;
 	}
 
-	@OneToMany(mappedBy="foro")
+	@OneToMany(mappedBy="inReplyTo")
+	@OrderBy("votos DESC")
 	public Set<ComentForo> getRespuestas() {
 		return replies;
 	}
 	public void setRespuestas(Set<ComentForo> value) {
 		replies = value;
+	}
+
+	@Formula("((select count(*) from voto_coment_foro vr where vr.cfid=cfid and vr.up)-(select count(*) from voto_coment_foro vr where vr.cfid=cfid and not vr.up))")
+	public int getVotos() {
+		return votos;
+	}
+	public void setVotos(int value) {
+		votos = value;
+	}
+
+	public int compareTo(ComentForo o) {
+		if (o == null) {
+			return 1;
+		}
+		if (fecha == null) {
+			return o.getFecha() == null ? 0 : 1;
+		}
+		return fecha.compareTo(o.getFecha());
+	}
+
+	@Override
+	public int hashCode() {
+		return cfid;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof ComentForo)) {
+			return false;
+		}
+		return ((ComentForo)obj).getCfid() == cfid;
 	}
 
 }

@@ -35,6 +35,7 @@ import org.javamexico.entity.pregunta.VotoRespuesta;
 import org.javamexico.util.PrivilegioInsuficienteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Implementacion del DAO de preguntas, usando Hibernate 3 y el soporte de Spring.
@@ -45,7 +46,19 @@ public class QuestionDAO implements PreguntaDao {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 	private SessionFactory sfact;
+	private int minRepVotaP = 10;
+	private int minRepVotaR = 20;
 
+	/** Indica la reputacion minima requerida para dar votos negativos a una pregunta. */
+	public void setMinRepVotoPregunta(int value) {
+		minRepVotaP = value;
+	}
+	/** Indica la reputacion minima requerida para dar votos negativos a una respuesta. */
+	public void setMinRepVotoRespuesta(int value) {
+		minRepVotaR = value;
+	}
+
+	@Required
 	public void setSessionFactory(SessionFactory value) {
 		sfact = value;
 	}
@@ -142,7 +155,7 @@ public class QuestionDAO implements PreguntaDao {
 	}
 
 	public VotoPregunta vota(Usuario user, Pregunta pregunta, boolean up) throws PrivilegioInsuficienteException {
-		if (!up && user.getReputacion() < 10) {
+		if (!up && user.getReputacion() < minRepVotaP) {
 			throw new PrivilegioInsuficienteException();
 		}
 		Session sess = sfact.getCurrentSession();
@@ -163,7 +176,7 @@ public class QuestionDAO implements PreguntaDao {
 	}
 
 	public VotoRespuesta vota(Usuario user, Respuesta resp, boolean up) throws PrivilegioInsuficienteException {
-		if (!up && user.getReputacion() < 10) {
+		if (!up && user.getReputacion() < minRepVotaR) {
 			throw new PrivilegioInsuficienteException();
 		}
 		Session sess = sfact.getCurrentSession();
@@ -281,8 +294,6 @@ public class QuestionDAO implements PreguntaDao {
 		if (p.getTags() == null) {
 			sess.refresh(p);
 		}
-		utag.setCount(utag.getCount() + 1);
-		sess.update(utag);
 		p.getTags().add(utag);
 		sess.update(p);
 		p.getTags().size();

@@ -16,13 +16,14 @@ package org.javamexico.dao;
 
 import org.javamexico.entity.foro.Foro;
 import org.javamexico.entity.foro.ComentForo;
+import org.javamexico.entity.foro.TagForo;
 import org.javamexico.entity.foro.VotoComentForo;
 import org.javamexico.entity.foro.VotoForo;
 import org.javamexico.entity.Usuario;
 import org.javamexico.util.PrivilegioInsuficienteException;
 
+import java.util.List;
 import java.util.Set;
-import java.util.Date;
 
 /** Define la funcionalidad del DAO para la seccion de foros.
  * 
@@ -33,25 +34,33 @@ public interface ForoDao {
 	/** Devuelve los foros creados por el usuario especificado.
 	 * @param user El creador de los foros
 	 * @param published Indica si se deben devolver solamente sus foros publicados, o todos. */
-	public Set<Foro> getForosByUser(Usuario user, boolean published);
+	public List<Foro> getForosByUser(Usuario user, boolean published);
 
-	/** Devuelve los foros creados a partir de la fecha especificada, sin importar el autor. */
-	public Set<Foro> getForosRecientes(Date desde);
+	/** Devuelve los foros creados en orden cronologico inverso, sin importar el autor.
+	 * @param page El numero de pagina (comienza en la 1)
+	 * @param pageSize el numero de foros a mostrar por pagina. */
+	public List<Foro> getForosRecientes(int page, int pageSize);
 
 	/** Devuelve los foros con mayor actividad (numero de comentarios). */
-	public Set<Foro> getForosMasActivos(int limit);
+	public List<Foro> getForosMasActivos(int limit);
 
 	/** Devuelve el foro con el ID especificado. */
 	public Foro getForo(int id);
 
-	/** Devuelve los comentarios del foro indicado, paginado segun se pida.
+	/** Devuelve los comentarios del foro indicado, segun se pida: puede ser en orden
+	 * cronologico inverso, o por numero de votos (el mas votado primero).
+	 * IMPORTANTE: Solamente se devuelven comentarios directos al foro; los comentarios
+	 * que son respuestas a otros comentarios se deben obtener con el metodo {@link #getRespuestas(ComentForo)}
 	 *  @param foro El foro cuyos comentarios se quieren obtener.
 	 *  @param pageSize El numero de comentarios por pagina.
 	 *  @param page El numero de pagina a obtener (la primera es 1)
 	 *  @param crono Indica si los comentarios se deben mostrar en orden cronologico
-	 *         (el mas viejo primero).
+	 *         (el mas nuevo primero); "false" significa ordenar por los mas votados primero.
 	 */
-	public Set<ComentForo> getComentarios(Foro foro, int pageSize, int page, boolean crono);
+	public List<ComentForo> getComentarios(Foro foro, int pageSize, int page, boolean crono);
+
+	/** Devuelve las respuestas al comentario especificado (solamente navega un nivel). */
+	public Set<ComentForo> getRespuestas(ComentForo coment);
 
 	/** Inserta nuevo foro en la base de datos. */
 	public void insert(Foro foro);
@@ -60,11 +69,17 @@ public interface ForoDao {
 	/** Elimina de la base de datos el foro especificado. */
 	public void delete(Foro foro);
 
-	/** Agrega un comentario al foro especificado, como respuesta a otro comentario.
+	/** Agrega un comentario al foro especificado.
 	 * @param coment El comentario a agregar.
 	 * @param foro El foro donde se va a agregar el comentario.
-	 * @param parent El comentario al cual se esta respondiendo (opcional). */
-	public void addComment(ComentForo coment, Foro foro, ComentForo parent);
+	 * @param autor El usuario que hace el comentario. */
+	public ComentForo addComment(String coment, Foro foro, Usuario autor);
+
+	/** Agrega un comentario como respuesta a otro comentario de un foro.
+	 * @param coment El comentario a agregar.
+	 * @param parent El comentario al cual se esta respondiendo (opcional).
+	 * @param autor El usuario que hace el comentario. */
+	public ComentForo addComment(String coment, ComentForo parent, Usuario autor);
 
 	/** Registra un voto que un usuario hace a un foro.
 	 * @param user El usuario que hace el voto.
@@ -79,5 +94,14 @@ public interface ForoDao {
 	 * @param up Indica si el voto es positivo (true) o negativo (false).
 	 * @throws PrivilegioInsuficienteException si el usuario no tiene reputacion suficiente para dar un voto negativo. */
 	public VotoComentForo vota(Usuario user, ComentForo coment, boolean up) throws PrivilegioInsuficienteException;
+
+	public VotoForo findVoto(Usuario user, Foro foro);
+
+	public VotoComentForo findVoto(Usuario user, ComentForo coment);
+
+	public void addTag(String tag, Foro foro);
+
+	/** Devuelve los tags de foros que contienen el texto parcial especificado. */
+	public List<TagForo> findMatchingTags(String parcial);
 
 }

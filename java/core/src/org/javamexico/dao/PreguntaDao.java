@@ -110,8 +110,11 @@ public interface PreguntaDao {
 	/** Agrega un comentario a la respuesta especificada, a nombre del usuario especificado. */
 	public ComentRespuesta addComentario(String c, Respuesta r, Usuario autor);
 
+	/** Agrega el tag especificado a la pregunta. Primero se busca el tag existente para relacionarlo con la
+	 * pregunta, pero si no existe, se crea uno nuevo. */
 	public void addTag(String tag, Pregunta p);
 
+	/** Devuelve una lista con tags que contengan el texto parcial especificado. */
 	public List<TagPregunta> findMatchingTags(String parcial);
 
 }
