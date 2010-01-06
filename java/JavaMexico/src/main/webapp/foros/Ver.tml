@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout" t:title="JavaMexico :: Foros"
+      t:sidebarTitle="Foros similares"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+<h2>${foro.titulo}</h2>
+<cite>Por ${foro.autor.nombre} el ${foro.fecha}</cite>
+
+<div>${foro.votos} votos
+	<t:if test="userExists"><t:actionlink t:id="voteForoUp" t:context="${foro.fid}">Voto UP</t:actionlink>
+		<t:actionlink t:id="voteForoDown" t:context="${foro.fid}">Voto DOWN</t:actionlink>
+	</t:if>
+</div>
+<p>${foro.texto}</p>
+<div><t:loop t:source="foro.tags" t:value="tag">
+	<t:pagelink t:context="${tag.tag}" t:page="foros/index" class="qtag">${tag.tag}</t:pagelink>&nbsp;
+</t:loop></div>
+
+<hr/>
+<t:loop t:source="coments" t:value="coment"><div>
+${coment.autor.nombre} (${coment.fecha})
+<br/>
+${coment.comentario}
+<t:if test="coment.respuestas">
+<br/>
+<t:actionlink t:zone="rzone" t:id="showResps">Ver las respuestas a este comentario</t:actionlink>
+<t:zone t:id="rzone" t:visible="false">Aqui van las respuestas</t:zone>
+</t:if>
+</div></t:loop>
+
+<p:sidebar>
+	Falta poner aqui foros similares (con los mismos tags)
+    <t:if test="userExists">
+	<div>Mis foros:</div><t:loop t:source="misForos" t:value="otrof" t:element="div">
+    		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
+	</t:loop></t:if>
+</p:sidebar>
+
+</html>

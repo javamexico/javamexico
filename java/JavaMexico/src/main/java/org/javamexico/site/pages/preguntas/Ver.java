@@ -178,11 +178,11 @@ public class Ver extends Pagina {
 	}
 
 	public boolean isPreguntaVotada() {
-		return pregunta != null && pdao.findVoto(getUser(), pregunta) != null;
+		return pregunta != null && getUserExists() && pdao.findVoto(getUser(), pregunta) != null;
 	}
 
 	public boolean isRespuestaVotada() {
-		return resp != null && pdao.findVoto(getUser(), resp) != null;
+		return resp != null && getUserExists() && pdao.findVoto(getUser(), resp) != null;
 	}
 
 }

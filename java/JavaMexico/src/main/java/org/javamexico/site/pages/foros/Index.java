@@ -14,10 +14,52 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.pages.foros;
 
+import java.util.List;
+
+import org.apache.tapestry5.annotations.IncludeStylesheet;
+import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.Service;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.javamexico.dao.ForoDao;
+import org.javamexico.entity.foro.Foro;
+import org.javamexico.entity.foro.TagForo;
+import org.javamexico.site.base.Pagina;
+
 /** Pagina principal de la seccion de foros.
  * 
  * @author Enrique Zamudio
  */
-public class Index {
+@IncludeStylesheet("context:layout/preguntas.css")
+public class Index extends Pagina {
+
+	@Inject
+	@Service("foroDao")
+	private ForoDao fdao;
+	@Property private Foro foro;
+	@Property private TagForo tag;
+	//El tag para buscar foros
+	private String stag;
+
+	/** Esto se invoca cuando trae contexto la liga a esta pagina */
+	void onActivate(String value) {
+		stag = value;
+	}
+
+	public List<Foro> getForos() {
+		//TODO paginar...
+		if (stag == null) {
+			return fdao.getForosRecientes(1, 10);
+		} else {
+			return fdao.getForosConTag(stag);
+		}
+	}
+
+	public List<TagForo> getPopTags() {
+		return fdao.getTagsPopulares(10);
+	}
+
+	public List<Foro> getMisForos() {
+		return getUserExists() ? fdao.getForosByUser(getUser(), true) : null;
+	}
 
 }

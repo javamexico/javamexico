@@ -1,12 +1,27 @@
-<html t:type="layout" t:title="Foros"
-      t:sidebarTitle="Foros activos"
+<html t:type="layout" t:title="JavaMexico :: Foros"
+      t:sidebarTitle="Tags mas activos"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
 
 <p>Pagina principal para los foros.</p>
 
+<p>Foros mas recientes:</p>
+<ul>
+<t:loop t:source="foros" t:value="foro" t:element="li">
+	<t:pagelink t:page="foros/ver" t:context="${foro.fid}">${foro.titulo}</t:pagelink>
+		- ${foro.autor.nombre} (${foro.fecha})
+</t:loop>
+</ul>
     <p:sidebar>
-    Podriamos poner los foros mas activos o bien los foros con actividad muy reciente.
+    	<ol><t:loop t:source="popTags" t:value="tag" t:element="div">
+    		<t:pagelink t:context="${tag.tag}" t:page="foros/index" class="qtag">${tag.tag}</t:pagelink> (${tag.count})
+    	</t:loop></ol>
+    	No encuentras un foro con el tema que buscas?
+    	<t:pagelink t:page="foros/crear">Crea un foro nuevo</t:pagelink>
+    	<t:if test="userExists">
+    	<div>Mis foros:</div><t:loop t:source="misForos" t:value="foro" t:element="div">
+    		<t:pagelink t:page="foros/ver" t:context="${foro.fid}">${foro.titulo}</t:pagelink>
+    	</t:loop></t:if>
     </p:sidebar>
 
 </html>

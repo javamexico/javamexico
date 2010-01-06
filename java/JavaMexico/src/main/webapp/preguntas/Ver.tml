@@ -9,7 +9,9 @@
 	<cite>Por ${pregunta.autor.username} en ${pregunta.fechaPregunta}</cite>
 	<div>${pregunta.votos} votos
 	<t:if test="userExists"><t:actionlink t:id="voteQuestionUp" t:context="${pregunta.pid}">Voto UP</t:actionlink>
-		<t:actionlink t:id="voteQuestionDown" t:context="${pregunta.pid}">Voto DOWN</t:actionlink> <!-- TODO buscar voto previo del usuario --></t:if></div>
+		<t:actionlink t:id="voteQuestionDown" t:context="${pregunta.pid}">Voto DOWN</t:actionlink>
+	</t:if>
+	</div>
     <p>${pregunta.pregunta}</p>
     <div><t:loop t:source="pregunta.tags" t:value="tag">
     	<t:pagelink t:context="${tag.tag}" t:page="preguntas/index" class="qtag">${tag.tag}</t:pagelink>&nbsp;
