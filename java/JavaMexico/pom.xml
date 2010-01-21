@@ -96,6 +96,13 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         	<type>jar</type>
         	<scope>compile</scope>
         </dependency>
+        <dependency>
+        	<groupId>org.springframework</groupId>
+        	<artifactId>spring-web</artifactId>
+        	<version>3.0.0.RELEASE</version>
+        	<type>jar</type>
+        	<scope>compile</scope>
+        </dependency>
 
     </dependencies>
         <description>Aplicacion web para JavaMexico.org</description>
