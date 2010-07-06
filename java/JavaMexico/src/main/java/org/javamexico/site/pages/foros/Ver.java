@@ -14,6 +14,7 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.site.pages.foros;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -21,6 +22,7 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
 import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.javamexico.dao.ForoDao;
 import org.javamexico.entity.foro.ComentForo;
 import org.javamexico.entity.foro.Foro;
@@ -43,7 +45,10 @@ public class Ver extends Pagina {
 	@Property private TagForo tag;
 	@Property private ComentForo coment;
 	@Property private ComentForo comresp;
+	@Property private String commtext;
 	@InjectComponent private Zone rzone;
+	@Inject
+	private Request req;
 	/** Aqui vamos a guardar el ID de un comentario especifico, para AJAX */
 	private int cid;
 
@@ -87,6 +92,10 @@ public class Ver extends Pagina {
 		return getUserExists() ? fdao.getForosByUser(getUser(), true) : null;
 	}
 
+	public List<Foro> getForosSimilares() {
+		return fdao.getForosConTags(new ArrayList<TagForo>(foro.getTags()));
+	}
+
 	public boolean isForoVotado() {
 		return foro != null && getUserExists() && fdao.findVoto(getUser(), foro) != null;
 	}
@@ -111,6 +120,14 @@ public class Ver extends Pagina {
 	void onActionFromVoteForoDown(String ctxt) {
 		onActivate(ctxt);
 		fdao.vota(getUser(), foro, false);
+	}
+
+	void onSuccessFromComentar(int id) {
+		foro = fdao.getForo(id);
+		if (commtext == null) {
+			commtext = req.getParameter("commtext");
+		}
+		coment = fdao.addComment(commtext, foro, getUser());
 	}
 
 }

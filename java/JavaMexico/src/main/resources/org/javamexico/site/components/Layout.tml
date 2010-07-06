@@ -22,7 +22,7 @@ Description: A Web 2.0 design with fluid width suitable for blogs and small webs
         <div id="header">
             <div id="logo">
                 <h1>
-                    <t:pagelink page="index">JavaMexico.org</t:pagelink>
+                    <t:pagelink page="index">JavaMexico.org<t:if test="${userExists}"> : ${user.username}</t:if></t:pagelink>
                 </h1>
             </div>
             <div id="menu">

@@ -150,7 +150,7 @@ public class ForumDAO implements ForoDao {
 		@SuppressWarnings("unchecked")
 		List<ComentForo> coms = sess.createCriteria(ComentForo.class).add(
 				Restrictions.eq("foro", foro)).add(Restrictions.isNull("inReplyTo")).setFirstResult(
-						(page-1)*pageSize).setMaxResults(page).addOrder(order).list();
+						(page-1)*pageSize).setMaxResults(pageSize).addOrder(order).list();
 		for (ComentForo cf : coms) {
 			cf.getRespuestas().size();
 		}
@@ -283,15 +283,25 @@ public class ForumDAO implements ForoDao {
 		List<TagForo> tags = sess.createCriteria(TagForo.class).add(Restrictions.ilike("tag", tag, MatchMode.EXACT)).setMaxResults(1).list();
 		List<Foro> list = null;
 		if (tags.size() > 0) {
-			list = sess.createCriteria(Foro.class).add(Restrictions.in(
-					"tags", new Object[]{ tags.get(0) })).list();
+			//TODO esto no funciona
+			log.info("dizque buscamos foros con tag {}", tags.get(0));
+			//list = sess.createCriteria(Foro.class).add(Restrictions.in(
+			//		"tags", new Object[]{ tags.get(0) })).list();
 		}
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Foro> getForosConTags(List<TagForo> tags) {
-		// TODO Auto-generated method stub
-		return null;
+		Session sess = sfact.getCurrentSession();
+		List<Foro> list = null;
+		if (tags.size() > 0) {
+			log.info("dizque buscamos foros con tags {}", tags);
+			//TODO esto no funciona
+			//list = sess.createCriteria(Foro.class).add(Restrictions.in(
+			//		"tags", tags)).list();
+		}
+		return list;
 	}
 
 	public void insert(TemaForo tema) {

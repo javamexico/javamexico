@@ -27,10 +27,19 @@
 <t:foros.Comentario t:coment="comresp" />
 </div></t:loop></t:zone>
 </t:if>
-</div></t:loop>
+</div><hr/></t:loop>
+
+<t:ligausuario text="Agregar una respuesta">
+	<t:form t:id="comentar" context="${foro.fid}">
+	<t:textarea t:value="commtext" cols="40" rows="10" t:id="commtext" />
+	<br/><t:submit value="Comentar" />
+</t:form></t:ligausuario>
 
 <p:sidebar>
-	Falta poner aqui foros similares (con los mismos tags)
+	<div>Foros similares</div>
+	<t:loop t:source="forosSimilares" t:value="otrof" t:element="div">
+    		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
+	</t:loop>
     <t:if test="userExists">
 	<div>Mis foros:</div><t:loop t:source="misForos" t:value="otrof" t:element="div">
     		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
