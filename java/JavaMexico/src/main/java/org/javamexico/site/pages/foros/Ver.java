@@ -103,4 +103,14 @@ public class Ver extends Pagina {
 		return rzone.getBody();
 	}
 
+	void onActionFromVoteForoUp(String ctxt) {
+		onActivate(ctxt);
+		fdao.vota(getUser(), foro, true);
+	}
+
+	void onActionFromVoteForoDown(String ctxt) {
+		onActivate(ctxt);
+		fdao.vota(getUser(), foro, false);
+	}
+
 }
