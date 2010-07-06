@@ -42,6 +42,7 @@ public class Ver extends Pagina {
 	@Property private Foro otrof;
 	@Property private TagForo tag;
 	@Property private ComentForo coment;
+	@Property private ComentForo comresp;
 	@InjectComponent private Zone rzone;
 	/** Aqui vamos a guardar el ID de un comentario especifico, para AJAX */
 	private int cid;
@@ -62,6 +63,11 @@ public class Ver extends Pagina {
 			return Index.class;
 		} else if (cid > 0) {
 			//TODO buscar el comentario especifico
+			for (ComentForo cf : getComents()) {
+				if (cf.getCfid() == cid) {
+					coment = cf;
+				}
+			}
 		}
 		return null;
 	}
@@ -93,7 +99,6 @@ public class Ver extends Pagina {
 		return String.format("czone%d", coment.getCfid());
 	}
 
-	/** Este metodo lo invoca la liga para ver mas respuestas a un comentario. */
 	Object onActionFromShowResps() {
 		return rzone.getBody();
 	}

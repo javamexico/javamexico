@@ -13,19 +13,19 @@
 	</t:if>
 </div>
 <p>${foro.texto}</p>
-<div><t:loop t:source="foro.tags" t:value="tag">
+<div>Tags: <t:loop t:source="foro.tags" t:value="tag">
 	<t:pagelink t:context="${tag.tag}" t:page="foros/index" class="qtag">${tag.tag}</t:pagelink>&nbsp;
 </t:loop></div>
 
 <hr/>
 <t:loop t:source="coments" t:value="coment"><div>
-${coment.autor.nombre} (${coment.fecha})
-<br/>
-${coment.comentario}
+<t:foros.Comentario t:coment="coment" />
 <t:if test="coment.respuestas">
 <br/>
 <t:actionlink t:zone="rzone" t:id="showResps">Ver las respuestas a este comentario</t:actionlink>
-<t:zone t:id="rzone" t:visible="false">Aqui van las respuestas</t:zone>
+<t:zone t:id="rzone" t:visible="false"><t:loop t:source="coment.respuestas" t:value="comresp"><div>
+<t:foros.Comentario t:coment="comresp" />
+</div></t:loop></t:zone>
 </t:if>
 </div></t:loop>
 
