@@ -38,16 +38,18 @@ import org.slf4j.Logger;
  */
 public class LigaUsuario extends Pagina {
 
-	@Inject
-	private Logger log;
+	@Inject private Logger log;
+	/** Este es el texto de la liga cuando ya hay usuario en la sesion. */
 	@Parameter(required=true, defaultPrefix="literal")
 	@Property private String text;
+	/** El username para la forma de login. */
 	@Property private String uname;
+	/** El password para la forma de login. */
 	@Property private String passwd;
-	@Inject
-	private Block innerBlock;
-	@Inject
-	private Block loginBlock;
+	/** Este bloque contiene el contenido que envuelve este componente. */
+	@Inject private Block innerBlock;
+	/** Este bloque contiene la forma de login que se muestra si el usuario no esta registrado. */
+	@Inject private Block loginBlock;
 	@Inject
 	@Service("usuarioDao")
 	private UserDao udao;
@@ -55,13 +57,13 @@ public class LigaUsuario extends Pagina {
 	private Form login;
 	@Inject
 	private Request request;
-	@InjectComponent
-	private Zone vzone;
+	/** Esta es la zona que contiene la liga de login o con el texto configurado. */
+	@InjectComponent private Zone vzone;
 	private String vzid;
 
 	Object onSuccessFromLogin(String zid) {
 		vzid = zid;
-		log.info("en login, contextPath={} context={}",request.getContextPath(), request.getParameter("t:ac"));
+		log.debug("en login, contextPath={} context={}",request.getContextPath(), request.getParameter("t:ac"));
 		Usuario u = udao.validaLogin(uname, passwd);
 		if (u == null) {
 			login.recordError("Usuario inexistente, o password invalido.");

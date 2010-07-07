@@ -124,6 +124,7 @@ public class Ver extends Pagina {
 		resp = null;
 	}
 
+	/** Devuelve el ID de la pregunta y de la respuesta actual (o el rid que ya teniamos si no hay respuesta actual) */
 	public String getRcformContext() {
 		return String.format("%d-%d", pregunta.getPid(), resp == null ? rid : resp.getRid());
 	}

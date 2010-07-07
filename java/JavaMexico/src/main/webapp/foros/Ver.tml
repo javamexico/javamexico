@@ -8,8 +8,9 @@
 <cite>Por ${foro.autor.nombre} el ${foro.fecha}</cite>
 
 <div>${foro.votos} votos
-	<t:if test="userExists"><t:actionlink t:id="voteForoUp" t:context="${foro.fid}">Voto UP</t:actionlink>
-		<t:actionlink t:id="voteForoDown" t:context="${foro.fid}">Voto DOWN</t:actionlink>
+	<t:if test="userExists">
+		<t:actionlink t:id="voteForoUp">Voto UP</t:actionlink>
+		| <t:actionlink t:id="voteForoDown">Voto DOWN</t:actionlink>
 	</t:if>
 </div>
 <p>${foro.texto}</p>
@@ -18,20 +19,44 @@
 </t:loop></div>
 
 <hr/>
-<t:loop t:source="coments" t:value="coment"><div>
-<t:foros.Comentario t:coment="coment" />
+<t:loop t:source="coments" t:value="coment"><div class="qtag">
+<cite>${coment.autor.nombre} (${coment.fecha})</cite>
+<br/>${coment.comentario}
+<br/>
+${coment.votos} votos <t:if test="userExists">
+	<t:actionlink t:id="voteComentUp">Voto UP</t:actionlink>
+	| <t:actionlink t:id="voteComentDown">Voto DOWN</t:actionlink>
+</t:if>
+
+<t:ligausuario text="Responder a este comentario">
+	<t:form t:id="responder">
+	<t:textarea t:value="commtext" cols="40" rows="10" t:id="resptext" />
+	<br/><t:submit value="Responder" />
+</t:form></t:ligausuario>
 <t:if test="coment.respuestas">
 <br/>
-<t:actionlink t:zone="rzone" t:id="showResps">Ver las respuestas a este comentario</t:actionlink>
-<t:zone t:id="rzone" t:visible="false"><t:loop t:source="coment.respuestas" t:value="comresp"><div>
-<t:foros.Comentario t:coment="comresp" />
-</div></t:loop></t:zone>
+<t:zone t:id="rzone" t:visible="true">
+	<t:actionlink t:zone="${rzoneClientId}" t:id="showResps">Ver las respuestas a este comentario</t:actionlink>
+</t:zone>
 </t:if>
 </div><hr/></t:loop>
 
+<!-- esto se presenta bajo alguno de los comentarios de primer nivel -->
+<t:zone t:id="subcomentZone" t:visible="false">
+	<t:loop t:source="coment.respuestas" t:value="comresp" t:element="ul"><li>
+		<cite>${comresp.autor.nombre} (${comresp.fecha})</cite>
+		<br/>${comresp.comentario}
+		<br/>
+		${comresp.votos} votos <t:if test="userExists">
+			<t:actionlink t:id="voteComrespUp" t:context="comresp.cfid">Voto UP</t:actionlink>
+			| <t:actionlink t:id="voteComrespDown" t:context="comresp.cfid">Voto DOWN</t:actionlink>
+		</t:if>
+	</li></t:loop>
+</t:zone>
+
 <t:ligausuario text="Agregar una respuesta">
-	<t:form t:id="comentar" context="${foro.fid}">
-	<t:textarea t:value="commtext" cols="40" rows="10" t:id="commtext" />
+	<t:form t:id="comentar">
+	<t:textarea t:value="commtext" cols="60" rows="10" t:id="commtext" />
 	<br/><t:submit value="Comentar" />
 </t:form></t:ligausuario>
 

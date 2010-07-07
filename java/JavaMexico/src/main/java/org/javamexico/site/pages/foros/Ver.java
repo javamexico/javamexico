@@ -46,9 +46,10 @@ public class Ver extends Pagina {
 	@Property private ComentForo coment;
 	@Property private ComentForo comresp;
 	@Property private String commtext;
+	/** Esta zona contiene una liga para mostrar respuestas a un comentario. */
 	@InjectComponent private Zone rzone;
-	@Inject
-	private Request req;
+	/** Esta zona despliega las respuestas a un comentario. */
+	@InjectComponent private Zone subcomentZone;
 	/** Aqui vamos a guardar el ID de un comentario especifico, para AJAX */
 	private int cid;
 
@@ -109,25 +110,66 @@ public class Ver extends Pagina {
 	}
 
 	Object onActionFromShowResps() {
-		return rzone.getBody();
+		return subcomentZone.getBody();
 	}
 
-	void onActionFromVoteForoUp(String ctxt) {
-		onActivate(ctxt);
+	void onActionFromVoteForoUp() {
 		fdao.vota(getUser(), foro, true);
 	}
 
-	void onActionFromVoteForoDown(String ctxt) {
-		onActivate(ctxt);
+	void onActionFromVoteForoDown() {
 		fdao.vota(getUser(), foro, false);
 	}
 
-	void onSuccessFromComentar(int id) {
-		foro = fdao.getForo(id);
-		if (commtext == null) {
-			commtext = req.getParameter("commtext");
+	void onActionFromVoteComentUp() {
+		fdao.vota(getUser(), coment, true);
+	}
+
+	void onActionFromVoteComentDown() {
+		fdao.vota(getUser(), coment, false);
+	}
+
+	void votaRespuestaComent(int crid, boolean up) {
+		if (coment == null) {
+			log.warn("No puedo votar nada porque no hay comentario padre");
+			return;
+		} else {
+			for (ComentForo cf : coment.getRespuestas()) {
+				if (cf.getCfid() == crid) {
+					comresp = cf;
+				}
+			}
 		}
+		if (comresp == null) {
+			log.warn("No encuentro respuesta {} hija de coment {}", crid, coment.getCfid());
+		} else {
+			fdao.vota(getUser(), comresp, up);
+		}
+	}
+
+	void onActionFromVoteComrespUp(int crid) {
+		votaRespuestaComent(crid, true);
+	}
+
+	void onActionFromVoteComrespDown(int crid) {
+		votaRespuestaComent(crid, false);
+	}
+	void onSuccessFromResponder() {
+		coment = fdao.addComment(commtext, coment, getUser());
+	}
+
+	void onSuccessFromComentar() {
 		coment = fdao.addComment(commtext, foro, getUser());
+	}
+
+	/** Devuelve el ID del foro y del comentario actual (o el cid que ya teniamos si no hay comentario actual) */
+	public String getCcformContext() {
+		return String.format("%d-%d", foro.getFid(), coment == null ? cid : coment.getCfid());
+	}
+
+	/** Esto es necesario para poder mostrar las respuestas a un comentario en donde realmente deben ir. */
+	public String getRzoneClientId() {
+		return rzone.getClientId();
 	}
 
 }
