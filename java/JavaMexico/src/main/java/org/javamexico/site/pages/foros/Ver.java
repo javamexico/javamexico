@@ -22,7 +22,6 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.Service;
 import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.Request;
 import org.javamexico.dao.ForoDao;
 import org.javamexico.entity.foro.ComentForo;
 import org.javamexico.entity.foro.Foro;
@@ -94,7 +93,11 @@ public class Ver extends Pagina {
 	}
 
 	public List<Foro> getForosSimilares() {
-		return fdao.getForosConTags(new ArrayList<TagForo>(foro.getTags()));
+		if (foro.getTags().size() == 1) {
+			return fdao.getForosConTag(foro.getTags().iterator().next());
+		} else {
+			return fdao.getForosConTags(new ArrayList<TagForo>(foro.getTags()));
+		}
 	}
 
 	public boolean isForoVotado() {

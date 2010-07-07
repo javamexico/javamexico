@@ -14,9 +14,11 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.dao.hib3;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -272,9 +274,8 @@ public class ForumDAO implements ForoDao {
 
 	public List<Foro> getForosConTag(TagForo tag) {
 		Session sess = sfact.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Foro> list = sess.createCriteria(Foro.class).add(Restrictions.in("tags", new Object[]{ tag })).list();
-		return list;
+		sess.refresh(tag);
+		return new ArrayList<Foro>(tag.getForos());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -283,10 +284,7 @@ public class ForumDAO implements ForoDao {
 		List<TagForo> tags = sess.createCriteria(TagForo.class).add(Restrictions.ilike("tag", tag, MatchMode.EXACT)).setMaxResults(1).list();
 		List<Foro> list = null;
 		if (tags.size() > 0) {
-			//TODO esto no funciona
-			log.info("dizque buscamos foros con tag {}", tags.get(0));
-			//list = sess.createCriteria(Foro.class).add(Restrictions.in(
-			//		"tags", new Object[]{ tags.get(0) })).list();
+			list = new ArrayList<Foro>(tags.get(0).getForos());
 		}
 		return list;
 	}
@@ -294,14 +292,22 @@ public class ForumDAO implements ForoDao {
 	@SuppressWarnings("unchecked")
 	public List<Foro> getForosConTags(List<TagForo> tags) {
 		Session sess = sfact.getCurrentSession();
-		List<Foro> list = null;
-		if (tags.size() > 0) {
-			log.info("dizque buscamos foros con tags {}", tags);
-			//TODO esto no funciona
-			//list = sess.createCriteria(Foro.class).add(Restrictions.in(
-			//		"tags", tags)).list();
+		Set<Integer> foros = new TreeSet<Integer>();
+		//Recorremos cada tag
+		for (TagForo tag : tags) {
+			sess.refresh(tag);
+			//Obtenemos los foros del tag
+			Set<Foro> sub = tag.getForos();
+			//Por alguna rarisima razon mas alla de mi comprension,
+			//si agrego el foro directamente a la lista, en algun momento truena esto
+			//con un ClassCastException que no me da stack trace. Algun pedo muy satanico.
+			//Asi que agregamos la llave de cada foro y luego hacemos un query.
+			//Ineficiente, pero al menos funciona.
+			for (Foro f : sub) {
+				foros.add(f.getFid());
+			}
 		}
-		return list;
+		return sess.createCriteria(Foro.class).add(Restrictions.in("fid", foros)).list();
 	}
 
 	public void insert(TemaForo tema) {

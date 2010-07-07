@@ -14,12 +14,12 @@
 	</t:if>
 </div>
 <p>${foro.texto}</p>
-<div>Tags: <t:loop t:source="foro.tags" t:value="tag">
+<div>Tags: <t:loop t:id="ftags" t:source="foro.tags" t:value="tag">
 	<t:pagelink t:context="${tag.tag}" t:page="foros/index" class="qtag">${tag.tag}</t:pagelink>&nbsp;
 </t:loop></div>
 
 <hr/>
-<t:loop t:source="coments" t:value="coment"><div class="qtag">
+<t:loop t:id="fcoms" t:source="coments" t:value="coment"><div class="qtag">
 <cite>${coment.autor.nombre} (${coment.fecha})</cite>
 <br/>${coment.comentario}
 <br/>
@@ -43,7 +43,7 @@ ${coment.votos} votos <t:if test="userExists">
 
 <!-- esto se presenta bajo alguno de los comentarios de primer nivel -->
 <t:zone t:id="subcomentZone" t:visible="false">
-	<t:loop t:source="coment.respuestas" t:value="comresp" t:element="ul"><li>
+	<t:loop t:id="cresps" t:source="coment?.respuestas" t:value="comresp" t:element="ul"><li>
 		<cite>${comresp.autor.nombre} (${comresp.fecha})</cite>
 		<br/>${comresp.comentario}
 		<br/>
@@ -62,11 +62,11 @@ ${coment.votos} votos <t:if test="userExists">
 
 <p:sidebar>
 	<div>Foros similares</div>
-	<t:loop t:source="forosSimilares" t:value="otrof" t:element="div">
+	<t:loop t:id="fsims" t:source="forosSimilares" t:value="otrof" t:element="div">
     		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
 	</t:loop>
     <t:if test="userExists">
-	<div>Mis foros:</div><t:loop t:source="misForos" t:value="otrof" t:element="div">
+	<div>Mis foros:</div><t:loop t:id="fmios" t:source="misForos" t:value="otrof" t:element="div">
     		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
 	</t:loop></t:if>
 </p:sidebar>

@@ -15,11 +15,17 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.entity.foro;
 
 import java.util.Comparator;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.Formula;
@@ -35,6 +41,7 @@ public class TagForo {
 	private int tid;
 	private int count;
 	private String tag;
+	private Set<Foro> foros;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="tag_foro_tid_seq", allocationSize=1)
@@ -61,6 +68,35 @@ public class TagForo {
 		tag = value;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TagForo)) {
+			return false;
+		}
+		return ((TagForo)obj).getTid() == tid;
+	}
+
+	@Override
+	public int hashCode() {
+		return tid;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Tag:%s", tag);
+	}
+
+	@ManyToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@JoinTable(name="tag_foro_join",
+			joinColumns=@JoinColumn(name="tid"),
+			inverseJoinColumns=@JoinColumn(name="fid"))
+	public Set<Foro> getForos() {
+		return foros;
+	}
+	public void setForos(Set<Foro> value) {
+		foros = value;
+	}
+
 	/** Este comparador ordena los tags de foros segun el numero de foros que los usan.
 	 * 
 	 * @author Enrique Zamudio
@@ -80,24 +116,6 @@ public class TagForo {
 			}
 		}
 		
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof TagForo)) {
-			return false;
-		}
-		return ((TagForo)obj).getTid() == tid;
-	}
-
-	@Override
-	public int hashCode() {
-		return tid;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Tag:%s", tag);
 	}
 
 }
