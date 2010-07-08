@@ -14,9 +14,12 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.dao.hib3;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -79,20 +82,31 @@ public class QuestionDAO implements PreguntaDao {
 
 	public List<Pregunta> getPreguntasConTag(TagPregunta tag) {
 		Session sess = sfact.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Pregunta> qus = sess.createCriteria(Pregunta.class).add(
-				Restrictions.in("tags", new Object[]{ tag })).list();
-		return qus;
+		sess.refresh(tag);
+		return new ArrayList<Pregunta>(tag.getPreguntas());
 	}
 
 	public List<Pregunta> getPreguntasConTag(String tag) {
-		//TODO implementar
-		return null;
+		Session sess = sfact.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<TagPregunta> tags = sess.createCriteria(TagPregunta.class).add(Restrictions.ilike("tag", tag, MatchMode.EXACT)).setMaxResults(1).list();
+		List<Pregunta> qus = null;
+		if (tags.size() > 0) {
+			qus = new ArrayList<Pregunta>(tags.get(0).getPreguntas());
+		} else {
+			qus = Collections.emptyList();
+		}
+		return qus;
 	}
 
 	public List<Pregunta> getPreguntasConTags(Set<TagPregunta> tags) {
-		//TODO implementar
-		return null;
+		Session sess = sfact.getCurrentSession();
+		Set<Pregunta> qus = new TreeSet<Pregunta>();
+		for (TagPregunta tag : tags) {
+			sess.refresh(tag);
+			qus.addAll(tag.getPreguntas());
+		}
+		return new ArrayList<Pregunta>(qus);
 	}
 
 	public List<Pregunta> getPreguntasMasVotadas(int limit) {

@@ -186,4 +186,16 @@ public class Ver extends Pagina {
 		return resp != null && getUserExists() && pdao.findVoto(getUser(), resp) != null;
 	}
 
+	public List<Pregunta> getPregsSimilares() {
+		if (pregunta.getTags().size() == 1) {
+			return pdao.getPreguntasConTag(pregunta.getTags().iterator().next());
+		} else {
+			return pdao.getPreguntasConTags(pregunta.getTags());
+		}
+	}
+
+	public boolean isPreguntaDistinta() {
+		return otrap == null || pregunta.getPid() != otrap.getPid();
+	}
+
 }

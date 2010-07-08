@@ -51,10 +51,13 @@
 
 
     <p:sidebar>
-    	TODO: preguntas similares (por tags)
+    	Preguntas similares
+    	<t:loop t:source="pregsSimilares" t:value="otrap" t:element="div">
+    		<t:if test="preguntaDistinta"><t:pagelink t:page="preguntas/ver" t:context="${otrap.pid}">${otrap.titulo}</t:pagelink></t:if>
+    	</t:loop>
     	<t:if test="userExists"><div>Mis preguntas:</div>
     	<t:loop t:source="misPreguntas" t:value="otrap" t:element="div">
-    		<t:pagelink t:page="preguntas/ver" t:context="${otrap.pid}">${otrap.titulo}</t:pagelink>
+    		<t:if test="preguntaDistinta"><t:pagelink t:page="preguntas/ver" t:context="${otrap.pid}">${otrap.titulo}</t:pagelink></t:if>
     	</t:loop></t:if>
     </p:sidebar>
 

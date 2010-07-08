@@ -175,4 +175,8 @@ public class Ver extends Pagina {
 		return rzone.getClientId();
 	}
 
+	public boolean isForoDistinto() {
+		return otrof == null || foro.getFid() != otrof.getFid();
+	}
+
 }

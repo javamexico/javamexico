@@ -6,7 +6,8 @@
 
     <p>${message:greeting}</p>
 
-	<p>Lo de moda ahorita son las <t:pagelink page="preguntas">preguntas</t:pagelink>.</p>
+	<p>Lo de moda ahorita son las <t:pagelink page="preguntas">preguntas</t:pagelink>, aunque ya tambien
+	hay avances en la seccion de <t:pagelink page="foros">foros</t:pagelink>.</p>
     <p:sidebar>
 
         <p>

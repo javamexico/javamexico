@@ -15,11 +15,17 @@ If not, see <http://www.gnu.org/licenses/>.
 package org.javamexico.entity.pregunta;
 
 import java.util.Comparator;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.Formula;
@@ -35,6 +41,7 @@ public class TagPregunta implements Comparable<TagPregunta> {
 	private int tid;
 	private int count;
 	private String tag;
+	private Set<Pregunta> qus;
 
 	@Id
 	@SequenceGenerator(name="pk", sequenceName="tag_pregunta_tid_seq", allocationSize=1)
@@ -61,6 +68,17 @@ public class TagPregunta implements Comparable<TagPregunta> {
 		tag = value;
 	}
 
+	@ManyToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
+	@JoinTable(name="tag_pregunta_join",
+			joinColumns=@JoinColumn(name="tid"),
+			inverseJoinColumns=@JoinColumn(name="pid"))
+	public Set<Pregunta> getPreguntas() {
+		return qus;
+	}
+	public void setPreguntas(Set<Pregunta> value) {
+		qus = value;
+	}
+
 	/** Compara dos tags por su nombre. */
 	public int compareTo(TagPregunta o) {
 		if (o == null) {
@@ -70,6 +88,24 @@ public class TagPregunta implements Comparable<TagPregunta> {
 			return o.getTag() == null ? 0 : -1;
 		}
 		return tag.compareTo(o.getTag());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TagPregunta)) {
+			return false;
+		}
+		return ((TagPregunta)obj).getTid() == tid;
+	}
+
+	@Override
+	public int hashCode() {
+		return tid;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Tag:%s", tag);
 	}
 
 	/** Este comparador evalua la cuenta de cada tag en vez del nombre.
@@ -91,24 +127,6 @@ public class TagPregunta implements Comparable<TagPregunta> {
 			}
 		}
 		
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof TagPregunta)) {
-			return false;
-		}
-		return ((TagPregunta)obj).getTid() == tid;
-	}
-
-	@Override
-	public int hashCode() {
-		return tid;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Tag:%s", tag);
 	}
 
 }

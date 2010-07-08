@@ -63,11 +63,11 @@ ${coment.votos} votos <t:if test="userExists">
 <p:sidebar>
 	<div>Foros similares</div>
 	<t:loop t:id="fsims" t:source="forosSimilares" t:value="otrof" t:element="div">
-    		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
+    	<t:if test="foroDistinto"><t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink></t:if>
 	</t:loop>
     <t:if test="userExists">
 	<div>Mis foros:</div><t:loop t:id="fmios" t:source="misForos" t:value="otrof" t:element="div">
-    		<t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink>
+    	<t:if test="foroDistinto"><t:pagelink t:page="foros/ver" t:context="${otrof.fid}">${otrof.titulo}</t:pagelink></t:if>
 	</t:loop></t:if>
 </p:sidebar>
 
