@@ -5,7 +5,7 @@
       xmlns:p="tapestry:parameter">
 
 <h2>${foro.titulo}</h2>
-<cite>Por ${foro.autor.nombre} el ${foro.fecha}</cite>
+<cite>Por ${foro.autor.nombre} el ${foro.fecha} bajo <t:pagelink t:page="foros/tema" t:context="${foro.tema.tid}">${foro.tema.tema}</t:pagelink></cite>
 
 <div>${foro.votos} votos
 	<t:if test="userExists">

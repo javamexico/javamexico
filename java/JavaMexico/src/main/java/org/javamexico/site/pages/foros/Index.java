@@ -23,6 +23,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.javamexico.dao.ForoDao;
 import org.javamexico.entity.foro.Foro;
 import org.javamexico.entity.foro.TagForo;
+import org.javamexico.entity.foro.TemaForo;
 import org.javamexico.site.base.Pagina;
 
 /** Pagina principal de la seccion de foros.
@@ -37,18 +38,24 @@ public class Index extends Pagina {
 	private ForoDao fdao;
 	@Property private Foro foro;
 	@Property private TagForo tag;
+	@Property private TemaForo tema;
 	//El tag para buscar foros
-	private String stag;
+	@Property private String stag;
 
 	/** Esto se invoca cuando trae contexto la liga a esta pagina */
 	void onActivate(String value) {
 		stag = value;
 	}
 
+	public List<TemaForo> getTemas() {
+		return fdao.getTemas();
+	}
+
 	public List<Foro> getForos() {
 		//TODO paginar...
 		if (stag == null) {
-			return fdao.getForosRecientes(1, 10);
+			return fdao.getForosConTema(tema, 1, 5);
+			//return fdao.getForosRecientes(1, 10);
 		} else {
 			return fdao.getForosConTag(stag);
 		}

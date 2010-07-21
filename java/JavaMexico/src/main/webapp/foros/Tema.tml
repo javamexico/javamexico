@@ -1,0 +1,16 @@
+<html t:type="layout" t:title="JavaMexico :: Foros :: ${tema.tema}"
+      t:sidebarTitle="Tags mas activos"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+<p>${tema.descripcion}</p>
+<t:loop t:source="foros" t:value="foro" t:element="li">
+	<t:pagelink t:page="foros/ver" t:context="${foro.fid}">${foro.titulo}</t:pagelink>
+		- por ${foro.autor.nombre} (${foro.fecha})
+</t:loop>
+
+    <p:sidebar>
+    aqui podria ir lo mismo que en index, o algo distinto...
+    </p:sidebar>
+
+</html>

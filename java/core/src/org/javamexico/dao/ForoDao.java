@@ -45,7 +45,7 @@ public interface ForoDao {
 	/** Devuelve los foros con mayor actividad (numero de comentarios). */
 	public List<Foro> getForosMasActivos(int limit);
 
-	/** Devuelve una lista de los foros con el tema especificado. */
+	/** Devuelve una lista de los foros con el tema especificado, ordenados de los mas votados a los menos. */
 	public List<Foro> getForosConTema(TemaForo tema, int page, int pageSize);
 
 	/** Devuelve el foro con el ID especificado. */
@@ -53,6 +53,9 @@ public interface ForoDao {
 
 	/** Devuelve una lista de todos los temas de foros registrados. */
 	public List<TemaForo> getTemas();
+
+	/** Devuelve el tema con la clave especificada. */
+	public TemaForo getTema(int tid);
 
 	/** Devuelve los comentarios del foro indicado, segun se pida: puede ser en orden
 	 * cronologico inverso, o por numero de votos (el mas votado primero).

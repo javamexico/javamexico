@@ -1,0 +1,43 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author Enrique Zamudio Lopez}
+{\*\company Solab}
+{\*\copyright 2007 Desarrollo de Soluciones Abiertas S.C.}}\margl1440\margr1440\vieww11200\viewh10200\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs28 \cf0 M\'f3dulo: Foros\
+\
+Tablas (BD):\
+foro\
+tema_foro\
+tag_foro\
+tag_foro_join\
+coment_foro\
+voto_foro\
+voto_coment_foro\
+\
+Entidades: org.javamexico.entity.foro\
+TemaForo\
+Foro\
+TagForo\
+ComentForo\
+VotoForo\
+VotoComentForo\
+\
+DAOs:\
+Interfaz ForoDao\
+Impl Hib3 ForumDAO\
+\
+Un foro consiste en un t\'edtulo, un tema, texto y tags. Cualquier usuario registrado con cierta reputaci\'f3n puede dar de alta un foro. Cualquier usuario puede dejar un comentario en un foro. Cualquier usuario puede dar un voto positivo a un foro o a un comentario en un foro, pero solamente usuarios con cierta reputaci\'f3n pueden dar voto negativo al foro o a comentarios dentro del foro. Todos los foros aceptan comentarios y los comentarios aceptan respuestas (solamente a un nivel de profundidad; no se pueden tener respuestas de las respuestas).\
+\
+Se pueden hacer b\'fasquedas por el t\'edtulo o texto de los foros, as\'ed como por tags. La p\'e1gina que muestra un foro, debe mostrar una lista de foros similares (la similitud se califica por los tags que coincidan en otros foros).\
+\
+La p\'e1gina principal muestra los temas de los foros y los 5 foros m\'e1s votados o m\'e1s recientes de cada tema. Los t\'edtulos de los temas son ligas para ir a una p\'e1gina del tema; los t\'edtulos de los foros son ligas para ver el foro con sus comentarios, votos, etc.\
+En la parte derecha de la p\'e1gina principal se ven los tags m\'e1s usados en foros y si el usuario est\'e1 registrado, puede ver los foros que ha dado de alta.\
+\
+La p\'e1gina de foros por tema muestra el t\'edtulo y descripci\'f3n del tema, y los foros que se han registrado en \'e9l. Los t\'edtulos de los foros llevan a la p\'e1gina del foro.\
+\
+La p\'e1gina del foro muestra el t\'edtulo, texto, autor, y el texto del foro. Permite a usuarios registrados darle un voto positivo o negativo al foro, as\'ed como comentar debajo del texto, o contestar a un comentario. Tambi\'e9n se puede dar un voto positivo o negativo a un comentario.\
+}

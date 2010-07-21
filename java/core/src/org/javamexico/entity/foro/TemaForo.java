@@ -18,7 +18,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -35,6 +38,8 @@ public class TemaForo {
 	private Date fechaAlta;
 
 	@Id
+	@SequenceGenerator(name="pk", sequenceName="tema_foro_tid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getTid() {
 		return tid;
 	}

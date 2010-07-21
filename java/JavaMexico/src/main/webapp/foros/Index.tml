@@ -5,13 +5,28 @@
 
 <p>Pagina principal para los foros.</p>
 
-<p>Foros mas recientes:</p>
+<t:if test="${stag}">
+<p>Foros con el tag ${stag}:</p>
+<ul>
+<t:loop t:source="foros" t:value="foro" t:element="li">
+	<t:pagelink t:page="foros/ver" t:context="${foro.fid}">${foro.titulo}</t:pagelink>
+		- por ${foro.autor.nombre} (${foro.fecha})
+		bajo el tema <t:pagelink t:page="foros/tema" t:context="${foro.tema.tid}">${foro.tema.tema}</t:pagelink>
+</t:loop>
+</ul>
+<p:else>
+<p>Foros mas recientes, por tema:</p>
+<ul><t:loop t:source="temas" t:value="tema" t:element="li">
+	<t:pagelink t:page="foros/tema" t:context="${tema.tid}">${tema.tema}</t:pagelink>
 <ul>
 <t:loop t:source="foros" t:value="foro" t:element="li">
 	<t:pagelink t:page="foros/ver" t:context="${foro.fid}">${foro.titulo}</t:pagelink>
 		- ${foro.autor.nombre} (${foro.fecha})
 </t:loop>
 </ul>
+</t:loop></ul>
+</p:else></t:if>
+
     <p:sidebar>
     	<ol><t:loop t:source="popTags" t:value="tag" t:element="div">
     		<t:pagelink t:context="${tag.tag}" t:page="foros/index" class="qtag">${tag.tag}</t:pagelink> (${tag.count})

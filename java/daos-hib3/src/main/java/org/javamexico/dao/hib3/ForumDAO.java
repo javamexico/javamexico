@@ -175,6 +175,12 @@ public class ForumDAO implements ForoDao {
 		return f;
 	}
 
+	public TemaForo getTema(int tid) {
+		Session sess = sfact.getCurrentSession();
+		TemaForo f = (TemaForo)sess.get(TemaForo.class, tid);
+		return f;
+	}
+
 	public List<Foro> getForosByUser(Usuario user, boolean published) {
 		Session sess = sfact.getCurrentSession();
 		Criteria crit = sess.createCriteria(Foro.class).add(
