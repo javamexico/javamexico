@@ -14,12 +14,45 @@ If not, see <http://www.gnu.org/licenses/>.
 */
 package org.javamexico.entity.encuesta;
 
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
+@Entity(name="opcion_encuesta")
 public class OpcionEncuesta {
 
 	private int opid;
 	private Encuesta encuesta;
 	private String texto;
+
+	@Id
+	@SequenceGenerator(name="pk", sequenceName="opcion_encuesta_opid_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
+	public int getOpid() {
+		return opid;
+	}
+	public void setOpid(int opid) {
+		this.opid = opid;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="eid")
+	public Encuesta getEncuesta() {
+		return encuesta;
+	}
+	public void setEncuesta(Encuesta encuesta) {
+		this.encuesta = encuesta;
+	}
+
+	public String getTexto() {
+		return texto;
+	}
+	public void setTexto(String texto) {
+		this.texto = texto;
+	}
 
 }

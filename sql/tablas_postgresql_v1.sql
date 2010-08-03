@@ -295,6 +295,7 @@ CREATE TABLE opcion_encuesta(
 );
 
 CREATE TABLE voto_encuesta(
+	vid    SERIAL PRIMARY KEY,
 	opid   INTEGER REFERENCES opcion_encuesta(opid) NOT NULL ON DELETE CASCADE,
 	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
 	fecha  TIMESTAMP NOT NULL,
