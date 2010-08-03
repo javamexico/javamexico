@@ -309,18 +309,78 @@ CREATE TABLE coment_encuesta(
 	coment VARCHAR(2000) NOT NULL
 );
 
+--
 --La parte de bolsa de trabajo
+--
+
+--Las empresas se registran aparte y administran
+--sus ofertas en otra aplicacion.
+CREATE TABLE chamba_empresa(
+  eid SERIAL PRIMARY KEY,
+  fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
+  status     INTEGER NOT NULL DEFAULT 2,
+  nombre     VARCHAR(80) NOT NULL,
+  passwd     VARCHAR(40) NOT NULL,
+  nom_contacto  VARCHAR(80),
+  mail_contacto VARCHAR(80),
+  telefono1 VARCHAR(10),
+  telefono2 VARCHAR(10),
+  url       VARCHAR(1024)
+);
+
 CREATE TABLE chamba_oferta(
+  ofid SERIAL PRIMARY KEY,
+  eid  INTEGER REFERENCES chamba_usuario(eid) ON DELETE CASCADE,
+  status INTEGER NOT NULL DEFAULT 2,
+  fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
+  fecha_expira timestamp NOT NULL,
+  titulo VARCHAR(80) NOT NULL,
+  contacto VARCHAR(80),
+  mail_contacto VARCHAR(80),
+  telefono1 VARCHAR(10),
+  telefono2 VARCHAR(10),
+  url VARCHAR(1024),
+  resumen VARCHAR(200),
+  descripcion VARCHAR(4000),
+);
+
+CREATE TABLE chamba_tag(
+  tid SERIAL PRIMARY KEY,
+  tag VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE chamba_oferta_tag_join(
+  tid INTEGER NOT NULL REFERENCES chamba_tag(tid) ON DELETE CASCADE,
+  ofid INTEGER NOT NULL REFERENCES chamba_oferta(ofid) ON DELETE CASCADE,
+  PRIMARY KEY(tid, ofid)
 );
 
 CREATE TABLE chamba_anuncio(
+  adid SERIAL PRIMARY KEY,
+  eid  INTEGER REFERENCES chamba_usuario(eid) ON DELETE CASCADE,
+  fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
+  fecha_expira timestamp NOT NULL,
 );
 
 CREATE TABLE chamba_aviso(
+  avid SERIAL PRIMARY KEY
+  eid  INTEGER REFERENCES chamba_usuario(eid) ON DELETE CASCADE,
+  fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
+  fecha_expira timestamp NOT NULL,
 );
 
-CREATE TABLE voto_oferta(
+CREATE TABLE chamba_voto_oferta(
+  vid SERIAL PRIMARY KEY,
+  ofid INTEGER NOT NULL REFERENCES chamba_oferta(ofid) ON DELETE CASCADE,
+  uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+  fecha TIMESTAMP NOT NULL,
+  up    BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE voto_aviso(
+CREATE TABLE chamba_voto_aviso(
+  vid SERIAL PRIMARY KEY,
+  adid INTEGER NOT NULL REFERENCES chamba_aviso(avid) ON DELETE CASCADE,
+  uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+  fecha TIMESTAMP NOT NULL,
+  up    BOOLEAN NOT NULL DEFAULT true
 );
