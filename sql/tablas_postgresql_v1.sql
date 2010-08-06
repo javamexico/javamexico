@@ -27,8 +27,8 @@ CREATE TABLE sitio(
 
 --Cuentas de un usuario en otros sitios
 CREATE TABLE liga_usuario(
-	uid INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	sid INTEGER REFERENCES sitio(sid) NOT NULL ON DELETE CASCADE,
+	uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+	sid INTEGER NOT NULL REFERENCES sitio(sid) ON DELETE CASCADE,
 	data VARCHAR(2000) NOT NULL,
 	PRIMARY KEY(uid, sid)
 );
@@ -41,8 +41,8 @@ CREATE TABLE habilidad(
 
 --Las habilidades de un usuario
 CREATE TABLE hab_usuario(
-	uid INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	hid INTEGER REFERENCES habilidad(hid) NOT NULL ON DELETE CASCADE,
+	uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+	hid INTEGER NOT NULL REFERENCES habilidad(hid) ON DELETE CASCADE,
 	PRIMARY KEY(uid, hid)
 );
 
@@ -54,8 +54,8 @@ CREATE TABLE certificado(
 
 --Los certificados que tiene un usuario
 CREATE TABLE cert_usuario(
-	uid  INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	cid  INTEGER REFERENCES certificado(cid) NOT NULL ON DELETE CASCADE,
+	uid  INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+	cid  INTEGER NOT NULL REFERENCES certificado(cid) ON DELETE CASCADE,
 	anio INTEGER NOT NULL,
 	PRIMARY KEY(uid, cid)
 );
@@ -69,8 +69,8 @@ CREATE TABLE escuela(
 
 --Escuelas donde ha asistido un usuario
 CREATE TABLE escuela_usuario(
-	uid INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	eid INTEGER REFERENCES escuela(eid) NOT NULL ON DELETE CASCADE,
+	uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
+	eid INTEGER NOT NULL REFERENCES escuela(eid) ON DELETE CASCADE,
 	ini INTEGER,
 	fin INTEGER,
 	grado VARCHAR(80),
@@ -164,7 +164,7 @@ CREATE TABLE pregunta(
 	status   INTEGER NOT NULL DEFAULT 1,
 	titulo   VARCHAR(200) NOT NULL,
 	pregunta VARCHAR(2000) NOT NULL,
-	resp_sel INTEGER, -- REFERENCES respuesta(rid) NULL ON DELETE nullify,
+	resp_sel INTEGER, -- REFERENCES respuesta(rid) ON DELETE nullify,
 	fecha_r  TIMESTAMP
 );
 
@@ -234,7 +234,7 @@ CREATE TABLE voto_respuesta(
 --Entrada al blog de un usuario
 CREATE TABLE blog_post(
 	bid SERIAL PRIMARY KEY,
-	uid INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	uid INTEGER NOT NULL REFERENCES usuario(uid) ON DELETE CASCADE,
 	fecha_alta TIMESTAMP NOT NULL,
 	comments   BOOLEAN NOT NULL DEFAULT true,
 	titulo     VARCHAR(400) NOT NULL,
@@ -245,8 +245,8 @@ CREATE TABLE blog_post(
 CREATE TABLE blog_coment(
 	cid   SERIAL PRIMARY KEY,
 	bid   INTEGER REFERENCES blog_post(bid) ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
-	rt    INTEGER REFERENCES blog_coment(cid) NOT NULL ON DELETE RESTRICT --nullify
+	uid   INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
+	rt    INTEGER NOT NULL REFERENCES blog_coment(cid) ON DELETE RESTRICT --nullify
 	fecha TIMESTAMP NOT NULL,
 	coment VARCHAR(2000) NOT NULL
 );
@@ -263,16 +263,16 @@ CREATE TABLE tag_blog_join(
 
 
 CREATE TABLE voto_blog(
-	bid   INTEGER REFERENCES blod(bid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	bid   INTEGER NOT NULL REFERENCES blod(bid)  ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
 	up    BOOLEAN NOT NULL DEFAULT true,
 	PRIMARY KEY(pid, uid)
 );
 
 CREATE TABLE voto_blog_coment(
-	cid   INTEGER REFERENCES blog_coment(cid) NOT NULL ON DELETE CASCADE,
-	uid   INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	cid   INTEGER NOT NULL REFERENCES blog_coment(cid)  ON DELETE CASCADE,
+	uid   INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
 	up    BOOLEAN NOT NULL DEFAULT true,
 	PRIMARY KEY(pid, uid)
@@ -281,7 +281,7 @@ CREATE TABLE voto_blog_coment(
 --La parte de encuestas
 CREATE TABLE encuesta(
 	eid     SERIAL PRIMARY KEY,
-	uid     INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE RESTRICT,
+	uid     INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE RESTRICT,
 	fecha   TIMESTAMP NOT NULL,
 	status  INTEGER NOT NULL DEFAULT 1,
 	titulo  VARCHAR(400),
@@ -290,22 +290,22 @@ CREATE TABLE encuesta(
 
 CREATE TABLE opcion_encuesta(
 	opid  SERIAL PRIMARY KEY,
-	eid   INTEGER REFERENCES encuesta(eid) NOT NULL ON DELETE CASCADE,
+	eid   INTEGER NOT NULL REFERENCES encuesta(eid)  ON DELETE CASCADE,
 	texto VARCHAR(400)
 );
 
 CREATE TABLE voto_encuesta(
 	vid    SERIAL PRIMARY KEY,
-	opid   INTEGER REFERENCES opcion_encuesta(opid) NOT NULL ON DELETE CASCADE,
-	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	opid   INTEGER NOT NULL REFERENCES opcion_encuesta(opid)  ON DELETE CASCADE,
+	uid    INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha  TIMESTAMP NOT NULL,
 	PRIMARY KEY(opid, uid)
 );
 
 CREATE TABLE coment_encuesta(
 	cid    SERIAL PRIMARY KEY,
-	eid    INTEGER REFERENCES encuesta(eid) NOT NULL ON DELETE CASCADE,
-	uid    INTEGER REFERENCES usuario(uid) NOT NULL ON DELETE CASCADE,
+	eid    INTEGER NOT NULL REFERENCES encuesta(eid)  ON DELETE CASCADE,
+	uid    INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha  TIMESTAMP NOT NULL,
 	coment VARCHAR(2000) NOT NULL
 );
