@@ -18,6 +18,7 @@ import org.javamexico.entity.Usuario;
 import org.javamexico.entity.encuesta.Encuesta;
 import org.javamexico.entity.encuesta.ComentEncuesta;
 import org.javamexico.entity.encuesta.OpcionEncuesta;
+import org.javamexico.entity.encuesta.VotoComentEncuesta;
 import org.javamexico.entity.encuesta.VotoEncuesta;
 
 import java.util.Date;
@@ -40,6 +41,14 @@ public interface EncuestaDao {
 
 	public ComentEncuesta addComentario(String texto, Usuario autor, Encuesta poll);
 
+	/** Este voto es para una opcion de la encuesta, no hay opcion "up" porque siempre son votos positivos. */
 	public VotoEncuesta vota(Usuario autor, OpcionEncuesta opt);
+
+	public VotoEncuesta findVoto(Usuario autor, Encuesta opt);
+
+	/** Este metodo es para darle voto positivo o negativo a un comentario en una encuesta. */
+	public VotoComentEncuesta votaComent(Usuario autor, ComentEncuesta coment, boolean up);
+
+	public VotoComentEncuesta findVoto(Usuario autor, ComentEncuesta coment);
 
 }

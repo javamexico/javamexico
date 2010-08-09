@@ -298,8 +298,7 @@ CREATE TABLE voto_encuesta(
 	vid    SERIAL PRIMARY KEY,
 	opid   INTEGER NOT NULL REFERENCES opcion_encuesta(opid)  ON DELETE CASCADE,
 	uid    INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
-	fecha  TIMESTAMP NOT NULL,
-	PRIMARY KEY(opid, uid)
+	fecha  TIMESTAMP NOT NULL
 );
 
 CREATE TABLE coment_encuesta(
@@ -308,6 +307,14 @@ CREATE TABLE coment_encuesta(
 	uid    INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha  TIMESTAMP NOT NULL,
 	coment VARCHAR(2000) NOT NULL
+);
+
+CREATE TABLE voto_coment_encuesta(
+  vid   SERIAL PRIMARY KEY,
+  cid   INTEGER NOT NULL REFERENCES opcion_encuesta(opid)  ON DELETE CASCADE,
+  uid   INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
+  fecha TIMESTAMP NOT NULL,
+  up    BOOLEAN NOT NULL DEFAULT true
 );
 
 --
