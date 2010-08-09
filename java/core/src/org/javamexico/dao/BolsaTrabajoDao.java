@@ -8,6 +8,7 @@ import org.javamexico.entity.TagUsuario;
 import org.javamexico.entity.Usuario;
 import org.javamexico.entity.bolsa.Oferta;
 import org.javamexico.entity.bolsa.Tag;
+import org.javamexico.entity.bolsa.VotoOferta;
 
 /** Define el comportamiento del DAO para el modulo de Bolsa de Trabajo.
  * 
@@ -23,6 +24,8 @@ public interface BolsaTrabajoDao {
 
 	public List<Oferta> getOfertasConTagsUsuario(Set<TagUsuario> tags);
 
-	public void votaOferta(Usuario autor, Oferta oferta);
+	public VotoOferta votaOferta(Usuario autor, Oferta oferta, boolean up);
+
+	public VotoOferta findVoto(Usuario user, Oferta oferta);
 
 }

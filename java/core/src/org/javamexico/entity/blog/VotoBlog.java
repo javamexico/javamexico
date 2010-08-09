@@ -1,4 +1,4 @@
-package org.javamexico.entity.bolsa;
+package org.javamexico.entity.blog;
 
 import java.util.Date;
 
@@ -12,17 +12,17 @@ import javax.persistence.SequenceGenerator;
 
 import org.javamexico.entity.Usuario;
 
-@Entity(name="chamba_voto_oferta")
-public class VotoOferta {
+@Entity(name="voto_blog")
+public class VotoBlog {
 
 	private int vid;
-	private Oferta oferta;
-	private Usuario usuario;
-	private Date fecha;
 	private boolean up;
+	private Date fecha;
+	private Usuario user;
+	private BlogPost blog;
 
 	@Id
-	@SequenceGenerator(name="pk", sequenceName="chamba_voto_oferta_vid_seq", allocationSize=1)
+	@SequenceGenerator(name="pk", sequenceName="boto_blog_vid_seq", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pk")
 	public int getVid() {
 		return vid;
@@ -34,33 +34,33 @@ public class VotoOferta {
 	public boolean isUp() {
 		return up;
 	}
-	public void setUp(boolean flag) {
-		up = flag;
-	}
-
-	@ManyToOne
-	@JoinColumn(name="ofid")
-	public Oferta getOferta() {
-		return oferta;
-	}
-	public void setOferta(Oferta oferta) {
-		this.oferta = oferta;
+	public void setUp(boolean up) {
+		this.up = up;
 	}
 
 	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date value) {
-		fecha = value;
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 
 	@ManyToOne
 	@JoinColumn(name="uid")
-	public Usuario getUsuario() {
-		return usuario;
+	public Usuario getUser() {
+		return user;
 	}
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setUser(Usuario user) {
+		this.user = user;
+	}
+
+	@ManyToOne
+	@JoinColumn(name="bid")
+	public BlogPost getBlog() {
+		return blog;
+	}
+	public void setBlog(BlogPost blog) {
+		this.blog = blog;
 	}
 
 }

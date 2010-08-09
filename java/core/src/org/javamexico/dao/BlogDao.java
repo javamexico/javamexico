@@ -16,6 +16,8 @@ package org.javamexico.dao;
 
 import org.javamexico.entity.blog.BlogPost;
 import org.javamexico.entity.blog.BlogComent;
+import org.javamexico.entity.blog.VotoBlog;
+import org.javamexico.entity.blog.VotoComentBlog;
 import org.javamexico.entity.Usuario;
 
 import java.util.Date;
@@ -52,5 +54,16 @@ public interface BlogDao {
 	 * @param post El blog al cual se va a agregar el comentario
 	 * @param parent El comentario al cual se esta contestando (opcional). */
 	public void addComment(BlogComent coment, BlogPost post, BlogComent parent);
+
+	/** Emite un voto del usuario al post de un blog. Si el usuario ya habia votado por el blog, se actualiza el voto. */
+	public VotoBlog votaBlog(Usuario user, BlogPost post, boolean up);
+
+	/** Emite un voto del usuario al comentario de un blog. Si el usuario ya habia votado por el comentario, se actualiza
+	 * el voto. */
+	public VotoComentBlog votaComentario(Usuario user, BlogComent comm, boolean up);
+
+	public VotoBlog findVotoBlog(Usuario user, BlogPost post);
+
+	public VotoComentBlog findVotoComent(Usuario user, BlogComent comm);
 
 }

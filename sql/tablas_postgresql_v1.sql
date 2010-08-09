@@ -263,19 +263,19 @@ CREATE TABLE tag_blog_join(
 
 
 CREATE TABLE voto_blog(
+	vid   SERIAL PRIMARY  KEY,
 	bid   INTEGER NOT NULL REFERENCES blod(bid)  ON DELETE CASCADE,
 	uid   INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
-	up    BOOLEAN NOT NULL DEFAULT true,
-	PRIMARY KEY(pid, uid)
+	up    BOOLEAN NOT NULL DEFAULT true
 );
 
 CREATE TABLE voto_blog_coment(
+	vid   SERIAL PRIMARY  KEY,
 	cid   INTEGER NOT NULL REFERENCES blog_coment(cid)  ON DELETE CASCADE,
 	uid   INTEGER NOT NULL REFERENCES usuario(uid)  ON DELETE CASCADE,
 	fecha TIMESTAMP NOT NULL,
-	up    BOOLEAN NOT NULL DEFAULT true,
-	PRIMARY KEY(pid, uid)
+	up    BOOLEAN NOT NULL DEFAULT true
 );
 
 --La parte de encuestas
