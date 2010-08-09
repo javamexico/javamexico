@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+<context:annotation-config />
+<tx:annotation-driven transaction-manager="hibTxManager" />
+
+<bean id="usuarioDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<property name="frozen" value="true" />
+	<property name="proxyInterfaces" value="org.javamexico.dao.UserDao" />
+	<property name="target"><bean class="org.javamexico.dao.hib3.UsuarioDAO">
+		<property name="sessionFactory" ref="hibFactory" />
+	</bean></property>
+	<property name="interceptorNames"><list>
+		<value>hibInterceptor</value>
+	</list></property>
+</bean>
+
+<bean id="preguntaDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<property name="frozen" value="true" />
+	<property name="proxyInterfaces" value="org.javamexico.dao.PreguntaDao" />
+	<property name="target"><bean class="org.javamexico.dao.hib3.QuestionDAO">
+		<property name="sessionFactory" ref="hibFactory" />
+	</bean></property>
+	<property name="interceptorNames"><list>
+		<value>hibInterceptor</value>
+	</list></property>
+</bean>
+
+<bean id="foroDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<property name="frozen" value="true" />
+	<property name="proxyInterfaces" value="org.javamexico.dao.ForoDao" />
+	<property name="target"><bean class="org.javamexico.dao.hib3.ForumDAO">
+		<property name="sessionFactory" ref="hibFactory" />
+	</bean></property>
+	<property name="interceptorNames"><list>
+		<value>hibInterceptor</value>
+	</list></property>
+</bean>
+
+<bean id="hibTxManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	<property name="sessionFactory" ref="hibFactory" />
+	<property name="dataSource" ref="dataSource" />
+</bean>
+
+<bean id="hibInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
+	<property name="sessionFactory" ref="hibFactory" />
+</bean>
+
+<bean id="jdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+	<constructor-arg ref="dataSource" />
+</bean>
+
+</beans>

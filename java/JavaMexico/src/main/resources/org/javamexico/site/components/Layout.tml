@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Title      : Concrete
+Version    : 1.0
+Released   : 20080825
+Description: A Web 2.0 design with fluid width suitable for blogs and small websites.
+-->
+        <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <title>${title}</title>
+    </head>
+    <body>
+        <!-- start header -->
+        <div id="header">
+            <div id="logo">
+                <h1>
+                    <t:pagelink page="index">JavaMexico.org<t:if test="${userExists}"> : ${user.username}</t:if></t:pagelink>
+                </h1>
+            </div>
+            <div id="menu">
+                <ul>
+                    <li t:type="loop" t:source="pageNames" t:value="pageName" class="prop:classForPageName">
+                        <t:pagelink page="prop:pageName">${pageName}</t:pagelink>
+                    </li>
+                    <t:if test="userExists">
+                    	<li><t:actionlink t:id="logout">Cerrar sesi&oacute;n</t:actionlink></li>
+                    <p:else>
+                    	<li><t:pagelink t:page="login" t:context="componentResources.pageName">Registrarse</t:pagelink></li>
+                    </p:else></t:if>
+                </ul>
+            </div>
+        </div>
+        <!-- end header -->
+        <!-- start page -->
+        <div id="page">
+            <!-- start sidebar -->
+            <div id="sidebar">
+                <ul>
+                    <li id="search" style="background: none;">
+                    </li>
+                    <li t:type="if" t:test="sidebar">
+                        <h2>${sidebarTitle}</h2>
+                        <div class="sidebar-content">
+                            <t:delegate to="sidebar"/>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- end sidebar -->
+            <!-- start content -->
+            <div id="content">
+                <div class="post">
+                    <div class="title">
+                        <h2>${title}</h2>
+                    </div>
+                    <div class="entry">
+                        <t:body/>
+                    </div>
+                </div>
+            </div>
+            <!-- end content -->
+            <br style="clear: both;"/>
+        </div>
+        <!-- end page -->
+        <!-- start footer -->
+        <div id="footer">
+            <p class="legal">
+                &copy;2009 org.javamexico. All Rights Reserved.
+                &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                Design by
+                <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>
+                &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                Icons by
+                <a href="http://famfamfam.com/">FAMFAMFAM</a>.
+            </p>
+        </div>
+        <!-- end footer -->
+    </body>
+</html>

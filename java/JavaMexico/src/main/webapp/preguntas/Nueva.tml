@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html t:type="layout" t:title="Crear una nueva pregunta"
+      t:sidebarTitle="Tags"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+        <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
+
+<h2>Crear una nueva pregunta</h2>
+<t:if test="userExists">
+<t:form t:id="crearPregunta"> <t:errors/>
+<t:label for="titulo" />
+<t:textfield t:id="titulo" value="titulo" size="50" maxlength="200" t:validate="required,minLength=20,maxLength=200" />
+<br/>
+<t:label for="pregunta" />
+<t:textarea t:id="pregunta" value="pregunta" rows="5" cols="50" t:validate="required,minLength=30" />
+<br/>
+<input type="submit" value="Crear pregunta" />
+[ <t:pagelink t:page="preguntas/index">Cancelar</t:pagelink> ]
+<br/>
+Tu pregunta ser&aacute; creada pero aun no aparecer&aacute; en la lista,
+hasta que la revises, le pongas tags y la apruebes.
+</t:form>
+<p:else>
+Debes registrarte primero
+<t:loginPanel/>
+</p:else></t:if>
+
+</html>

@@ -1,0 +1,72 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.javamexico</groupId>
+    <artifactId>javamexico-core</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>JavaMexico Core Classes</name>
+        <dependencies>
+        	<dependency>
+        		<groupId>javax.annotation</groupId>
+        		<artifactId>jsr250-api</artifactId>
+        		<version>1.0</version>
+        		<type>jar</type>
+        		<scope>compile</scope>
+        	</dependency>
+        	<dependency>
+        		<groupId>javax.persistence</groupId>
+        		<artifactId>persistence-api</artifactId>
+        		<version>1.0</version>
+        		<type>jar</type>
+        		<scope>compile</scope>
+        	</dependency>
+        	<dependency>
+        		<groupId>org.hibernate</groupId>
+        		<artifactId>hibernate-annotations</artifactId>
+        		<version>3.4.0.GA</version>
+        		<type>jar</type>
+        		<scope>compile</scope>
+        	</dependency>
+
+    </dependencies>
+        <description>Clases principales (entidades, daos) para JavaMexico.org</description>
+        <developers>
+        	<developer>
+        		<id>ezl</id>
+        		<name>Enrique Zamudio</name>
+        		<email>alterbass@gmail.com</email>
+        		<roles>
+        			<role>Committer</role>
+        		</roles>
+        	</developer>
+        </developers>
+    <build>
+        <finalName>javamexico-core</finalName>
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <optimize>true</optimize>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <reporting>
+
+    </reporting>
+
+    <repositories>
+
+    </repositories>
+
+    <pluginRepositories>
+
+    </pluginRepositories>
+
+</project>
