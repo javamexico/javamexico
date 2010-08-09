@@ -338,7 +338,7 @@ CREATE TABLE chamba_empresa(
 
 CREATE TABLE chamba_oferta(
   ofid SERIAL PRIMARY KEY,
-  eid  INTEGER REFERENCES chamba_usuario(eid) ON DELETE CASCADE,
+  eid  INTEGER REFERENCES chamba_empresa(eid) ON DELETE CASCADE,
   status INTEGER NOT NULL DEFAULT 2,
   fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
   fecha_expira timestamp NOT NULL,
@@ -349,7 +349,7 @@ CREATE TABLE chamba_oferta(
   telefono2 VARCHAR(10),
   url VARCHAR(1024),
   resumen VARCHAR(200),
-  descripcion VARCHAR(4000),
+  descripcion VARCHAR(4000)
 );
 
 CREATE TABLE chamba_tag(
@@ -365,16 +365,16 @@ CREATE TABLE chamba_oferta_tag_join(
 
 CREATE TABLE chamba_anuncio(
   adid SERIAL PRIMARY KEY,
-  eid  INTEGER REFERENCES chamba_usuario(eid) ON DELETE CASCADE,
+  eid  INTEGER REFERENCES chamba_empresa(eid) ON DELETE CASCADE,
   fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
-  fecha_expira timestamp NOT NULL,
+  fecha_expira timestamp NOT NULL
 );
 
 CREATE TABLE chamba_aviso(
   avid SERIAL PRIMARY KEY
-  eid  INTEGER REFERENCES chamba_usuario(eid) ON DELETE CASCADE,
+  eid  INTEGER REFERENCES chamba_empresa(eid) ON DELETE CASCADE,
   fecha_alta timestamp NOT NULL DEFAULT localtimestamp,
-  fecha_expira timestamp NOT NULL,
+  fecha_expira timestamp NOT NULL
 );
 
 CREATE TABLE chamba_voto_oferta(
