@@ -392,3 +392,7 @@ CREATE TABLE chamba_voto_aviso(
   fecha TIMESTAMP NOT NULL,
   up    BOOLEAN NOT NULL DEFAULT true
 );
+
+insert into tema_foro(  tema, descripcion, fecha_alta ) values ( 'Java', 'Todo lo relacionado al mejor lenguaje de programacion', '1960-01-01 23:03:20' );
+
+commit;

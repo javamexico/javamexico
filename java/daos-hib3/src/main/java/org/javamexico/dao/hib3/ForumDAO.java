@@ -212,6 +212,7 @@ public class ForumDAO implements ForoDao {
 		if (foro.getFecha() == null) {
 			foro.setFecha(new Date());
 		}
+		foro.setStatus(1);
 		sess.save(foro);
 	}
 
