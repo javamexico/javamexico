@@ -111,13 +111,6 @@
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
-    <dependency>
-    	<groupId>org.apache.derby</groupId>
-    	<artifactId>derby</artifactId>
-    	<version>10.5.3.0_1</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
-    </dependency>
   </dependencies>
   <build>
   <plugins>
@@ -135,11 +128,6 @@
          <artifactId>maven-surefire-plugin</artifactId>
          <version>2.5</version>
          <configuration>
-             <systemPropertyVariables>
-                 <derby.system.home>${basedir}/../../db</derby.system.home>
-                 <buildDirectory>${project.build.directory}</buildDirectory>
-             </systemPropertyVariables>
-            <useSystemClassLoader>true</useSystemClassLoader>
           </configuration>
         </plugin>
   </plugins>
