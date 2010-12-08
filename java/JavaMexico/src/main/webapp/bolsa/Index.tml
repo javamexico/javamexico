@@ -1,0 +1,14 @@
+<html t:type="layout" t:title="JavaMexico :: Bolsa de Trabajo"
+      t:sidebarTitle="Ofertas"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
+        <!-- Most of the page content, including <head>, <body>, etc. tags, comes from Layout.tml -->
+
+<p>Aqui podemos poner un buscador, o mostrar ofertas relevantes para el usuario (segun sus tags y los de las ofertas)</p>
+
+    <p:sidebar>
+
+Aqui podrian ir ofertas populares o algo asi
+    </p:sidebar>
+
+</html>
